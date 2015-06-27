@@ -7,3 +7,10 @@
 *.cmx
 *.cmxs
 *.cmxa
+
+abducer/X
+
+mistral/build
+mistral/example/*
+!mistral/example/*.cpp
+!mistral/example/Makefile
