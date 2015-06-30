@@ -185,7 +185,7 @@ string ArithmeticTerm::to_string()
 		Term* t = it->first;
 		int c = it->second;
 		if(i != 0 && c>=0) res += "+";
-		if(c!= 1 && c!= -1) res += int_to_string(c);
+		if(c!= 1 && c!= -1) res += (int_to_string(c) + "*");
 		if(c == -1) res += "-";
 		res += t->to_string();
 	}

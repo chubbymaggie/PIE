@@ -1,6 +1,11 @@
 # specInfer
 A tool to infer specifications for OCaml programs.
 
+## Setup
+ - Checkout LLVM (with Clang) to `/my_root/path/to/llvm`
+ - Run `./Clang_Checker/setup.sh` with parameter `my_root/path/to/llvm/tools/Clang`
+ - TODO: `specInfer` paths are hardcoded in `LoopInvariantChecker.cpp`, will clean up in next commit.
+
 ## Status
 
 | Test                 | Invariant                                 | Remark                      |
@@ -12,9 +17,9 @@ A tool to infer specifications for OCaml programs.
 | [04](bm_oopsla/04.c) | ![04_inv](http://mathurl.com/py8jd3p.png) | Nested loops                |
 | [05](bm_oopsla/05.c) | ![05_inv](http://mathurl.com/o8uuce8.png) | :white_check_mark:          |
 | [06](bm_oopsla/06.c) | ![06_inv](http://mathurl.com/oacrffn.png) | :white_check_mark:          |
-| [07](bm_oopsla/07.c) | ![07_inv](http://mathurl.com/py8jd3p.png) | 3CNF Expressiveness?        |
+| [07](bm_oopsla/07.c) | ![07_inv](http://mathurl.com/py8jd3p.png) | 3-CNF Expressiveness?       |
 | [08](bm_oopsla/08.c) | ![08_inv](http://mathurl.com/py8jd3p.png) | :boom: >6-CNF?? :boom:      |
-| [09](bm_oopsla/09.c) | ![09_inv](http://mathurl.com/py8jd3p.png) | Mistral: `2i` for `2*i`     |
+| [09](bm_oopsla/09.c) | ![09_inv](http://mathurl.com/py8jd3p.png) | 3-CNF Expressiveness?       |
 | [10](bm_oopsla/10.c) | ![10_inv](http://mathurl.com/qhodxgu.png) | :white_check_mark:          |
 | [11](bm_oopsla/11.c) | ![11_inv](http://mathurl.com/py8jd3p.png) | :boom: >6-CNF?? :boom:      |
 | [12](bm_oopsla/12.c) | ![12_inv](http://mathurl.com/py8jd3p.png) | Non-deterministic condition |
@@ -27,11 +32,11 @@ A tool to infer specifications for OCaml programs.
 | [19](bm_oopsla/19.c) | ![19_inv](http://mathurl.com/py8jd3p.png) | :boom: >6-CNF?? :boom:      |
 | [20](bm_oopsla/20.c) | ![20_inv](http://mathurl.com/py8jd3p.png) | Nested loops                |
 | [21](bm_oopsla/21.c) | ![21_inv](http://mathurl.com/py8jd3p.png) | Nested loops                |
-| [22](bm_oopsla/22.c) | ![22_inv](http://mathurl.com/py8jd3p.png) | Mistral: `2i` for `2*i`     |
+| [22](bm_oopsla/22.c) | ![22_inv](http://mathurl.com/py8jd3p.png) | :boom: Explodes :boom:      |
 | [23](bm_oopsla/23.c) | ![23_inv](http://mathurl.com/py8jd3p.png) | :boom: Explodes :boom:      |
 | [24](bm_oopsla/24.c) | ![24_inv](http://mathurl.com/py8jd3p.png) | :boom: >6-CNF?? :boom:      |
-| [25](bm_oopsla/25.c) | ![25_inv](http://mathurl.com/py8jd3p.png) | :boom: >6_CNF?? :boom:      |
-| [26](bm_oopsla/26.c) | ![26_inv](http://mathurl.com/py8jd3p.png) | Mistral: `2i` for `2*i`     |
+| [25](bm_oopsla/25.c) | ![25_inv](http://mathurl.com/py8jd3p.png) | :boom: >6-CNF?? :boom:      |
+| [26](bm_oopsla/26.c) | ![26_inv](http://mathurl.com/py8jd3p.png) | Keeps trying                |
 | [27](bm_oopsla/27.c) | ![27_inv](http://mathurl.com/py8jd3p.png) | Non-deterministic condition |
 | [28](bm_oopsla/28.c) | ![28_inv](http://mathurl.com/pjbgymx.png) | :white_check_mark:          |
 | [29](bm_oopsla/29.c) | ![29_inv](http://mathurl.com/py8jd3p.png) | Nested loops                |
