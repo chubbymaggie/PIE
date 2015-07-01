@@ -24,8 +24,8 @@
 
 #include "../../Sema/TreeTransform.h"
 
-#define MISTRAL_PATH "/data/Repos/specInfer/mistral/"
-#define ABDUCER_PATH "/data/Repos/specInfer/abducer/"
+#define MISTRAL_PATH __MISTRAL_PATH_FROM_SETUP_SCRIPT__
+#define ABDUCER_PATH __ABDUCER_PATH_FROM_SETUP_SCRIPT__
 
 namespace clang {
 

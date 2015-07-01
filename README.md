@@ -3,8 +3,10 @@ A tool to infer specifications for OCaml programs.
 
 ## Setup
  - Checkout LLVM (with Clang) to `/my_root/path/to/llvm`
- - Run `./Clang_Checker/setup.sh` with parameter `my_root/path/to/llvm/tools/Clang`
- - TODO: `specInfer` paths are hardcoded in `LoopInvariantChecker.cpp`, will clean up in next commit.
+ - Run `./Clang_Checker/setup.sh` with the following parameters (in order):
+    - `my_root/path/to/llvm/tools/Clang`
+    - `my_root/path/to/mistral`
+    - `my_root/path/to/abducer`
 
 ## Status
 
