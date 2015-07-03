@@ -1,8 +1,6 @@
 #ifndef __BM_OOPSLA_H__
 #define __BM_OOPSLA_H__ 1
 
-#include <cassert>
-#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 
@@ -46,7 +44,8 @@ int unknown2() { return unknown(); }
 int unknown3() { return unknown(); }
 int unknown4() { return unknown(); }
 
-inline void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
+void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
+void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 
 #define INITIALIZE(format_str, args...)                 \
           struct timeval t; gettimeofday(&t, NULL);     \

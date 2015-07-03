@@ -681,6 +681,15 @@ namespace {
 void LoopInvariantChecker :: checkASTDecl(const Decl *D,
                                           AnalysisManager &mgr,
                                           BugReporter &BR) const {
+  const FunctionDecl *fd = dyn_cast<FunctionDecl>(D);
+  if(!fd) return;
+
+  IdentifierInfo *FnInfo = fd->getIdentifier();
+  if (!FnInfo) return;
+
+  if(!FnInfo->isStr("main"))
+    return;
+
   CFG *cfg = mgr.getCFG(D);
   if(!cfg)
     return;
@@ -715,7 +724,7 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
 
   bool non_deterministic = false;
   //FIXME: The guard may `contain' a call instead of `being' a  call
-  if(isa<CallExpr>(*guard)) {
+  if(isa<CallExpr>(guard->IgnoreCasts())) {
     non_deterministic = true;
     guard = new (mgr.getASTContext()) CXXBoolLiteralExpr(true,
                                                          guard->getType(),
