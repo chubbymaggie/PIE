@@ -35,7 +35,7 @@ int uni_rand_interval(int min, int max)
 
 //TODO: Hack to terminate early. Assumes termination condition is zero.
 //      Better idea?
-#define MAX_RUNS 64
+#define MAX_RUNS 256
 unsigned short runs = 0;
 
 int unknown() {

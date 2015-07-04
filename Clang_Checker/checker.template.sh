@@ -17,10 +17,12 @@ mv "$FILE.x" "$WORKING_PATH/"
 cd "$WORKING_PATH"
 
 # Generate a bunch of tests
+echo -ne "(*) Collecting test data ... 1 / 8"
 "./$FILE.x" > header
 head -n 1 < header > final_tests
 tail -n +2 < header > tests
-for i in `seq 1 8`; do
+for i in `seq 2 8`; do
+  echo -ne "\r(*) Collecting test data ... $i / 8"
   "./$FILE.x" | tail -n +2 >> tests
 done
 
@@ -32,6 +34,7 @@ rm -rf header tests
 
 # Call the monster
 cd "$ROOT"
+echo -ne "\n\n(*) Checking loop invariant:\n"
 bin/clang++ --std=c++11 -c -w -Xclang -analyze                          \
             -Xclang -analyzer-checker=alpha.core.LoopInvariantChecker   \
             "$1"

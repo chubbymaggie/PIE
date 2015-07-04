@@ -92,7 +92,7 @@ def genTests():
     if os.path.isfile('final_tests'):
         with open('final_tests') as f:
             models = f.readlines()
-        header = {uniq_vars[name.strip()] : idx for idx, name in enumerate(models[0].split('\t'))}
+        header = {uniq_vars[name.strip()] : idx for idx, name in enumerate(models[0].split('\t')) if name.strip() in uniq_vars}
         models = ([val.strip() for val in vals.split('\t')] for vals in models[1:])
         return ((vals[header[v]] for v in uvars) for vals in models)
 
