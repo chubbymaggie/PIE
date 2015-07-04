@@ -5,7 +5,8 @@ int main() {
   INITIALIZE(4, j, k, l, n);
 
   assume(n > 0);
-  j = k = n;
+  j = n;
+  k = n;
 
   while(j > l) {
     PRINT_VARS();

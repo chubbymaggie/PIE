@@ -1,7 +1,7 @@
 #include "bm_oopsla.h"
 
 int main() {
-  static int n, x = 0, m = 0;
+  int n, x = 0, m = 0;
   INITIALIZE(3, m, n, x);
 
   while(x < n) {

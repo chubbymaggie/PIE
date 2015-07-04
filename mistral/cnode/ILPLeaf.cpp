@@ -377,7 +377,7 @@ string ILPLeaf::pretty_print_ilp(bool neg)
 		if(!first) res+= "+";
 		first = false;
 		if(coef != 1)
-			res+=int_to_string(coef);
+			res+=int_to_string(coef) + "*";
 		res +=cur;
 	}
 	if(constant_left) {
@@ -398,7 +398,7 @@ string ILPLeaf::pretty_print_ilp(bool neg)
 		if(!first) res+= "+";
 		first = false;
 		if(coef != 1)
-			res+=int_to_string(coef);
+			res+=int_to_string(coef) + "*";
 		res +=cur;
 	}
 
@@ -440,7 +440,7 @@ string ILPLeaf::to_string()
 	{
 		Term* t = it->first;
 		long int coef = it->second;
-		if(coef != 1) res += int_to_string(coef);
+		if(coef != 1) res += int_to_string(coef) + "*";
 		res += t->to_string();
 		if(i!= (int)elems.size() - 1) res += "+";
 	}
