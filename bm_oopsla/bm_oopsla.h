@@ -51,10 +51,8 @@ void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
           struct timeval t; gettimeofday(&t, NULL);     \
           srand(t.tv_usec * t.tv_sec);                  \
           fprintf(stderr, "(" #args ")\n");             \
-          auto print_vars = [&]() {                     \
+          auto PRINT_VARS = [&]() {                     \
             fprintf(stderr, format_str, ##args);        \
           }
-
-#define PRINT_VARS() print_vars()
 
 #endif

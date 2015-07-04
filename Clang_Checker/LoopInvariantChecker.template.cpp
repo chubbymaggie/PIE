@@ -27,6 +27,10 @@
 #define MISTRAL_PATH __MISTRAL_PATH_FROM_SETUP_SCRIPT__
 #define ABDUCER_PATH __ABDUCER_PATH_FROM_SETUP_SCRIPT__
 
+std::string WORKING_PATH = __WORKING_PATH_BASE_FROM_SETUP_SCRIPT__ "/";
+
+unsigned long COUNT = 0, ABDUCTION_COUNT = 0, VERIFICATION_COUNT = 0;
+
 namespace clang {
 
   template<>
@@ -84,7 +88,7 @@ namespace {
     }
   }
 
-  void writeMCF(const Expr * pred, const std::string filename) {
+  void writeMCF(const Expr * pred, const std::string & filename) {
     std::string mcf("-\n-\n");
     {
       llvm::raw_string_ostream mcf_stream(mcf);
@@ -140,65 +144,55 @@ namespace {
   }
 
   std::string getAbductionResultFor(const Expr * pred) {
-    writeMCF(pred, "/tmp/00X00.mcf");
+    std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "A" + std::to_string(++ABDUCTION_COUNT) + ".mcf";
+    writeMCF(pred, target);
 
-    system(
-      "cd " ABDUCER_PATH " ; "
-      "rm -rf X ; mkdir X ; "
-      "cp /tmp/00X00.mcf X/ ; "
-      "./abduce.sh X/ > /dev/null"
-    );
+    std::string command = ABDUCER_PATH "/abduce.sh ";
+    command += target;
+    command += " > /dev/null";
+    system(command.c_str());
 
     std::string result;
     {
-      std::ifstream in(ABDUCER_PATH "X/00X00.mcf.sinf");
+      std::ifstream in(target + ".sinf");
       std::getline(in, result);
     }
     return result;
   }
 
   bool chkVALID(const Expr * pred) {
-    writeMCF(pred, "/tmp/00V00.mcf");
+    std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "V" + std::to_string(++VERIFICATION_COUNT) + ".mcf";
+    writeMCF(pred, target);
 
-    system(
-      MISTRAL_PATH "example/chkVALID /tmp/00V00.mcf 0 > /tmp/00V00.res"
-    );
+    std::string command = MISTRAL_PATH "/example/chkVALID ";
+    command += target;
+    command += " 0 > ";
+    command += target + ".res";
+    system(command.c_str());
 
     std::string result;
     {
-      std::ifstream in("/tmp/00V00.res");
+      std::ifstream in(target + ".res");
       std::getline(in, result);
     }
     return result.substr(0,5) == "VALID";
   }
 
-  bool chkSAT(const Expr * pred) {
-    writeMCF(pred, "/tmp/00S00.mcf");
-
-    system(
-      MISTRAL_PATH "example/chkSAT /tmp/00S00.mcf 0 > /tmp/00S00.res"
-    );
-
-    std::string result;
-    {
-      std::ifstream in("/tmp/00S00.res");
-      std::getline(in, result);
-    }
-    return result.substr(0,5) != "UNSAT";
-  }
-
   std::string simplify(std::string mcf_pred) {
+    std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "S.mcf";
     {
-      std::ofstream mcf_file("/tmp/00S00.mcf");
+      std::ofstream mcf_file(target);
       mcf_file << mcf_pred;
     }
 
-    system(
-      MISTRAL_PATH "example/simplify /tmp/00S00.mcf 0 > /tmp/00S00.res"
-    );
+    std::string command = MISTRAL_PATH "/example/simplify ";
+    command += target;
+    command += " 0 > ";
+    command += target + ".sim";
+    system(command.c_str());
 
     {
-      std::ifstream in("/tmp/00S00.res");
+      std::ifstream in(target + ".sim");
       std::getline(in, mcf_pred);
     }
 
@@ -508,7 +502,7 @@ namespace {
 
     wpOfSubgraph(verif, loop_head, &(cfg->getEntry()), dom_tree, reachables, mgr);
 
-    llvm::errs() << "\n   [p] Verification query = ";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT << "] Verification query (pre) = ";
     verif -> printPretty(llvm::errs(), nullptr, mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
 
@@ -574,7 +568,7 @@ namespace {
       false
     );
 
-    llvm::errs() << "\n   [I] Verification query = ";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT << "] Verification query (ind) = ";
     verif -> printPretty(llvm::errs(), nullptr,
                          mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
@@ -583,7 +577,6 @@ namespace {
     llvm::errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
 
     if(!res) {
-      if(!chkSAT(verif)) return false;
       pred = simplify(abduce(mgr, verif) + " & (" + pred + ")");
       return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
@@ -638,7 +631,7 @@ namespace {
       false
     );
 
-    llvm::errs() << "\n   [P] Verification query = ";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT << "] Verification query = ";
     verif -> printPretty(llvm::errs(), nullptr,
                          mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
@@ -647,7 +640,6 @@ namespace {
     llvm::errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
 
     if(!res) {
-      if(!chkSAT(verif)) return false;
       pred = simplify(abduce(mgr, verif) + " & (" + pred + ")");
       return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
@@ -693,6 +685,13 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
   CFG *cfg = mgr.getCFG(D);
   if(!cfg)
     return;
+
+  StringRef main_path = mgr.getSourceManager().getFilename(D->getLocation()).str();
+  WORKING_PATH += main_path.drop_front(main_path.rfind('/') + 1).str();
+  {
+    std::string command = "rm -rf " + WORKING_PATH + "; mkdir " + WORKING_PATH;
+    system(command.c_str());
+  }
 
   DominatorTree dom_tree;
   dom_tree.buildDominatorTree(* mgr.getAnalysisDeclContext(D));

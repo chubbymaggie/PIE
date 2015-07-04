@@ -8,6 +8,8 @@
 *.cmxs
 *.cmxa
 
+bm_oopsla_logs
+
 abducer/X
 
 mistral/build

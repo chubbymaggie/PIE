@@ -105,12 +105,10 @@ if __name__ == "__main__":
     uvars = sorted(uniq_vars.values())
     uniq_consts = sorted(list(uniq_consts))
 
-    not_smt = '-\n-\n!(%s)' % smt
-    with open('not-%s' % sys.argv[1], 'w') as f:
-        f.write(not_smt)
-    out = check_output(['./chkSAT', 'not-%s' % sys.argv[1], '0']).decode().split("\n")
+    out = check_output(['./chkSAT', sys.argv[1], '0']).decode().split("\n")
+    if out[0] == 'UNSAT':
+        sys.exit(1)
     model = dict((kv[0].strip(), kv[1].strip()) for kv in (line.partition(':')[0::2] for line in out[1:]))
-    os.remove('not-%s' % sys.argv[1])
 
     print('\n(*** Variable mapping ***)')
     for kv in sorted(uniq_vars.items(), key=lambda kv: int(kv[1][1:-1])):

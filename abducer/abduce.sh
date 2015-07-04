@@ -1,26 +1,41 @@
 #!/bin/bash
 
-./link.sh "$1"
-cd "$1"
+ROOT="`dirname $0`"
+ROOT="`cd $ROOT && pwd`"
+
+if [[ ! -f "$1" ]]; then
+  exit 1
+fi
+
+TARGET="`dirname $1`"
+FILE="`basename $1`"
+
+$ROOT/link.sh "$TARGET"
+cd "$TARGET"
 
 make clean ; make
 
-for f in *.mcf
-do
-    echo -ne "\n... $f ... \n"
+echo -ne "\n... $FILE ... \n"
 
-    echo -ne "-\n-\n" > f
-    ./simplify $f >> f
-    mv f $f
+# Simplify initial query
+echo -ne "-\n-\n" > f
+./simplify $FILE >> f
+mv f $FILE
 
-    ./smt2ml $f > $f.tml ; cres="$?"
+# MCF Query to OCaml code
+./smt2ml $FILE > $FILE.tml
+if [[ $? != 0 ]]; then
+  echo "false" > $FILE.sinf
+  exit 1
+fi
 
-    ./preprocess $f.tml > T$f.ml ; tres="$?"
+./preprocess $FILE.tml > T$FILE.ml
 
-    ocamlfind ocamlopt -package batteries -c T$f.ml 2>/dev/null
-    ocamlfind ocamlopt -o $f.e -linkpkg -package batteries escher_*.cmx specInfer.cmx T$f.cmx 2> /dev/null
+# Compile OCaml code to binary
+ocamlfind ocamlopt -package batteries -c T$FILE.ml 2>/dev/null
+ocamlfind ocamlopt -o $FILE.e -linkpkg -package batteries escher_*.cmx specInfer.cmx T$FILE.cmx 2> /dev/null
 
-    echo -ne "-\n-\n" > $f.inf
-    ./$f.e | ./var_replace $f.tml >> $f.inf
-    ./simplify $f.inf > $f.sinf
-done
+# Replace variables & simplify
+echo -ne "-\n-\n" > $FILE.inf
+./$FILE.e | ./var_replace $FILE.tml >> $FILE.inf
+./simplify $FILE.inf > $FILE.sinf
