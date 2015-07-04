@@ -1,10 +1,14 @@
 #ifndef __BM_OOPSLA_H__
 #define __BM_OOPSLA_H__ 1
 
+#include <algorithm>
+#include <string>
 #include <cstdio>
 #include <cstdlib>
 
 #include <sys/time.h>
+
+using std::string;
 
 int rand_interval(int min, int max) { return min + (rand() % (max - min)); }
 
@@ -31,7 +35,7 @@ int uni_rand_interval(int min, int max)
 
 //TODO: Hack to terminate early. Assumes termination condition is zero.
 //      Better idea?
-#define MAX_RUNS 32
+#define MAX_RUNS 64
 unsigned short runs = 0;
 
 int unknown() {
@@ -47,12 +51,21 @@ int unknown4() { return unknown(); }
 void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 
-#define INITIALIZE(format_str, args...)                 \
-          struct timeval t; gettimeofday(&t, NULL);     \
-          srand(t.tv_usec * t.tv_sec);                  \
-          fprintf(stderr, "(" #args ")\n");             \
-          auto PRINT_VARS = [&]() {                     \
-            fprintf(stderr, format_str, ##args);        \
+#define OUTPUT_STREAM stdout
+
+#define INITIALIZE(count, args...)                                          \
+          struct timeval ___t___; gettimeofday(&___t___, NULL);             \
+          srand(___t___.tv_usec * ___t___.tv_sec);                          \
+          string ___vars___ = #args;                                        \
+          std::replace(___vars___.begin(), ___vars___.end(), ',', '\t');    \
+          fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());               \
+          auto PRINT_VARS = [&]() {                                         \
+            fprintf(OUTPUT_STREAM, rep<count>("%d").c_str(), ##args);       \
           }
+
+template <unsigned int N>
+string rep(const string str) { return str + " \t " + rep<N-1>(str); }
+
+template <> string rep<1>(const string str) { return str + "\n"; }
 
 #endif

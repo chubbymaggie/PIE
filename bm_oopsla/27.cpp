@@ -2,7 +2,7 @@
 
 int main() {
   int x, y, k, i, n, j = 0, m = 0;
-  INITIALIZE("(%d, %d, %d, %d, %d, %d, %d)\n", i, j, k, m, n, x, y);
+  INITIALIZE(7, i, j, k, m, n, x, y);
 
   assume((x+y) == k);
 

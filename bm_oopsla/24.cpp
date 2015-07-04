@@ -2,10 +2,10 @@
 
 int main() {
   int n, i, k, j = 0;
-  INITIALIZE("(%d, %d, %d, %d)\n", i, j, k, n);
+  INITIALIZE(4, i, j, k, n);
 
-  assume(n, n > 0);
-  assume(k, k > n);
+  assume(n > 0);
+  assume(k > n);
 
   while(j < n) {
     PRINT_VARS();

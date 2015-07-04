@@ -2,7 +2,7 @@
 
 int main() {
   int m, n, y, x = 0;
-  INITIALIZE("(%d, %d, %d, %d)", m, n, x, y);
+  INITIALIZE(4, m, n, x, y);
 
   assume(n >= 0);
   assume(m >= 0 && m < n);

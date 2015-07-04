@@ -24,10 +24,10 @@
 
 #include "../../Sema/TreeTransform.h"
 
-#define MISTRAL_PATH __MISTRAL_PATH_FROM_SETUP_SCRIPT__
-#define ABDUCER_PATH __ABDUCER_PATH_FROM_SETUP_SCRIPT__
+#define MISTRAL_PATH "__MISTRAL_PATH_FROM_SETUP_SCRIPT__"
+#define ABDUCER_PATH "__ABDUCER_PATH_FROM_SETUP_SCRIPT__"
 
-std::string WORKING_PATH = __WORKING_PATH_BASE_FROM_SETUP_SCRIPT__ "/";
+std::string WORKING_PATH = "__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/";
 
 unsigned long COUNT = 0, ABDUCTION_COUNT = 0, VERIFICATION_COUNT = 0;
 
@@ -701,10 +701,6 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
 
   StringRef main_path = mgr.getSourceManager().getFilename(D->getLocation()).str();
   WORKING_PATH += main_path.drop_front(main_path.rfind('/') + 1).str();
-  {
-    std::string command = "rm -rf " + WORKING_PATH + "; mkdir " + WORKING_PATH;
-    system(command.c_str());
-  }
 
   DominatorTree dom_tree;
   dom_tree.buildDominatorTree(* mgr.getAnalysisDeclContext(D));

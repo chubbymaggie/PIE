@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ROOT="`dirname \"$0\"`"
-ROOT="`cd $ROOT && pwd`"
+ROOT="`cd \"$ROOT\" && pwd`"
 
-TARGET="`cd $1 && pwd`"
+TARGET="`cd \"$1\" && pwd`"
 
 cd "$ROOT/../mistral/example/"
 make all

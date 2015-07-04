@@ -2,7 +2,7 @@
 
 int main() {
   static int n, x = 0, m = 0;
-  INITIALIZE("(%d, %d, %d)\n", m, n, x);
+  INITIALIZE(3, m, n, x);
 
   while(x < n) {
     PRINT_VARS();

@@ -2,7 +2,7 @@
 
 int main() {
   int n, j, k, l = 0;
-  INITIALIZE("(%d, %d, %d, %d)\n", j, k, l, n);
+  INITIALIZE(4, j, k, l, n);
 
   assume(n > 0);
   j = k = n;

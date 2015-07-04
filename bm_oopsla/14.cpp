@@ -3,7 +3,7 @@
 int main() {
   int c1 = 4, c2 = 2;
   int n, v, i = 0, k = 0;
-  INITIALIZE("(%d, %d, %d, %d, %d, %d)", c1, c2, i, k, n, v);
+  INITIALIZE(6, c1, c2, i, k, n, v);
 
   assume(n > 0);
 

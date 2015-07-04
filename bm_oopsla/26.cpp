@@ -2,7 +2,7 @@
 
 int main() {
   int n, x = 0, y = 0, i = 0, m = 10;
-  INITIALIZE("(%d, %d, %d, %d, %d)\n", i, m, n, x, y);
+  INITIALIZE(5, i, m, n, x, y);
 
   while(i < n) {
     PRINT_VARS();

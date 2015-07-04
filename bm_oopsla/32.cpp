@@ -2,7 +2,7 @@
 
 int main() {
   int i, j, x, y;
-  INITIALIZE("(%d, %d, %d, %d)\n", i, j, x, y);
+  INITIALIZE(4, i, j, x, y);
 
   x = i;
   y = j;

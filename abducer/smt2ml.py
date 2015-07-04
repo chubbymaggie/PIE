@@ -8,6 +8,7 @@ import sys
 from subprocess import check_output
 
 cnt = 0
+uvars = []
 uniq_vars = {}
 uniq_consts = set([0])
 
@@ -88,6 +89,13 @@ MAX_SPACE = 3.2 * (10**4)
 PENALTY = 32
 
 def genTests():
+    if os.path.isfile('final_tests'):
+        with open('final_tests') as f:
+            models = f.readlines()
+        header = {uniq_vars[name.strip()] : idx for idx, name in enumerate(models[0].split('\t'))}
+        models = ([val.strip() for val in vals.split('\t')] for vals in models[1:])
+        return ((vals[header[v]] for v in uvars) for vals in models)
+
     space = pairwise(uniq_consts) + uniq_consts + ([(float('-inf'), uniq_consts[0]), (uniq_consts[-1], float('inf'))] * 3)
 
     if len(uniq_vars) * (len(space) ** len(uniq_vars)) > MAX_SPACE:

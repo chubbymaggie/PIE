@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# FIXME --- Old code, may not be working now
+# Compares Mistral vs specInfer for MCF files
+
 old_dir=`pwd`
 cur_time=$(date "+%Y.%m.%d-%H.%M.%S")
 file="infer-test.$cur_time"
