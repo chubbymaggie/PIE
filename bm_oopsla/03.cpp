@@ -6,8 +6,11 @@ int main() {
 
   while(unknown1()) {
     PRINT_VARS();
+    /*
     int z = unknown2();
     if(z > 5) w++;
+    */
+    if(unknown2()) w++;
     k += w;
   }
   PRINT_VARS();

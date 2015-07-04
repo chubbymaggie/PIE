@@ -430,24 +430,35 @@ namespace {
     //FIXME: Exponential exploration happening. Jump from dominator to dominator
 
     //FIXME: Assumed order: then, else
-    Expr* cond = dyn_cast<Expr>(to->getTerminatorCondition(false));
-
     ASTContext & ac = mgr.getASTContext();
     Expr* else_pred = cloneExpr(ac, pred);
 
+    bool non_deterministic = false;
+    Expr* cond = dyn_cast<Expr>(to->getTerminatorCondition(false));
+    if(isa<CallExpr>(cond->IgnoreCasts())) {
+      non_deterministic = true;
+      cond = new (ac) CXXBoolLiteralExpr (
+               true,
+               cond->getType(),
+               SourceLocation()
+             );
+    }
+    Expr* ncond = new (ac) UnaryOperator (
+                    cond,
+                    UO_LNot,
+                    cond->getType(),
+                    VK_LValue,
+                    OK_Ordinary,
+                    SourceLocation()
+                  );
+
+    // cond => pred
     wpOfSubgraph(pred, from, *(to->succ_begin()), dom_tree, reachables, mgr);
     pred = new (ac) ParenExpr(
       SourceLocation(),
       SourceLocation(),
       new (ac) BinaryOperator(
-        new (ac) UnaryOperator (
-          cond,
-          UO_LNot,
-          cond->getType(),
-          VK_LValue,
-          OK_Ordinary,
-          SourceLocation()
-        ),
+        ncond,
         pred,
         BO_LOr,
         cond->getType(),
@@ -457,11 +468,12 @@ namespace {
         false
       ));
 
+    // !cond => else_pred
     wpOfSubgraph(else_pred, from, *(to->succ_begin() + 1), dom_tree, reachables, mgr);
     else_pred = new (ac) ParenExpr(
       SourceLocation(), SourceLocation(),
       new (ac) BinaryOperator(
-        cond,
+        non_deterministic ? ncond : cond,
         else_pred,
         BO_LOr,
         cond->getType(),
@@ -483,6 +495,7 @@ namespace {
         SourceLocation(),
         false
       ));
+
     wpOfBlock(pred, to);
   }
 
@@ -502,7 +515,7 @@ namespace {
 
     wpOfSubgraph(verif, loop_head, &(cfg->getEntry()), dom_tree, reachables, mgr);
 
-    llvm::errs() << "\n   [V" << VERIFICATION_COUNT << "] Verification query (pre) = ";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pre} = ";
     verif -> printPretty(llvm::errs(), nullptr, mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
 
@@ -568,7 +581,7 @@ namespace {
       false
     );
 
-    llvm::errs() << "\n   [V" << VERIFICATION_COUNT << "] Verification query (ind) = ";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {ind} = ";
     verif -> printPretty(llvm::errs(), nullptr,
                          mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
@@ -631,7 +644,7 @@ namespace {
       false
     );
 
-    llvm::errs() << "\n   [V" << VERIFICATION_COUNT << "] Verification query = ";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pos} = ";
     verif -> printPretty(llvm::errs(), nullptr,
                          mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
@@ -663,7 +676,7 @@ namespace {
     if(!checkPostconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard))
       return false;
 
-    //TODO: May avoid checking again, if the previous call already fails and finally returns a verified pred
+    //TODO: May avoid checking again, if the previous call already passes and finally returns a verified pred
     return checkInductiveValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
   }
 

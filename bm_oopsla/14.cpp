@@ -10,8 +10,9 @@ int main() {
   while(i < n) {
     PRINT_VARS();
     i++;
-    if(unknown2() % 2 == 0) v = 0;
-    else                    v = 1;
+    // if(unknown2() % 2 == 0) v = 0;
+    if(unknown2()) v = 0;
+    else           v = 1;
 
     if(v == 0)  k += c1;
     else        k += c2;
