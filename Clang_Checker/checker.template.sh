@@ -1,5 +1,8 @@
 #!/bin/bash
 
+MAX_RUNS=128
+MAX_TESTS=4096
+
 ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
@@ -16,25 +19,30 @@ cp "$FILE" "$WORKING_PATH/"
 mv "$FILE.x" "$WORKING_PATH/"
 cd "$WORKING_PATH"
 
-# Generate a bunch of tests
-echo -ne "(*) Collecting test data ... 1 / 8"
+# Generate a bunch of tests from $MAX_RUNS successful runs
 "./$FILE.x" > header
 head -n 1 < header > final_tests
-tail -n +2 < header > tests
-for i in `seq 2 8`; do
-  echo -ne "\r(*) Collecting test data ... $i / 8"
-  "./$FILE.x" | tail -n +2 >> tests
+echo "" > tests
+for i in `seq 1 $MAX_RUNS`; do
+  echo -ne "\r(*) Collecting test data ... $i / $MAX_RUNS"
+  TESTS=`"./$FILE.x"`
+  while [ $? -ne 0 ]; do
+    TESTS=`"./$FILE.x"`
+  done
+  echo "$TESTS" | tail -n +2 >> tests
 done
 
-# Uniquify the tests and select at most 1024
-sort -u tests | shuf -n 1536 >> final_tests
+# Uniquify the tests and select at most $MAX_TESTS
+sort -u tests | shuf -n $MAX_TESTS >> final_tests
+TESTS="`wc -l final_tests`"
+echo " ==> $TESTS."
 
 # Clean up
 rm -rf header tests
 
 # Call the monster
 cd "$ROOT"
-echo -ne "\n\n(*) Checking loop invariant:\n"
+echo -ne "\n(*) Checking loop invariant:\n"
 bin/clang++ --std=c++11 -c -w -Xclang -analyze                          \
             -Xclang -analyzer-checker=alpha.core.LoopInvariantChecker   \
             "$1"

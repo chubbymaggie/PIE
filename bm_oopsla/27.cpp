@@ -4,6 +4,12 @@ int main() {
   int x, y, k, i, n, j = 0, m = 0;
   INITIALIZE(7, i, j, k, m, n, x, y);
 
+  x = unknown();
+  y = unknown();
+  k = unknown();
+  i = unknown();
+  n = unknown();
+
   assume((x+y) == k);
 
   while(j < n) {
@@ -16,7 +22,7 @@ int main() {
       x--;
     }
 
-    if(unknown1()) m = j;
+    if(unknown4()) m = j;
     j++;
   }
   PRINT_VARS();

@@ -30,12 +30,12 @@ int uni_rand_interval(int min, int max)
     return min + (r / buckets);
 }
 
-#define RAND_LOW -16
-#define RAND_HIGH 16
+#define RAND_LOW -48
+#define RAND_HIGH 48
 
 //TODO: Hack to terminate early. Assumes termination condition is zero.
 //      Better idea?
-#define MAX_RUNS 256
+#define MAX_RUNS 512
 unsigned short runs = 0;
 
 int unknown() {
@@ -46,7 +46,9 @@ int unknown() {
 int unknown1() { return unknown(); }
 int unknown2() { return unknown(); }
 int unknown3() { return unknown(); }
-int unknown4() { return unknown(); }
+
+// A boolean unknown function
+int unknown4() { return uni_rand_interval(0, 1); }
 
 void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }

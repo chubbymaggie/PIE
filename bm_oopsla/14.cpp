@@ -5,11 +5,13 @@ int main() {
   int n, v, i = 0, k = 0;
   INITIALIZE(6, c1, c2, i, k, n, v);
 
+  n = unknown();
   assume(n > 0);
 
   while(i < n) {
     PRINT_VARS();
     i++;
+
     // if(unknown2() % 2 == 0) v = 0;
     if(unknown2()) v = 0;
     else           v = 1;

@@ -25,6 +25,7 @@ ln -fs "$ROOT/../mistral/example/chkVALID"  chkVALID
 ln -fs "$ROOT/../mistral/example/simplify"  simplify
 ln -fs "$ROOT/../mistral/example/verify"    verify
 
+ln -fs "$ROOT/replay.sh"     replay
 ln -fs "$ROOT/smt2ml.py"     smt2ml
 ln -fs "$ROOT/var_repl.py"   var_replace
 ln -fs "$ROOT/preprocess.py" preprocess

@@ -451,7 +451,7 @@ let pacLearnSpec ?(k=3) (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(featu
     : ('c cnf option * 'c) list =
 
   let featureLen = BatList.length features in
-  prerr_string ("\r  > Inferring [k = " ^ (string_of_int k) ^ "] (" ^ (string_of_int featureLen) ^ "f x " ^ (string_of_int (List.length tests)) ^ "t) ...                                     "); flush_all();
+  prerr_string ("\r    [%] Inferring [k = " ^ (string_of_int k) ^ "] (" ^ (string_of_int featureLen) ^ "f x " ^ (string_of_int (List.length tests)) ^ "t) ...                                     "); flush_all();
   
   (* create the truth assignment corresponding to each test in tests by evaluating the features *)
   let examples =
@@ -493,7 +493,7 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
     (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list)) (iconsts : int list)
     (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
 
-  prerr_string "\r  > Removing conflicts ...                                     "; flush_all();
+  prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
   let features = if fst trans = [] then features else convergeAllFeatures f tests features [post] trans iconsts in
 
   if missingFeatures f tests features post != [] then None else (
@@ -527,7 +527,7 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
         print_cnf our_output res ;
         close_out our_output ;
         Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
-        prerr_string "\r  > Verifying: ";
+        prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
         let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
         prerr_string "                            \n" ; flush_all();
         Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour ") ;
@@ -537,6 +537,6 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
                 Sys.command("./var_replace revVals " ^ smtfile ^ ".tml < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
                 let res_file = open_in (smtfile ^ ".our") in
                 let int_args = (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans)) in
-                prerr_endline ("    + Added test ... " ^ (String.concat "," (List.map string_of_int int_args)));
+                prerr_endline ("      [+] Added test ... " ^ (String.concat "," (List.map string_of_int int_args)));
                 close_in res_file;
                 pacLearnSpecNSATVerify ~k:1 ~unsats:unsats f ((trans_test int_args) :: tests) features post trans iconsts trans_test smtfile)))

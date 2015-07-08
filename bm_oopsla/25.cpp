@@ -4,6 +4,8 @@ int main() {
   int m, n, y, x = 0;
   INITIALIZE(4, m, n, x, y);
 
+  m = unknown();
+  n = unknown();
   assume(n >= 0);
   assume(m >= 0 && m < n);
   y = m;

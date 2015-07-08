@@ -4,6 +4,7 @@ int main() {
   int n, i, k, j = 0;
   INITIALIZE(4, i, j, k, n);
 
+  n = unknown();
   assume(n > 0);
   assume(k > n);
 

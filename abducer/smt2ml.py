@@ -93,7 +93,7 @@ def genTests():
         with open('final_tests') as f:
             models = f.readlines()
         header = {uniq_vars[name.strip()] : idx for idx, name in enumerate(models[0].split('\t')) if name.strip() in uniq_vars}
-        models = ([val.strip() for val in vals.split('\t')] for vals in models[1:])
+        models = ([val.strip() for val in vals.split('\t')] for vals in models[1:] if len(vals.strip()) > 0)
         return ((vals[header[v]] for v in uvars) for vals in models)
 
     space = pairwise(uniq_consts) + uniq_consts + ([(float('-inf'), uniq_consts[0]), (uniq_consts[-1], float('inf'))] * 3)

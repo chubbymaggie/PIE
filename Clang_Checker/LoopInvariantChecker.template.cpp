@@ -256,7 +256,7 @@ namespace {
   }
 
   void wpOfVarDecl(Expr * & pred, const VarDecl * vdecl) {
-    if(vdecl->hasInit())
+    if(vdecl->hasInit() && !isa<CallExpr>(vdecl->getInit()->IgnoreCasts()))
       substituteVarInAST(vdecl->getASTContext(), pred, vdecl->getNameAsString(),
         new (vdecl->getASTContext()) ParenExpr(
           SourceLocation(), SourceLocation(),
@@ -346,6 +346,7 @@ namespace {
 
   void wpOfBinaryOperator(Expr * & pred, const BinaryOperator * bop) {
     if(bop->getOpcode() == BO_Assign) {
+      if(isa<CallExpr>(bop->getRHS()->IgnoreCasts())) return;
       ASTContext & ac = (dyn_cast<DeclRefExpr>(bop->getLHS()))->getDecl()->getASTContext();
       std::string var = (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString();
       substituteVarInAST(ac, pred, var, new (ac) ParenExpr(

@@ -4,6 +4,8 @@ int main() {
   int x = -50, y;
   INITIALIZE(2, x, y);
 
+  y = unknown();
+
   while(x < 0) {
     PRINT_VARS();
     x = x+y;

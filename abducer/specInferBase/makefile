@@ -8,7 +8,10 @@ dep-only: escher_components.ml escher_core.ml escher_types.ml escher_synth.ml sp
 
 clean:
 	rm -f *.cm* *.o
-	rm -f *.mcf.*our *.mcf.tml *.e
+	rm -f *.mcf.*our *.e
 
-dist-clean: clean
+cleaner:
+	rm -f *.mcf.tml
+
+dist-clean: clean cleaner
 	rm -f *.ml simplify abduce chkSAT chkVALID verify var_replace smt2ml makefile infer-test*

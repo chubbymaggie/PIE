@@ -4,6 +4,8 @@ int main() {
   int n, x = 0;
   INITIALIZE(2, n, x);
 
+  n = unknown();
+
   while(x < n) {
     PRINT_VARS();
     x++;

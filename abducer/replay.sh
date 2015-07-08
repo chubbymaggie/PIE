@@ -1,32 +1,17 @@
 #!/bin/bash
 
-ROOT="`dirname \"$0\"`"
-ROOT="`cd \"$ROOT\" && pwd`"
-
 if [[ ! -f "$1" ]]; then
   exit 1
 fi
 
-TARGET="`dirname \"$1\"`"
-FILE="`basename \"$1\"`"
-
-"$ROOT/link.sh" "$TARGET"
-cd "$TARGET"
+FILE="$1"
 
 make clean ; make
 
 echo -ne "\n... $FILE ... \n"
 
-# Simplify initial query
-echo -ne "-\n-\n" > f
-SIM_QUERY="`./simplify \"$FILE\"`"
-echo "$SIM_QUERY" >> f
-mv f "$FILE"
-
-echo -ne "   [#] Simplified query: $SIM_QUERY\n" >&2
-
-# MCF Query to OCaml code
-./smt2ml "$FILE" > "$FILE.tml"
+# Just verify SAT, use old .tml
+./smt2ml "$FILE" > "/tmp/$FILE.tml"
 if [[ $? != 0 ]]; then
   echo "false" > "$FILE.sinf"
   exit 1

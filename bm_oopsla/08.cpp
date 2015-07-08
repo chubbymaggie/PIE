@@ -4,6 +4,7 @@ int main() {
   int n, i = 0, j = 0;
   INITIALIZE(3, n, i, j);
 
+  n = unknown();
   assume(n >= 0);
 
   while(i < n) {
