@@ -4,10 +4,10 @@ OWN_ROOT="`dirname "$0"`"
 OWN_ROOT="`cd \"$OWN_ROOT\" && pwd`"
 
 LLVM_ROOT="`cd \"$1\" && pwd`"
-WORKING_ROOT="`cd \"$2\" && pwd`"
 
 MISTRAL_ROOT="`cd ../mistral/ && pwd`"
 ABDUCER_ROOT="`cd ../abducer/ && pwd`"
+WORKING_ROOT="`cd ../bm_oopsla_logs/ && pwd`"
 
 cd "$LLVM_ROOT/tools/clang/lib/StaticAnalyzer/Checkers/"
 patch -bN < "$OWN_ROOT/patch"

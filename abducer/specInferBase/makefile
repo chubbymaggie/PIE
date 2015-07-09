@@ -10,8 +10,8 @@ clean:
 	rm -f *.cm* *.o
 	rm -f *.mcf.*our *.e
 
-cleaner:
+cleaner: clean
 	rm -f *.mcf.tml
 
-dist-clean: clean cleaner
+dist-clean: cleaner
 	rm -f *.ml simplify abduce chkSAT chkVALID verify var_replace smt2ml makefile infer-test*

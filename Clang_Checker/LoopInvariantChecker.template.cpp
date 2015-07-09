@@ -27,6 +27,7 @@
 #define MISTRAL_PATH "__MISTRAL_PATH_FROM_SETUP_SCRIPT__"
 #define ABDUCER_PATH "__ABDUCER_PATH_FROM_SETUP_SCRIPT__"
 
+std::string MAIN_FILENAME;
 std::string WORKING_PATH = "__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/";
 
 unsigned long COUNT = 0, ABDUCTION_COUNT = 0, VERIFICATION_COUNT = 0;
@@ -201,14 +202,15 @@ namespace {
 
   Expr * getASTFor(const std::string & mcf, bool in_mcf = true) {
     std::string c_code = mcf;
+    std::string target = "/tmp/" + MAIN_FILENAME + "_ast_" + std::to_string(COUNT) + ".c";
     if(in_mcf) doCPPify(c_code);
     {
-      std::ofstream out("/tmp/00X00.c");
+      std::ofstream out(target);
       out << c_code;
     }
 
     std::unique_ptr<std::vector<const char *> > args(new std::vector<const char*>());
-    args->push_back("/tmp/00X00.c");
+    args->push_back(target.c_str());
 
     //FIXME: Possible memory leak? When is this ASTUnit destroyed?
     ASTUnit * au = ASTUnit::LoadFromCommandLine(
@@ -501,7 +503,7 @@ namespace {
   }
 
   std::string abduce(AnalysisManager & mgr, const Expr * query) {
-    llvm::errs() << "\n   ? Abduction query = ";
+    llvm::errs() << "\n   [Q] Abduction query = ";
     query -> printPretty(llvm::errs(), nullptr, mgr.getASTContext().getPrintingPolicy());
     llvm::errs() << "\n";
 
@@ -691,17 +693,14 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
   if(!fd) return;
 
   IdentifierInfo *FnInfo = fd->getIdentifier();
-  if (!FnInfo) return;
-
-  if(!FnInfo->isStr("main"))
-    return;
+  if(!FnInfo || !FnInfo->isStr("main")) return;
 
   CFG *cfg = mgr.getCFG(D);
-  if(!cfg)
-    return;
+  if(!cfg) return;
 
-  StringRef main_path = mgr.getSourceManager().getFilename(D->getLocation()).str();
-  WORKING_PATH += main_path.drop_front(main_path.rfind('/') + 1).str();
+  StringRef main_path = mgr.getSourceManager().getFilename(D->getLocation());
+  MAIN_FILENAME = main_path.drop_front(main_path.rfind('/') + 1).str();
+  WORKING_PATH += MAIN_FILENAME;
 
   DominatorTree dom_tree;
   dom_tree.buildDominatorTree(* mgr.getAnalysisDeclContext(D));
