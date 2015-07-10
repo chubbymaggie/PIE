@@ -37,8 +37,8 @@ ParserElement.enablePackrat()
 
 LPAR, RPAR = map(Suppress, '()')
 
-aop0 = oneOf('+ -')
-aop1 = oneOf('* /')
+aop0 = oneOf('* /')
+aop1 = oneOf('+ -')
 aop2 = oneOf('%').setParseAction(lambda s,l,t: ['mod'])
 bop = oneOf('& |').setParseAction(lambda s,l,t: [t[0]+t[0]])
 NOT = Literal('!')
