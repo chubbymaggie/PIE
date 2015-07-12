@@ -10,9 +10,14 @@
 
 ## Status
 
-### Single-Loop Programs (:white_check_mark: = 22 / 26)
+Limitations of the Clang plugin:
+  - Only single loop
+  - Only `main` function is analyzed by plugin
+  - No boolean operators (`&&`, `||` etc.) because of short-circuiting
 
-| Test         | Invariant                                 | Remark                       |
+### Single-Loop Programs (:white_check_mark: = 25 / 26)
+
+| Test         | Invariant                                 | Status (Restarts > 0)        |
 | ------------ | :---------------------------------------: | :--------------------------: |
 | [00](00.cpp) | ![00_inv](http://mathurl.com/oc7ea3o.png) | :white_check_mark:           |
 | [01](01.cpp) | ![01_inv](http://mathurl.com/qfhcrfh.png) | :white_check_mark:           |
@@ -23,7 +28,7 @@
 | [07](07.cpp) | ![07_inv](http://mathurl.com/q5ssdys.png) | :white_check_mark:           |
 | [08](08.cpp) | ![08_inv](http://mathurl.com/p8gbrxa.png) | :white_check_mark:           |
 | [09](09.cpp) | ![09_inv](http://mathurl.com/oq2y9ap.png) | :white_check_mark:           |
-| [10](10.cpp) | ![10_inv](http://mathurl.com/nataogh.png) | :white_check_mark:           |
+| [10](10.cpp) | ![10_inv](http://mathurl.com/nataogh.png) | :white_check_mark: (1)       |
 | [11](11.cpp) | ![11_inv](http://mathurl.com/nlpgffe.png) | :white_check_mark:           |
 | [12](12.cpp) | ![12_inv](http://mathurl.com/nc9vwyl.png) | :white_check_mark:           |
 | [13](13.cpp) | ![13_inv](http://mathurl.com/nhag4gb.png) | :white_check_mark:           |
@@ -33,8 +38,8 @@
 | [19](19.cpp) | ![19_inv](http://mathurl.com/o3p6llt.png) | :white_check_mark:           |
 | [22](22.cpp) | ![22_inv](http://mathurl.com/nzpt6df.png) | :white_check_mark:           |
 | [23](23.cpp) | ![23_inv](http://mathurl.com/pawny6x.png) | :white_check_mark:           |
-| [24](24.cpp) | ![24_inv](http://mathurl.com/py8jd3p.png) | Too strong                   |
-| [25](25.cpp) | ![25_inv](http://mathurl.com/py8jd3p.png) | Too strong                   |
+| [24](24.cpp) | ![24_inv](http://mathurl.com/ph5hmgr.png) | :white_check_mark:           |
+| [25](25.cpp) | ![25_inv](http://mathurl.com/o8mjsdf.png) | :white_check_mark:           |
 | [26](26.cpp) | ![26_inv](http://mathurl.com/pluqjcs.png) | :white_check_mark:           |
 | [27](27.cpp) | ![27_inv](http://mathurl.com/py8jd3p.png) | Ran out of coffee & patience |
 | [28](28.cpp) | ![28_inv](http://mathurl.com/pjbgymx.png) | :white_check_mark:           |

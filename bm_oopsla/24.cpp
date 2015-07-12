@@ -6,6 +6,7 @@ int main() {
 
   n = unknown();
   assume(n > 0);
+  k = unknown();
   assume(k > n);
 
   while(j < n) {

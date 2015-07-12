@@ -14,7 +14,10 @@ int main() {
   }
   PRINT_VARS();
 
-  if(n > 0) assert(0 <= m && m < n);
+  if(n > 0) {
+    assert(0 <= m);
+    assert(m < n);
+  }
   return 0;
 }
 

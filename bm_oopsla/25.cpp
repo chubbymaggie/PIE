@@ -7,7 +7,8 @@ int main() {
   m = unknown();
   n = unknown();
   assume(n >= 0);
-  assume(m >= 0 && m < n);
+  assume(m >= 0);
+  assume(m < n);
   y = m;
 
   while(x < n) {

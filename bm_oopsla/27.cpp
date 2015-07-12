@@ -7,10 +7,10 @@ int main() {
   x = unknown();
   y = unknown();
   k = unknown();
+  assume((x+y) == k);
+
   i = unknown();
   n = unknown();
-
-  assume((x+y) == k);
 
   while(j < n) {
     PRINT_VARS();

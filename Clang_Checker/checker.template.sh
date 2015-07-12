@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MAX_RUNS=128
-MAX_TESTS=4096
+MAX_RUNS=200
+MAX_TESTS=5000
 
 ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
