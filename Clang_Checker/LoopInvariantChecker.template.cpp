@@ -44,7 +44,7 @@ using namespace ento;
 
 namespace {
 
-  typedef std::list<CFGBlock*> CFGPath;
+  enum CheckResult { FAILED, PASSED, VERIFIED };
 
   class LoopInvariantChecker : public Checker<check::ASTDecl<FunctionDecl>> {
 
@@ -161,7 +161,7 @@ namespace {
     return result;
   }
 
-  bool chkVALID(const Expr * pred) {
+  bool chkVALID(const Expr * pred, bool add_counter = false) {
     std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "V" + std::to_string(++VERIFICATION_COUNT) + ".mcf";
     writeMCF(pred, target);
 
@@ -176,7 +176,15 @@ namespace {
       std::ifstream in(target + ".res");
       std::getline(in, result);
     }
-    return result.substr(0,5) == "VALID";
+
+    if(result.substr(0,5) == "VALID") return true;
+
+    if(add_counter) {
+      std::string command = WORKING_PATH + "/add_counter " + WORKING_PATH + "/final_tests " + target + ".res";
+      system(command.c_str());
+    }
+
+    return false;
   }
 
   std::string simplify(std::string mcf_pred) {
@@ -512,8 +520,24 @@ namespace {
     return res;
   }
 
-  bool checkPreconditionValidity(AnalysisManager & mgr, const std::string & pred, CFGBlock * loop_head,
-                                 CFG* cfg, DominatorTree * dom_tree, CFGReverseBlockReachabilityAnalysis * reachables) {
+  CheckResult checkValidity(AnalysisManager & mgr,
+                            std::string & pred,
+                            CFGBlock* loop_head,
+                            CFG * cfg,
+                            DominatorTree *dom_tree,
+                            CFGReverseBlockReachabilityAnalysis *reachables,
+                            Expr * guard,
+                            Expr * nguard);
+
+  CheckResult checkPreconditionValidity(AnalysisManager & mgr,
+                                        std::string & pred,
+                                        CFGBlock* loop_head,
+                                        CFG * cfg,
+                                        DominatorTree *dom_tree,
+                                        CFGReverseBlockReachabilityAnalysis *reachables,
+                                        Expr * guard,
+                                        Expr * nguard) {
+
     Expr * verif = getASTFor(pred);
 
     wpOfSubgraph(verif, loop_head, &(cfg->getEntry()), dom_tree, reachables, mgr);
@@ -523,28 +547,25 @@ namespace {
     llvm::errs() << "\n";
 
     bool res;
-    llvm::errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
+    llvm::errs() << "     - Result = " << (res = chkVALID(verif, true)) << "\n";
 
-    return res;
+    if(!res) {
+      llvm::errs() << "\n ----------------------------------------< RESTART >---------------------------------------- \n";
+      pred = "true";
+      return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
+    }
+
+    return PASSED;
   }
 
-  bool checkValidity(AnalysisManager & mgr,
-                     std::string & pred,
-                     CFGBlock* loop_head,
-                     CFG * cfg,
-                     DominatorTree *dom_tree,
-                     CFGReverseBlockReachabilityAnalysis *reachables,
-                     Expr * guard,
-                     Expr * nguard);
-
-  bool checkInductiveValidity(AnalysisManager & mgr,
-                              std::string & pred,
-                              CFGBlock* loop_head,
-                              CFG* cfg,
-                              DominatorTree *dom_tree,
-                              CFGReverseBlockReachabilityAnalysis *reachables,
-                              Expr * guard,
-                              Expr * nguard) {
+  CheckResult checkInductiveValidity(AnalysisManager & mgr,
+                                     std::string & pred,
+                                     CFGBlock* loop_head,
+                                     CFG* cfg,
+                                     DominatorTree *dom_tree,
+                                     CFGReverseBlockReachabilityAnalysis *reachables,
+                                     Expr * guard,
+                                     Expr * nguard) {
 
     Expr * inv_guess = getASTFor(pred);
 
@@ -597,17 +618,17 @@ namespace {
       return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
 
-    return res;
+    return PASSED;
   }
 
-  bool checkPostconditionValidity(AnalysisManager & mgr,
-                                  std::string & pred,
-                                  CFGBlock* loop_head,
-                                  CFG* cfg,
-                                  DominatorTree *dom_tree,
-                                  CFGReverseBlockReachabilityAnalysis *reachables,
-                                  Expr * guard,
-                                  Expr * nguard) {
+  CheckResult checkPostconditionValidity(AnalysisManager & mgr,
+                                         std::string & pred,
+                                         CFGBlock* loop_head,
+                                         CFG* cfg,
+                                         DominatorTree *dom_tree,
+                                         CFGReverseBlockReachabilityAnalysis *reachables,
+                                         Expr * guard,
+                                         Expr * nguard) {
 
     Expr * inv_guess = getASTFor(pred);
 
@@ -660,10 +681,10 @@ namespace {
       return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
 
-    return res;
+    return PASSED;
   }
 
-  bool checkValidity(AnalysisManager & mgr,
+  CheckResult checkValidity(AnalysisManager & mgr,
                      std::string & pred,
                      CFGBlock* loop_head,
                      CFG* cfg,
@@ -673,14 +694,18 @@ namespace {
                      Expr * nguard) {
     llvm::errs() << "\n   # Invariant Guess = " << pred << "\n";
 
-    if(!checkPreconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables))
-      return false;
+    CheckResult cr;
 
-    if(!checkPostconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard))
-      return false;
+    if((cr = checkPreconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard)) != PASSED)
+      return cr;
 
-    //TODO: May avoid checking again, if the previous call already passes and finally returns a verified pred
-    return checkInductiveValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
+    if((cr = checkPostconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard)) != PASSED)
+      return cr;
+
+    if((cr = checkInductiveValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard)) != FAILED)
+      return VERIFIED;
+
+    return FAILED;
   }
 
 } // end anonymous namespace
@@ -760,7 +785,7 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
 
   std::string guess = "true";
 
-  if(checkValidity(mgr, guess, loop_head, cfg, &dom_tree, &reachables, non_deterministic ? nguard : guard, nguard))
+  if(checkValidity(mgr, guess, loop_head, cfg, &dom_tree, &reachables, non_deterministic ? nguard : guard, nguard) == VERIFIED)
     llvm::errs() << "\n\n[###] Final invariant = " << guess << " [###]\n";
   else
     llvm::errs() << "\n\n[---] Invariant could not be determined. [---]\n";

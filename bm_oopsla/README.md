@@ -10,7 +10,7 @@
 
 ## Status
 
-### Single-Loop Programs (:white_check_mark: = 18 / 26)
+### Single-Loop Programs (:white_check_mark: = 22 / 26)
 
 | Test         | Invariant                                 | Remark                       |
 | ------------ | :---------------------------------------: | :--------------------------: |
@@ -23,10 +23,10 @@
 | [07](07.cpp) | ![07_inv](http://mathurl.com/q5ssdys.png) | :white_check_mark:           |
 | [08](08.cpp) | ![08_inv](http://mathurl.com/p8gbrxa.png) | :white_check_mark:           |
 | [09](09.cpp) | ![09_inv](http://mathurl.com/oq2y9ap.png) | :white_check_mark:           |
-| [10](10.cpp) | ![10_inv](http://mathurl.com/py8jd3p.png) | Too strong                   |
+| [10](10.cpp) | ![10_inv](http://mathurl.com/nataogh.png) | :white_check_mark:           |
 | [11](11.cpp) | ![11_inv](http://mathurl.com/nlpgffe.png) | :white_check_mark:           |
 | [12](12.cpp) | ![12_inv](http://mathurl.com/nc9vwyl.png) | :white_check_mark:           |
-| [13](13.cpp) | ![13_inv](http://mathurl.com/py8jd3p.png) | Too strong                   |
+| [13](13.cpp) | ![13_inv](http://mathurl.com/nhag4gb.png) | :white_check_mark:           |
 | [14](14.cpp) | ![14_inv](http://mathurl.com/p3ju4lr.png) | :white_check_mark:           |
 | [17](17.cpp) | ![17_inv](http://mathurl.com/ojo9lk9.png) | :white_check_mark:           |
 | [18](18.cpp) | ![18_inv](http://mathurl.com/qg5yno2.png) | :white_check_mark:           |

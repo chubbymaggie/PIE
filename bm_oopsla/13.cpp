@@ -6,13 +6,15 @@ int main() {
 
   i = unknown();
   j = unknown();
-  assume(i > 0);
+  assume(i >= l);
   x = i; y = j;
 
   while(x != l) {
+    PRINT_VARS();
     x--;
     y--;
   }
+  PRINT_VARS();
 
   if(i == j) assert(y == l);
   return 0;

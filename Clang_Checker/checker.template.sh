@@ -15,7 +15,7 @@ g++ --std=c++11 "$FILE" -o "$FILE.x"
 
 rm -rf "$WORKING_PATH"
 mkdir "$WORKING_PATH"
-cp "$FILE" "$WORKING_PATH/"
+ln -rf "$FILE" "$WORKING_PATH/$FILE"
 mv "$FILE.x" "$WORKING_PATH/"
 cd "$WORKING_PATH"
 
