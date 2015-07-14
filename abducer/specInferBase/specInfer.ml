@@ -499,7 +499,7 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
   if missingFeatures f tests features post != [] then None else (
     let res = fst (List.hd (pacLearnSpec ~k:k f ~tests:tests ~features:features [post])) in
     if res = None then (
-      prerr_endline ""; pacLearnSpecNSATVerify ~k:(k + 1) ~unsats:unsats f tests features post trans iconsts trans_test smtfile
+      pacLearnSpecNSATVerify ~k:(k + 1) ~unsats:unsats f tests features post trans iconsts trans_test smtfile
     (* TODO: res is FALSE, add new model ::
       let mtests = missingTests tests features ~incompatible:unsats in
         if mtests = None then res

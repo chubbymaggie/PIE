@@ -7,6 +7,7 @@ ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
 FILE="`basename \"$1\"`"
+ABDUCER_PATH="__ABDUCER_PATH_FROM_SETUP_SCRIPT__"
 WORKING_PATH="__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/$FILE"
 
 # Compile the program
@@ -15,11 +16,11 @@ g++ --std=c++11 "$FILE" -o "$FILE.x"
 
 rm -rf "$WORKING_PATH"
 mkdir "$WORKING_PATH"
-ln -rf "$FILE" "$WORKING_PATH/$FILE"
+ln -rfs "$FILE" "$WORKING_PATH/$FILE"
 mv "$FILE.x" "$WORKING_PATH/"
-cd "$WORKING_PATH"
 
 # Generate a bunch of tests from $MAX_RUNS successful runs
+cd "$WORKING_PATH"
 "./$FILE.x" > header
 head -n 1 < header > final_tests
 echo "" > tests
@@ -37,8 +38,9 @@ sort -u tests | shuf -n $MAX_TESTS >> final_tests
 TESTS="`wc -l final_tests`"
 echo " ==> $TESTS."
 
-# Clean up
+# Clean up & link
 rm -rf header tests
+"$ABDUCER_PATH/link.sh" "$WORKING_PATH"
 
 # Call the monster
 cd "$ROOT"

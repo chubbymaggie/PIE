@@ -24,7 +24,6 @@
 
 #include "../../Sema/TreeTransform.h"
 
-#define MISTRAL_PATH "__MISTRAL_PATH_FROM_SETUP_SCRIPT__"
 #define ABDUCER_PATH "__ABDUCER_PATH_FROM_SETUP_SCRIPT__"
 
 std::string MAIN_FILENAME;
@@ -165,7 +164,7 @@ namespace {
     std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "V" + std::to_string(++VERIFICATION_COUNT) + ".mcf";
     writeMCF(pred, target);
 
-    std::string command = MISTRAL_PATH "/example/chkVALID ";
+    std::string command = WORKING_PATH + "/chkVALID ";
     command += target;
     command += " 0 > ";
     command += target + ".res";
@@ -194,7 +193,7 @@ namespace {
       mcf_file << mcf_pred;
     }
 
-    std::string command = MISTRAL_PATH "/example/simplify ";
+    std::string command = WORKING_PATH + "/simplify ";
     command += target;
     command += " 0 > ";
     command += target + ".sim";

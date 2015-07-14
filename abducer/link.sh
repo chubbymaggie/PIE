@@ -6,7 +6,7 @@ ROOT="`cd \"$ROOT\" && pwd`"
 TARGET="`cd \"$1\" && pwd`"
 
 cd "$ROOT/../mistral/example/"
-make all
+make all > /dev/null
 
 cd "$TARGET"
 
