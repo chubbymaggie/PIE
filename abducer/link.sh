@@ -19,11 +19,17 @@ ln -fs "$ROOT/specInferBase/specInfer.ml"   specInfer.ml
 ln -fs "$ROOT/specInferBase/top_helper.ml"  top_helper.ml
 ln -fs "$ROOT/specInferBase/makefile"       makefile
 
-ln -fs "$ROOT/../mistral/example/abduce"    abduce
-ln -fs "$ROOT/../mistral/example/chkSAT"    chkSAT
-ln -fs "$ROOT/../mistral/example/chkVALID"  chkVALID
-ln -fs "$ROOT/../mistral/example/simplify"  simplify
-ln -fs "$ROOT/../mistral/example/verify"    verify
+#ln -fs "$ROOT/../mistral/example/abduce"    abduce
+#ln -fs "$ROOT/../mistral/example/chkSAT"    chkSAT
+#ln -fs "$ROOT/../mistral/example/chkVALID"  chkVALID
+#ln -fs "$ROOT/../mistral/example/simplify"  simplify
+#ln -fs "$ROOT/../mistral/example/verify"    verify
+
+ln -fs "$ROOT/../z3/mcf2smtlib.py"  mcf2smtlib.py
+ln -fs "$ROOT/../z3/chkSAT.py"      chkSAT
+ln -fs "$ROOT/../z3/chkVALID.py"    chkVALID
+ln -fs "$ROOT/../z3/simplify.py"    simplify
+ln -fs "$ROOT/../z3/verify.py"      verify
 
 ln -fs "$ROOT/replay.sh"        replay
 ln -fs "$ROOT/smt2ml.py"        smt2ml

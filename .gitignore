@@ -8,6 +8,8 @@
 *.cmxs
 *.cmxa
 
+*.pyc
+
 bm_oopsla_logs
 
 abducer/X

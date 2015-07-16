@@ -54,7 +54,7 @@ term = ivar | ival | var
 expr = operatorPrecedence(term, [
                             (aop0, 2, opAssoc.LEFT, ),
                             (aop1, 2, opAssoc.LEFT, ),
-                            (aop2, 2, opAssoc.LEFT, )
+                            (aop2, 2, opAssoc.LEFT, lambda s,l,t: [[[t[0][0], 'mod', t[0][2]], '+', t[0][2]], 'mod', t[0][2]])
                          ])
 
 stmt = const | (expr + rop + expr)

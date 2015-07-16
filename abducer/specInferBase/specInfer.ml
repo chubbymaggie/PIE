@@ -19,6 +19,7 @@ type truthAssignment = (int, bool) BatHashtbl.t
      - there is no k-CNF formula (for some particular k being used) that distinguishes the positive and negative examples
 *)
 exception NoSuchFunction    
+exception BadCounterExample
 
 let string_of_truthAssignment ta =
   "[" ^ (BatHashtbl.fold (fun i b str -> str ^ "(" ^ (string_of_int i) ^ "," ^ (string_of_bool b) ^ "); ") ta "") ^ "]"
@@ -539,4 +540,5 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
                 let int_args = (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans)) in
                 prerr_endline ("      [+] Added test ... " ^ (String.concat "," (List.map string_of_int int_args)));
                 close_in res_file;
-                pacLearnSpecNSATVerify ~k:1 ~unsats:unsats f ((trans_test int_args) :: tests) features post trans iconsts trans_test smtfile)))
+                if f (trans_test int_args) then raise BadCounterExample else (
+                pacLearnSpecNSATVerify ~k:1 ~unsats:unsats f ((trans_test int_args) :: tests) features post trans iconsts trans_test smtfile))))
