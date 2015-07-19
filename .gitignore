@@ -10,7 +10,7 @@
 
 *.pyc
 
-bm_oopsla_logs
+logs
 
 abducer/X
 

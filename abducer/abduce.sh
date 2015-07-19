@@ -4,6 +4,7 @@ ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
 if [[ ! -f "$1" ]]; then
+  echo "--- File $1 doesn't exist. ABORT ---"
   exit 1
 fi
 

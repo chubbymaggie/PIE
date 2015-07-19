@@ -5,7 +5,7 @@ OWN_ROOT="`cd \"$OWN_ROOT\" && pwd`"
 
 LLVM_ROOT="`cd \"$1\" && pwd`"
 ABDUCER_ROOT="`cd ../abducer/ && pwd`"
-WORKING_ROOT="`cd ../bm_oopsla_logs/ && pwd`"
+WORKING_ROOT="`cd ../logs/ && pwd`"
 
 cd "$LLVM_ROOT/tools/clang/lib/StaticAnalyzer/Checkers/"
 patch -bN < "$OWN_ROOT/patch"

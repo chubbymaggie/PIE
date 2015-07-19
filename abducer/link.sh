@@ -10,14 +10,14 @@ make all > /dev/null
 
 cd "$TARGET"
 
-ln -fs "$ROOT/specInferBase/escher_core.ml"         escher_core.ml
-ln -fs "$ROOT/specInferBase/escher_components.ml"   escher_components.ml
-ln -fs "$ROOT/specInferBase/escher_types.ml"        escher_types.ml
-ln -fs "$ROOT/specInferBase/escher_synth.ml"        escher_synth.ml
+ln -fs "$ROOT/../base/escher_core.ml"         escher_core.ml
+ln -fs "$ROOT/../base/escher_components.ml"   escher_components.ml
+ln -fs "$ROOT/../base/escher_types.ml"        escher_types.ml
+ln -fs "$ROOT/../base/escher_synth.ml"        escher_synth.ml
 
-ln -fs "$ROOT/specInferBase/specInfer.ml"   specInfer.ml
-ln -fs "$ROOT/specInferBase/top_helper.ml"  top_helper.ml
-ln -fs "$ROOT/specInferBase/makefile"       makefile
+ln -fs "$ROOT/../base/specInfer.ml"   specInfer.ml
+ln -fs "$ROOT/../base/top_helper.ml"  top_helper.ml
+ln -fs "$ROOT/../base/makefile"       makefile
 
 #ln -fs "$ROOT/../mistral/example/abduce"    abduce
 #ln -fs "$ROOT/../mistral/example/chkSAT"    chkSAT
