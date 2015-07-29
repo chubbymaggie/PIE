@@ -34,10 +34,10 @@ any_type << (atom_types | list_type | tuple_type)
 mode = ''
 huge = False
 
-RAND_MIN = -65536
-RAND_MAX = 65535
-LIST_MAX = 24
-STR_MAX = 16
+RAND_MIN = -4
+RAND_MAX = 4
+LIST_MAX = 5
+STR_MAX = 8
 
 def ifHuge(l):
     global huge
@@ -121,7 +121,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                           ('(fun %s %s-> %s = %s)', '"%s = %s"')]
                          + ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
         if var2 is None:
-            preds.extend([('(fun %s -> %s mod 2 = 0)' % (nvar1[0], nvar1[0]), '"%s %% 2 = 0"' % nvar1[1])])
+            preds.extend([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"%s %% 2 = 0"' % nvar1[1])])
 
     elif typ1[0][0] == ST and typ2[0][0] == ST and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
@@ -216,10 +216,10 @@ def getTests(typ, count):
         tests.extend(random.choice(['true', 'false']) for p in xrange(count))
 
     elif typ[0][0] == LT:
-        tests.extend([getTests(typ[0][1], k) for k in xrange(random.randint(0, LIST_MAX))] for p in xrange(count))
+        tests.extend(getTests(typ[0][1], random.randint(0, LIST_MAX)) for p in xrange(count))
 
     elif typ[0][0] == TT:
-        tests.extend(tuple(getTests(t[2], 1)[0] for t in typ[0][1]) for p in xrange(count))
+        tests.extend(tuple(getTests([t[2]], 1)[0] for t in typ[0][1]) for p in xrange(count))
 
     return tests
 

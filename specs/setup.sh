@@ -6,10 +6,11 @@ ROOT="`cd \"$ROOT\" && pwd`"
 TARGET="`cd \"$1\" && pwd`"
 
 FILE="`realpath \"$2\"`"
+FILENAME="`basename \"$FILE\"`"
 
 cd "$TARGET"
 
-ln -fs "$FILE" "`basename \"$FILE\"`"
+ln -fs "$FILE" "$FILENAME"
 
 ln -fs "$ROOT/../base/escher_core.ml"         escher_core.ml
 ln -fs "$ROOT/../base/escher_components.ml"   escher_components.ml
@@ -22,3 +23,7 @@ ln -fs "$ROOT/../base/makefile"       makefile
 
 ln -fs "$ROOT/../base/specify.ml"     specify.ml
 ln -fs "$ROOT/../base/preprocess.py"  preprocess
+
+./preprocess "$FILENAME" > "T$FILENAME"
+
+make clean ; make

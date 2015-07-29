@@ -8,21 +8,10 @@ let lappend = fun (l0, l1) -> List.append l0 l1;;
 
 let appendRes = fun () ->
 let f = lappend in
-let tests = [
-    ([],[]);
-    ([],[1]);
-    ([1;2],[1;2]);
-    ([],[1;2;3;4]);
-    ([1],[1;2;3]);
-    ([1;2;3;4;5],[1;2]);
-    ([1;2;3;4],[1;2;9;8]);
-    ([1;2],[3;4]);
-    ([1;2;3],[]);
-    ([2],[])
-] in
-let def_features = (*PYF:l|T(L(1),L(1))*) in
+let tests = (*PYT:1|T(l0:L(I), l1:L(I))*) in
+let def_features = (*PYF:l|T(l0:L(1),l1:L(1))*) in
 let my_features = [] in
-let def_postconditions = (*PYP:l|T(L(1),L(1))|L(1)*) in
+let def_postconditions = (*PYP:l|T(l0:L(1),l1:L(1))|L(1)*) in
 let my_postconditions = [
     ((fun (l0,l1) r -> match r with Bad _ -> false | Ok lr -> List.length(lr) = List.length(l0) + List.length(l1)), "len(res) = len(l0)+len(l1)");
     ((fun (l0,l1) r -> match r with Bad _ -> false | Ok lr -> List.length(lr) != List.length(l0) + List.length(l1)), "len(res) != len(l0)+len(l1)")
@@ -35,7 +24,7 @@ let my_postconditions = [
 ;;
 
 
-
+(*
 (*** List.combine ***)
 
 let lcombine = fun (l1,l2) -> List.combine l1 l2;;
@@ -215,3 +204,4 @@ let my_postconditions = [] in
                      (List.map (fun postcond -> (postcond, missingFeatures f tests features postcond)) postconds),
          (pacLearnSpec f tests features postconds))
 ;;
+*)

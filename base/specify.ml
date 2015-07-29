@@ -5,6 +5,8 @@ open Escher_core
 open Escher_components
 open Escher_synth
 
+open SpecInfer
+
 let gen_post_conds ((in_vals, out_val) : 'a * 'b)
                    ((in_names, in_types) : string list * typ list)
                    ((out_name, out_type) : string * typ)
