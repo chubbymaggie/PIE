@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import itertools
+import random
 import re
 import sys
 import types
@@ -32,6 +33,11 @@ any_type << (atom_types | list_type | tuple_type)
 
 mode = ''
 huge = False
+
+RAND_MIN = -65536
+RAND_MAX = 65535
+LIST_MAX = 24
+STR_MAX = 16
 
 def ifHuge(l):
     global huge
@@ -200,6 +206,30 @@ def getFeatures(typ, var):
     features.extend(getBinaryPreds(typ, var, None, typ, None, None))
     return features
 
+def getTests(typ, count):
+    tests = []
+
+    if typ[0][0] == IT:
+        tests.extend(str(random.randint(RAND_MIN, RAND_MAX)) for p in xrange(count))
+
+    elif typ[0][0] == BT:
+        tests.extend(random.choice(['true', 'false']) for p in xrange(count))
+
+    elif typ[0][0] == LT:
+        tests.extend([getTests(typ[0][1], k) for k in xrange(random.randint(0, LIST_MAX))] for p in xrange(count))
+
+    elif typ[0][0] == TT:
+        tests.extend(tuple(getTests(t[2], 1)[0] for t in typ[0][1]) for p in xrange(count))
+
+    return tests
+
+def Tanalyze(pat):
+    global mode
+
+    mode = "T"
+    cnt, typ = pat.split('|')
+    return stringify(getTests(any_type.parseString(typ).asList(), int(cnt)))
+
 def Fanalyze(pat):
     global mode
 
@@ -233,8 +263,14 @@ if __name__ == "__main__":
     Fmat = re.compile(Fpat % '[^\*]+')
     Ppat = "\(\*PYP:(%s)\*\)"
     Pmat = re.compile(Ppat % '[^\*]+')
+    Tpat = "\(\*PYT:(%s)\*\)"
+    Tmat = re.compile(Tpat % '[^\*]+')
+
     for l in open(sys.argv[1]).readlines():
         Fres = Fmat.search(l)
         Frep = l if Fres is None else Fmat.sub(Fanalyze(Fres.group(1)), l)
         Pres = Pmat.search(Frep)
-        sys.stdout.write(Frep if Pres is None else Pmat.sub(Panalyze(Pres.group(1)), Frep))
+        Prep = Frep if Pres is None else Pmat.sub(Panalyze(Pres.group(1)), Frep)
+        Tres = Tmat.search(Prep)
+        Trep = Prep if Tres is None else Tmat.sub(Tanalyze(Tres.group(1)), Prep)
+        sys.stdout.write(Trep)

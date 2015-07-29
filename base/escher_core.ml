@@ -190,11 +190,11 @@ let filter_map p map =
   in
     VArrayMap.fold f map []
 
-let matches x y =
-  x = y || y = VDontCare
+let matches ?typeonly:(typeonly=false) x y =
+  x = y || y = VDontCare || (typeonly && (typeof x == typeof y))
 
-let varray_matches have want =
-  List.for_all2 matches (Array.to_list have) (Array.to_list want)
+let varray_matches ?typeonly:(typeonly=false) have want =
+  List.for_all2 (matches ~typeonly:typeonly) (Array.to_list have) (Array.to_list want)
 
 let varray_meet have want =
   let f h w = if h = w then h else VDontCare in

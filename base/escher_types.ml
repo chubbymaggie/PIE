@@ -8,6 +8,7 @@ type typ =
   | TList
   | TTree
   | TString
+  | TUnknown
 
 type value =
   | VInt of int
@@ -17,6 +18,14 @@ type value =
   | VString of string
   | VError
   | VDontCare
+
+let typeof v = match v with
+  | VInt(_)    -> TInt
+  | VBool(_)   -> TBool
+  | VList(_)   -> TList
+  | VTree(_)   -> TTree
+  | VString(_) -> TString
+  | _          -> TUnknown
 
 let of_int i = VInt(i)
 let of_bool b = VBool(b)

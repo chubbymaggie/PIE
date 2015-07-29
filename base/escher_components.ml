@@ -1,6 +1,8 @@
 open Escher_core
 open Escher_types
 
+let _unsupported_ = (fun l -> " **UNSUPPORTED** ")
+
 type component = {
       domain : typ list;
       codomain : typ;
@@ -8,8 +10,6 @@ type component = {
       name : string;
       dump : string list -> string
     }
-
-let _unsupported_ = (fun l -> " UNSUPPORTED! ")
 
 let apply_component (c : component) (args : Vector.t list) =
   if (c.name = "not" && (match (snd (fst (List.hd args))) with Node ("not", _) -> true | _ -> false))
@@ -116,7 +116,7 @@ let notc = {
              | [VBool x] -> VBool (not x)
              | _ -> VError);
     name = "not";
-    dump = (fun l -> "! (" ^ (List.hd l) ^ ")")
+    dump = (fun l -> "(! " ^ (List.hd l) ^ ")")
 }
 
 
@@ -128,7 +128,7 @@ let length = {
              | [VList xs] -> VInt (List.length xs)
              | _ -> VError);
     name = "length";
-    dump = _unsupported_
+    dump = (fun l -> "(len " ^ (List.hd l) ^ ")")
 }
 
 let empty = {
@@ -138,7 +138,7 @@ let empty = {
              | [VList x] -> VBool (List.length x = 0)
              | _ -> VError);
     name = "empty?";
-    dump = _unsupported_
+    dump = (fun l -> "(" ^ (List.hd l) ^ " = [])")
 }
 
 let reverse = {
@@ -148,7 +148,7 @@ let reverse = {
              | [VList x] -> VList (List.rev x)
              | _ -> VError);
     name = "reverse";
-    dump = _unsupported_
+    dump = (fun l -> "(rev " ^ (List.hd l) ^ ")")
 }
 
 let cons = {
@@ -158,7 +158,7 @@ let cons = {
              | [VInt x; VList xs] -> VList (VInt x::xs)
              | _ -> VError);
     name = "cons";
-    dump = _unsupported_
+    dump = (fun l -> "(" ^ (List.hd l) ^ " :: " ^ (List.hd (List.tl l)) ^ ")")
 }
 
 let head = {
@@ -168,7 +168,7 @@ let head = {
              | [VList (x::_)] -> x
              | _ -> VError);
     name = "head";
-    dump = _unsupported_
+    dump = (fun l -> "(hd " ^ (List.hd l) ^ ")")
 }
 
 let tail = {
@@ -178,7 +178,7 @@ let tail = {
              | [VList (_::xs)] -> VList xs
              | _ -> VError);
     name = "tail";
-    dump = _unsupported_
+    dump = (fun l -> "(tl " ^ (List.hd l) ^ ")")
 }
 
 let cat = {
@@ -187,7 +187,7 @@ let cat = {
     apply = (function [VList xs; VList ys] -> VList (xs @ ys)
              | _ -> VError);
     name = "cat";
-    dump = _unsupported_
+    dump = (fun l -> "(" ^ (List.hd l) ^ " @ " ^ (List.hd (List.tl l)) ^ ")")
 }
 
 let listEq = {
@@ -197,7 +197,7 @@ let listEq = {
              | [VList x; VList y] -> VBool (x=y)
              | _ -> VError);
     name = "listEq";
-    dump = _unsupported_
+    dump = (fun l -> "(" ^ (List.hd l) ^ " = " ^ (List.hd (List.tl l)) ^ ")")
 }
 
 (* Default TREE components *)
@@ -271,7 +271,7 @@ let str_concat = {
              | [VString x; VString y] -> VString (x ^ y)
              | _ -> VError);
     name = "str_concat";
-    dump = _unsupported_
+    dump = (fun l -> "(\"" ^ (List.hd l) ^ "\" ^ \"" ^ (List.hd (List.tl l)) ^ "\")")
 }
 
 let str_len = {
@@ -281,7 +281,7 @@ let str_len = {
              | [VString x] -> VInt (String.length x)
              | _ -> VError);
     name = "str_len";
-    dump = _unsupported_
+    dump = (fun l -> "(len \"" ^ (List.hd l) ^ "\")")
 }
 
 let str_sub = {
@@ -293,7 +293,7 @@ let str_sub = {
                    with Invalid_argument _ -> VError end
              | _ -> VError);
     name = "str_sub";
-    dump = _unsupported_
+    dump = (fun l -> "(sub " ^ (List.hd l) ^ " " ^ (List.hd (List.tl l)) ^ " " ^ (List.hd (List.tl (List.tl l))) ^ ")")
 }
 
 let str_prefix = {
@@ -305,7 +305,7 @@ let str_prefix = {
                    with Invalid_argument _ -> VError end
              | _ -> VError);
     name = "str_prefix";
-    dump = _unsupported_
+    dump = (fun l -> "(pre " ^ (List.hd l) ^ " " ^ (List.hd (List.tl l)) ^ ")")
 }
 
 let str_suffix = {
@@ -317,7 +317,7 @@ let str_suffix = {
                    with Invalid_argument _ -> VError end
              | _ -> VError);
     name = "str_suffix";
-    dump = _unsupported_
+    dump = (fun l -> "(suf " ^ (List.hd l) ^ " " ^ (List.hd (List.tl l)) ^ ")")
 }
 
 let rec palindrome_impl l =

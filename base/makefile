@@ -3,8 +3,10 @@
 dep-only: escher_components.ml escher_core.ml escher_types.ml escher_synth.ml specInfer.ml
 	ocamlopt -w a -c escher_types.ml escher_core.ml escher_components.ml escher_synth.ml
 	ocamlfind ocamlopt -package batteries -w a -c specInfer.ml
-	ocamlc -w a -c escher_types.ml escher_core.ml escher_components.ml escher_synth.ml
-	ocamlfind ocamlc -package batteries -w a -c specInfer.ml
+	ocamlfind ocamlopt -package batteries -w a -c specify.ml
+	ocamlc -w a -g -c escher_types.ml escher_core.ml escher_components.ml escher_synth.ml
+	ocamlfind ocamlc -package batteries -w a -g -c specInfer.ml
+	ocamlfind ocamlc -package batteries -w a -g -c specify.ml
 
 clean:
 	rm -f *.cm* *.o

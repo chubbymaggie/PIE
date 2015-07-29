@@ -32,7 +32,7 @@ let rec divide_depth f arity target acc =
 
 
 (* Upper bound on the heuristic value a solution may take *)
-let max_h = 10
+let max_h = 8
 
 let expand_ = ref "size"
 let goal_graph = ref false
@@ -84,17 +84,8 @@ let rec print_goal indent goal =
   if String.length indent > 10 then print_endline (indent ^ "...")
   else print_endline (indent ^ "goal: " ^ (varray_string goal.varray))
 
-let close_goal vector goal =
-  if !noisy then begin
-    print_endline ("Closed goal " ^ (varray_string goal.varray));
-    print_endline ("       with " ^ (Vector.string vector));
-  end;
-  match goal.status with
-    | Closed cls -> (* if (hvalue vector) < (hvalue cls) then *) goal.status <- Closed vector
-    | Open -> goal.status <- Closed vector
-
-let solve_impl task iconsts =
-  let seen = ref VSet.empty in
+let solve_impl ?ast:(ast=false) task iconsts =
+  let seen = ref [] in
   let vector_size = Array.length (snd (List.hd task.inputs)) in
   let components = task.components in
 
@@ -105,22 +96,30 @@ let solve_impl task iconsts =
     ref (VArrayMap.add final_goal.varray final_goal VArrayMap.empty)
   in
 
-  let int_array = Array.make max_h VSet.empty in
-  let bool_array = Array.make max_h VSet.empty in
-  let list_array = Array.make max_h VSet.empty in
-  let tree_array = Array.make max_h VSet.empty in
-  let string_array = Array.make max_h VSet.empty in
+  let close_goal vector goal =
+  if !noisy then begin
+    print_endline ("Closed goal " ^ (varray_string goal.varray));
+    print_endline ("       with " ^ (Vector.string vector));
+  end else ();
+  goal.status <- Closed vector;
+  match final_goal.status with Closed cls -> all_solutions := cls::all_solutions.contents | _ -> ()
+  in
+
+  let int_array = Array.make max_h [] in
+  let bool_array = Array.make max_h [] in
+  let list_array = Array.make max_h [] in
+  let tree_array = Array.make max_h [] in
+  let string_array = Array.make max_h [] in
 
   let check_vector v =
-      (* Close all matching goals *)
-      let (v_closes, _) = partition_map (varray_matches (snd v)) (!goals)
-      in
-        if !noisy then begin
-          print_endline "--- new vector --------------------------------------";
-          print_endline ((string_of_int (hvalue v)) ^ ": " ^ (Vector.string v));
-        end;
-
-	List.iter (close_goal v) v_closes; true
+    (* Close all matching goals *)
+    let (v_closes, _) = partition_map (varray_matches ~typeonly:ast (snd v)) (!goals)
+    in
+      if !noisy then begin
+        print_endline "--- new vector --------------------------------------";
+        print_endline ((string_of_int (hvalue v)) ^ ": " ^ (Vector.string v));
+      end else ();
+    List.iter (close_goal v) v_closes; true
   in
 
   let int_components = List.filter (fun c -> c.codomain = TInt) components in
@@ -133,7 +132,7 @@ let solve_impl task iconsts =
     let rec apply_cells types acc locations =
       match types, locations with
 	| (typ::typs, i::locs) ->
-	    VSet.iter (fun x -> apply_cells typs (x::acc) locs) begin
+	    List.iter (fun x -> apply_cells typs (x::acc) locs) begin
 	      match typ with
 		| TInt -> int_array.(i)
 		| TBool -> bool_array.(i)
@@ -153,7 +152,7 @@ let solve_impl task iconsts =
       let has_err = Array.fold_left (fun p x -> match x with VError -> true | _ -> p) false (snd vector) in
 (*	print_endline (string_of_int h_value ^ ">>" ^ (Vector.string vector));*)
 	if (h_value < max_h && (not has_err))
-	then array.(h_value) <- VSet.add vector array.(h_value)
+	then array.(h_value) <- vector::(array.(h_value))
     in
       apply_comp f c.domain i
   in
@@ -175,9 +174,9 @@ let solve_impl task iconsts =
   if not (!quiet) then (print_endline ("Inputs: ");
     List.iter (fun v -> print_endline ("   " ^ (Vector.string v))) task.inputs);
     if not (!quiet) then print_endline ("Goal: " ^ (varray_string final_goal.varray));
-    list_array.(1) <- VSet.singleton nil;
-    int_array.(1) <- List.fold_left (fun p i -> VSet.add ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i)) p) (VSet.singleton zero) iconsts;
-    bool_array.(1) <- VSet.add btrue (VSet.singleton bfalse);
+    list_array.(1) <- [nil];
+    int_array.(1) <- List.fold_left (fun p i -> ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i))::p) [zero] iconsts;
+    bool_array.(1) <- [btrue ; bfalse];
     List.iter
       (fun input ->
 	 let array = match (snd input).(1) with
@@ -189,16 +188,16 @@ let solve_impl task iconsts =
 	   | VError -> failwith "Error in input"
 	   | VDontCare -> failwith "Underspecified input"
 	 in
-	   array.(1) <- VSet.add input array.(1))
+	   array.(1) <- input::(array.(1)))
       task.inputs;
     for i = 2 to max_h-1; do
-      list_array.(i-1) <- VSet.filter check_vector list_array.(i-1);
-      int_array.(i-1) <- VSet.filter check_vector int_array.(i-1);
-      bool_array.(i-1) <- VSet.filter check_vector bool_array.(i-1);
-      tree_array.(i-1) <- VSet.filter check_vector tree_array.(i-1);
-      string_array.(i-1) <- VSet.filter check_vector string_array.(i-1);
+      list_array.(i-1) <- List.filter check_vector list_array.(i-1);
+      int_array.(i-1) <- List.filter check_vector int_array.(i-1);
+      bool_array.(i-1) <- List.filter check_vector bool_array.(i-1);
+      tree_array.(i-1) <- List.filter check_vector tree_array.(i-1);
+      string_array.(i-1) <- List.filter check_vector string_array.(i-1);
       begin match final_goal.status with
-    | Closed p -> all_solutions := p::all_solutions.contents ; raise Success ; final_goal.status <- Open
+    | Closed p -> (if not ast then raise Success else ()) ; final_goal.status <- Open
 	| Open -> () end;
       if not (!quiet) then print_endline ("At " ^ (string_of_int i));
       if !noisy then begin
@@ -209,11 +208,11 @@ let solve_impl task iconsts =
       expand i;
     done
 
-let solve task iconsts =
+let solve ?ast:(ast=false) task iconsts =
   all_solutions := [] ;
-  (try solve_impl task iconsts with Success -> ());
+  (try solve_impl ~ast:ast task iconsts with Success -> ());
   if not (!quiet) then (print_endline "Synthesis Result: "; List.iter (fun v -> print_endline (Vector.string v)) all_solutions.contents) ;
-  List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data) = VBool true))) all_solutions.contents
+  List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
 
 let default_int = [plus;mult;minus;leq;equal;modulo ; addone;subone]
 let default_list = [empty;tail;head;cat;cons;length;reverse;listEq]
@@ -223,7 +222,7 @@ let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
 let default_string = [str_concat; str_len; str_sub; str_prefix; str_suffix]
 
 let default_components =
-  default_int @ default_bool
+  default_int @ default_bool @ default_list @ default_string
 
 let int_list xs = VList (List.map (fun x -> VInt x) xs)
 

@@ -15,9 +15,12 @@ ln -fs "$ROOT/../base/escher_components.ml"   escher_components.ml
 ln -fs "$ROOT/../base/escher_types.ml"        escher_types.ml
 ln -fs "$ROOT/../base/escher_synth.ml"        escher_synth.ml
 
+ln -fs "$ROOT/../base/specify.ml"     specify.ml
 ln -fs "$ROOT/../base/specInfer.ml"   specInfer.ml
 ln -fs "$ROOT/../base/top_helper.ml"  top_helper.ml
 ln -fs "$ROOT/../base/makefile"       makefile
+
+ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
 #ln -fs "$ROOT/../mistral/example/abduce"    abduce
 #ln -fs "$ROOT/../mistral/example/chkSAT"    chkSAT
@@ -34,5 +37,4 @@ ln -fs "$ROOT/../z3/verify.py"      verify
 ln -fs "$ROOT/replay.sh"        replay
 ln -fs "$ROOT/smt2ml.py"        smt2ml
 ln -fs "$ROOT/var_repl.py"      var_replace
-ln -fs "$ROOT/preprocess.py"    preprocess
 ln -fs "$ROOT/add_counter.py"   add_counter

@@ -407,7 +407,7 @@ let synthFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~missing_features:(mis
                                                    Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
                 components = default_components
             } in
-            List.map (fun (annot, func) -> (fun data -> func (snd trans) data), annot) (solve xtask iconsts))
+            List.map (fun (annot, func) -> (fun data -> (func (snd trans) data) = VBool true), annot) (solve xtask iconsts))
 
 
 (* try to resolve the first group of conflicting tests that can be resolved *)
