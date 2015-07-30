@@ -24,6 +24,6 @@ ln -fs "$ROOT/../base/makefile"       makefile
 ln -fs "$ROOT/../base/specify.ml"     specify.ml
 ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
-./preprocess "$FILENAME" > "T$FILENAME"
+./preprocess "$FILENAME" ALL > "T$FILENAME"
 
 make clean ; make

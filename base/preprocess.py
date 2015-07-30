@@ -13,16 +13,17 @@ from pyparsing import alphanums, delimitedList, Forward, Group, Keyword, nums, S
 any_type = Forward()
 
 LPAR, RPAR = map(Suppress, '()')
-BT, IT, ST, LT, TT = TYPES = 'BISLT'
-BKW, IKW, SKW, LKW, TKW = map(Keyword, TYPES)
+BT, IT, CT, ST, LT, TT = TYPES = 'BICSLT'
+BKW, IKW, CKW, SKW, LKW, TKW = map(Keyword, TYPES)
 
 bool_type = Group(BKW)
 int_type = Group(IKW)
+char_type = Group(CKW)
 str_type = Group(SKW)
 comp_type = Group(Word(nums))
-atom_types = comp_type | bool_type | int_type | str_type
+atom_types = comp_type | bool_type | int_type | char_type | str_type
 
-ATOM_TYPES = [BT, IT, ST]
+ATOM_TYPES = [BT, IT, CT, ST]
 
 list_type = Group(LKW + LPAR + Group(any_type) + RPAR)
 tuple_type = Group(TKW + LPAR + Group(delimitedList(Group(Word(alphanums) + ':' + any_type))) + RPAR)
@@ -123,6 +124,12 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
         if var2 is None:
             preds.extend([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"%s %% 2 = 0"' % nvar1[1])])
 
+    elif typ1[0][0] == CT and typ2[0][0] == CT and var2 is not None:
+        preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
+                         [('(fun %s %s-> %s > %s)', '"%s > %s"'),
+                          ('(fun %s %s-> %s = %s)', '"%s = %s"')]
+                         + ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
+
     elif typ1[0][0] == ST and typ2[0][0] == ST and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
                          [('(fun %s %s-> %s > %s)', '"%s > %s"'),
@@ -156,6 +163,23 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                 preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %s %se) %s)' % (var1, var2, var2, f[0], var1, var2, var2),
                             '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
                             in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
+
+            if typ1[0][0] == ST:
+                preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
+                            '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
+                            in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
+                preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
+                            '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
+                            in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
+
+            elif typ2[0][0] == ST:
+                preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) (BatString.to_list %s)))' % (var1, var2, var2, f[0], var1, var2, var2),
+                            '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
+                            in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
+                preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %s %se) (BatString.to_list %s)))' % (var1, var2, var2, f[0], var1, var2, var2),
+                            '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
+                            in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
+
 
         if typ1[0][0] == TT:
             tps = [([t], var1+str(i)) for (i,t) in enumerate(typ1[0][1])]
