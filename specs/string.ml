@@ -14,22 +14,36 @@ let rec generate n ?(rand=Random.State.make_self_init()) gen =
     | _ ->
 	(run gen rand)::(generate (n-1) ~rand:rand gen)
 
-let smallintGen = make_int (-2) 3	  
-	  
+let smallintGen = make_int (-3) 4	  
+
+(* let charGen = (choose [lowercase; uppercase; select ['0';'1';'2';'3';'4';'5';'6';'7';'8';'9']]) *)
+let charGen = lowercase
+  
 (* generator for alphanumeric strings of size up to 4 *)
 let stringGen =
-  string (make_int 0 4)
-    (choose [lowercase; uppercase; select ['0';'1';'2';'3';'4';'5';'6';'7';'8';'9']])
+  string (make_int 0 5) charGen
+    
 let strtests = generate 10000 stringGen
 
+(* generator for pairs, given generators for each component *)
+let genPair g1 g2 = app (app (pure (fun x y -> (x,y))) g1) g2
+
+(* generator for pairs, given generators for each component *)
+let genTriple g1 g2 g3 = app (app (app (pure (fun x y z -> (x,y,z))) g1) g2) g3
+  
 (* generator for random tuples of the above strings and small ints *)
-let stringintGen = app (app (pure (fun x y -> (x,y))) stringGen) smallintGen
+let stringintGen = genPair stringGen smallintGen
 let stringinttests = generate 10000 stringintGen  
 
 
 (* generator for random tuples of the above strings and two small ints *)
-let stringintintGen = app (app (app (pure (fun x y z -> (x,y,z))) stringGen) smallintGen) smallintGen
+let stringintintGen = genTriple stringGen smallintGen smallintGen
 let stringintinttests = generate 10000 stringintintGen  
+
+(* generator for random tuples of small ints and characters *)
+let intcharGen = genPair smallintGen charGen
+let intchartests = generate 10000 intcharGen
+  
 
 (*** String.copy ***)
 
@@ -65,9 +79,7 @@ let f = sget in
 let tests = stringinttests in
 let def_features = (*PYF:t|T(s:S,i:I)*) in
 let my_features = [] in
-  (* currently no Python postcondition generation for characters, I believe *)
-let def_postconditions =
-  [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
+let def_postconditions = (*PYP:t|T(s:S,i:I)|C*) in
 let my_postconditions = []
   in
     let features = def_features @ my_features in
@@ -89,6 +101,27 @@ let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
      - even if that's known, the boundary conditions might be unclear
        (e.g., you are allowed to ask for (String.sub "hello" 5 0))
 *)
+
+(* currently we get None for the above precondition.
+   however, within a small scope we can get spurious results for other postconditions,
+   including "terminates normally".  by moving to larger scopes -- in particular I increased
+   the range of integers and increased the sizes of strings -- we properly get None for these.
+   and we get one correct spec:
+   (Some [[Pos "i2 = 0"]; [Neg "i1 < i2"]; [Neg "len(s) < i1"]],
+    "len(res) = 0");
+   but we still get one spurious spec with the current settings:
+   (Some
+     [[Pos "i2 % 2 = 0"]; [Neg "i1 < 0"]; [Pos "i2 = 0"; Neg "i1 > i2"];
+      [Neg "len(s) < i1"]; [Neg "len(s) < i2"];
+      [Pos "i1 = 0"; Neg "len(s) = i2"];
+      [Pos "len(s) % 2 = 0"; Pos "i2 = 0"; Pos "i1 < i2"]],
+    "len(res) % 2 = 0")]
+
+   we can identify spurious ones as having lots of clauses.  the question is what to do then?
+   - increase the scope of tests to try to get conflicts?
+   - remove some features to try to get conflicts?
+*)
+
   
 let ssubRes = fun () ->
 let f = ssub in
@@ -96,8 +129,27 @@ let tests = stringintinttests in
 let def_features = (*PYF:t|T(s:S,i1:I,i2:I)*) in
 let my_features = [] in
   (* currently no Python postcondition generation for characters, I believe *)
-let def_postconditions =
-  [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
+let def_postconditions =  (*PYP:t|T(s:S,i1:I,i2:I)|S*) in
+let my_postconditions = []
+  in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+        (List.filter (fun (pc, grp) -> grp != [])
+                     (List.map (fun postcond -> (postcond, missingFeatures f tests features postcond)) postconds),
+         (pacLearnSpec f tests features postconds))
+;;
+
+
+(*** String.make ***)
+
+let smake = (fun (i,c) -> String.make i c)
+
+let smakeRes = fun () ->
+let f = smake in
+let tests = intchartests in
+let def_features = (*PYF:t|T(i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(i:I,c:C)|S*) in
 let my_postconditions = []
   in
     let features = def_features @ my_features in
