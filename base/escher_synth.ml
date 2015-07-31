@@ -107,6 +107,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
 
   let int_array = Array.make max_h [] in
   let bool_array = Array.make max_h [] in
+  let char_array = Array.make max_h [] in
   let list_array = Array.make max_h [] in
   let tree_array = Array.make max_h [] in
   let string_array = Array.make max_h [] in
@@ -124,6 +125,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
 
   let int_components = List.filter (fun c -> c.codomain = TInt) components in
   let bool_components = List.filter (fun c -> c.codomain = TBool) components in
+  let char_components = List.filter (fun c -> c.codomain = TChar) components in
   let list_components = List.filter (fun c -> c.codomain = TList) components in
   let tree_components = List.filter (fun c -> c.codomain = TTree) components in
   let string_components = List.filter (fun c -> c.codomain = TString) components in
@@ -136,6 +138,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
 	      match typ with
 		| TInt -> int_array.(i)
 		| TBool -> bool_array.(i)
+		| TChar -> char_array.(i)
 		| TList -> list_array.(i)
 		| TTree -> tree_array.(i)
 		| TString -> string_array.(i)
@@ -163,6 +166,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
     List.iter (fun x -> expand_type x i)
       [(int_array, int_components);
        (bool_array, bool_components);
+       (char_array, char_components);
        (list_array, list_components);
        (tree_array, tree_components);
        (string_array, string_components)]
@@ -183,6 +187,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
 	   | VList _ -> list_array
 	   | VInt _ -> int_array
 	   | VBool _ -> bool_array
+	   | VChar _ -> char_array
 	   | VTree _ -> tree_array
 	   | VString _ -> string_array
 	   | VError -> failwith "Error in input"
@@ -194,6 +199,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
       list_array.(i-1) <- List.filter check_vector list_array.(i-1);
       int_array.(i-1) <- List.filter check_vector int_array.(i-1);
       bool_array.(i-1) <- List.filter check_vector bool_array.(i-1);
+      char_array.(i-1) <- List.filter check_vector char_array.(i-1);
       tree_array.(i-1) <- List.filter check_vector tree_array.(i-1);
       string_array.(i-1) <- List.filter check_vector string_array.(i-1);
       begin match final_goal.status with
@@ -217,12 +223,13 @@ let solve ?ast:(ast=false) task iconsts =
 let default_int = [plus;mult;minus;leq;equal;modulo ; addone;subone]
 let default_list = [empty;tail;head;cat;cons;length;reverse;listEq]
 let default_bool = [notc]
+let default_char = [cequal]
 
 let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
-let default_string = [str_concat; str_len; str_sub; str_prefix; str_suffix]
+let default_string = [str_concat; str_contains; str_len; str_get]
 
 let default_components =
-  default_int @ default_bool @ default_list @ default_string
+  default_int @ default_bool @ default_list @ default_string @ default_char
 
 let int_list xs = VList (List.map (fun x -> VInt x) xs)
 

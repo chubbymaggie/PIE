@@ -37,6 +37,7 @@ let rec value_string = function
   | VInt x -> string_of_int x
   | VBool true -> "true"
   | VBool false -> "false"
+  | VChar c -> "\'" ^ (String.make 1 c) ^ "\'"
   | VList x -> "[" ^ (String.concat "," (List.map value_string x)) ^ "]"
   | VTree x -> bt_string x
   | VString x -> "\"" ^ x ^ "\""
@@ -48,6 +49,7 @@ let varray_string values =
 
 let value_lt x y = match x,y with
   | (VInt x, VInt y) -> x >= 0 && y >= 0 && x < y
+  | (VChar x, VChar y) -> x < y
   | (VList x, VList y) -> (List.length x) < (List.length y)
   | (VTree x, VTree y) -> (bt_height x) < (bt_height y)
   | (VString x, VString y) -> (String.length x) < (String.length y)
@@ -55,6 +57,7 @@ let value_lt x y = match x,y with
 
 let value_leq x y = match x,y with
   | (VInt x, VInt y) -> x = y || x >= 0 && y >= 0 && x < y
+  | (VChar x, VChar y) -> x <= y
   | (VList x, VList y) -> (List.length x) <= (List.length y)
   | (VTree x, VTree y) -> (bt_height x) <= (bt_height y)
   | (VString x, VString y) -> (String.length x) <= (String.length y)
@@ -223,6 +226,7 @@ let type_of_varray varray =
     try begin match List.find defined (Array.to_list varray) with
       | VInt _ -> TInt
       | VBool _ -> TBool
+      | VChar _ -> TChar
       | VList _ -> TList
       | VTree _ -> TTree
       | VString _ -> TString

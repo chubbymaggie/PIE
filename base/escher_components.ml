@@ -119,6 +119,18 @@ let notc = {
     dump = (fun l -> "(! " ^ (List.hd l) ^ ")")
 }
 
+ 
+(* Default CHAR components *)
+let cequal = {
+    domain = [TChar;TChar];
+    codomain = TBool;
+    apply = (function
+             | [VChar x;VChar y] -> VBool (x = y)
+             | _ -> VError);
+    name = "cequal";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " = " ^ List.(hd (tl l)) ^ ")")
+}
+
 
 (* Default LIST components *)
 let length = {
@@ -273,7 +285,7 @@ let str_concat = {
     name = "str_concat";
     dump = (fun l -> "(\"" ^ (List.hd l) ^ "\" ^ \"" ^ (List.hd (List.tl l)) ^ "\")")
 }
-
+  
 let str_len = {
     domain = [TString];
     codomain = TInt;
@@ -284,6 +296,30 @@ let str_len = {
     dump = (fun l -> "(len \"" ^ (List.hd l) ^ "\")")
 }
 
+let str_contains = {
+    domain = [TString;TChar];
+    codomain = TBool;
+    apply = (function
+             | [VString x; VChar y] -> VBool (String.contains x y)
+             | _ -> VError);
+    name = "str_contains";
+    dump = (fun l -> "(contains " ^ (List.hd l) ^ " " ^ (List.hd (List.tl l)) ^ ")")
+}
+
+let str_get = {
+    domain = [TString;TInt];
+    codomain = TString;
+    apply = (function
+             | [VString str; VInt i] ->
+                   begin try VChar (String.get str i)
+                   with Invalid_argument _ -> VError end
+             | _ -> VError);
+    name = "str_get";
+    dump = (fun l -> "(get " ^ (List.hd l) ^ " " ^ (List.hd (List.tl l)) ^ ")")
+}  
+
+(* Not using the next three components for now *)  
+  
 let str_sub = {
     domain = [TString;TInt;TInt];
     codomain = TString;

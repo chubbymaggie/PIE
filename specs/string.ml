@@ -98,7 +98,7 @@ let my_postconditions = []
 let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
 
 (* the ideal precondition for when an exception is thrown:
-   0 <= i1 && 0 <= i2 && (i1 + i2) <= length(s)
+   i1 < 0 || i2 < 0 || (i1 + i2) > length(s)
    if we can do it, this one is nice for several reasons:
      - it's unclear from the type whether i2 is the end index or the length
      - even if that's known, the boundary conditions might be unclear
@@ -132,8 +132,9 @@ let tests = stringintinttests in
 let typ = [ TString ; TInt ; TInt ] in
 let tfun = fun (s, i1, i2) -> [ of_string s ; of_int i1 ; of_int i2 ] in
 let def_features = (*PYF:t|T(s:S,i1:I,i2:I)*) in
-let my_features = [] in
-let def_postconditions =  (*PYP:t|T(s:S,i1:I,i2:I)|S*) in
+let my_features = [((fun (s,i1,i2) -> String.length(s) >= (i1 + i2)), "len(s) >= i1+i2")] in
+(* let def_postconditions =  (\*PYP:t|T(s:S,i1:I,i2:I)|S*\) in *)
+let def_postconditions = [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
 let my_postconditions = []
 in
 let trans = (typ, tfun) in
@@ -150,16 +151,37 @@ let smake = (fun (i,c) -> String.make i c)
 let smakeRes = fun () ->
 let f = smake in
 let tests = intchartests in
- (* need to add characters to Escher *)
-(* let typ = [ TInt ; TUnknown ] in *)
-(* let tfun = fun (i, c) -> [ of_int i ; of_int i2 ] in *)
+let typ = [ TInt ; TChar ] in
+let tfun = fun (i, c) -> [ of_int i ; of_char c ] in
 let def_features = (*PYF:t|T(i:I,c:C)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|T(i:I,c:C)|S*) in
 let my_postconditions = []
   in
-    (* let trans = (typ, tfun) in *)
+    let trans = (typ, tfun) in
     let features = def_features @ my_features in
     let postconds = def_postconditions @ my_postconditions in
-      pacLearnSpec f tests features postconds
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+(*** String.index ***)
+
+let sindex = (fun (s,c) -> String.index s c)
+
+let sindexRes = fun () ->
+let f = sindex in
+let tests = generate 10000 (genPair stringGen charGen) in
+let typ = [ TString ; TChar ] in
+let tfun = fun (s, c) -> [ of_string s ; of_char c ] in
+let def_features = (*PYF:t|T(s:S,c:C)*) in
+let my_features = [] in
+(* let def_postconditions = (\*PYP:t|T(s:S,c:C)|I*\) in *)
+let def_postconditions = [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
+let my_postconditions = []
+  in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
 ;;
