@@ -490,6 +490,23 @@ let learnAndPrintSpec (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool)
   print_specs stdout (pacLearnSpec f tests features posts)
 
 
+let rec pacLearnSpecIncrK ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a -> bool) * 'c) list)
+    (post : ('a -> 'b result -> bool) * 'c) : 'c cnf option * 'c =
+
+  let res = List.hd (pacLearnSpec ~k:k f ~tests:tests ~features:features [post]) in
+    if fst res != None then res
+    else pacLearnSpecIncrK ~k:(k+1) f tests features post
+
+
+let resolveAndPacLearnSpec ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a -> bool) * 'c) list)
+    (posts : (('a -> 'b result -> bool) * 'c) list) (trans : typ list * ('a -> value list))
+    (iconsts: int list) : ('c cnf option * 'c) list =
+
+  prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
+  let features = if fst trans = [] then features else convergeAllFeatures f tests features posts trans iconsts in
+    List.map (fun post -> pacLearnSpecIncrK ~k:k f tests features post) posts
+
+
 let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
     (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list)) (iconsts : int list)
     (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =

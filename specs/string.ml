@@ -1,6 +1,8 @@
-
 (* for generating random tests *)
-#require "qcheck";;
+#require "qcheck"
+
+#use "top_helper.ml"
+
 open Generator
 
 open SpecInfer
@@ -38,16 +40,16 @@ let scopy = String.copy
 let scopyRes = fun () ->
 let f = scopy in
 let tests = strtests in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
 let def_features = (*PYF:s|S*) in
 let my_features = [] in
 let def_postconditions = (*PYP:s|S|S*) in
-let my_postconditions = []
-  in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
     let features = def_features @ my_features in
     let postconds = def_postconditions @ my_postconditions in
-        (List.filter (fun (pc, grp) -> grp != [])
-                     (List.map (fun postcond -> (postcond, missingFeatures f tests features postcond)) postconds),
-         (pacLearnSpec f tests features postconds))
+      resolveAndPacLearnSpec f tests features postconds trans []
 ;;
 
 
@@ -63,18 +65,18 @@ let sget = (fun (s, i) -> String.get s i)
 let sgetRes = fun () ->
 let f = sget in
 let tests = stringinttests in
+let typ = [ TString ; TInt ] in
+let tfun = fun (s, i) -> [ of_string s ; of_int i ] in
 let def_features = (*PYF:t|T(s:S,i:I)*) in
 let my_features = [] in
   (* currently no Python postcondition generation for characters, I believe *)
 let def_postconditions =
   [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
-let my_postconditions = []
-  in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
     let features = def_features @ my_features in
     let postconds = def_postconditions @ my_postconditions in
-        (List.filter (fun (pc, grp) -> grp != [])
-                     (List.map (fun postcond -> (postcond, missingFeatures f tests features postcond)) postconds),
-         (pacLearnSpec f tests features postconds))
+      resolveAndPacLearnSpec f tests features postconds trans []
 ;;
 
 
@@ -93,16 +95,16 @@ let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
 let ssubRes = fun () ->
 let f = ssub in
 let tests = stringintinttests in
+let typ = [ TString ; TInt ; TInt ] in
+let tfun = fun (s, i1, i2) -> [ of_string s ; of_int i ; of_int i ] in
 let def_features = (*PYF:t|T(s:S,i1:I,i2:I)*) in
 let my_features = [] in
   (* currently no Python postcondition generation for characters, I believe *)
 let def_postconditions =
   [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
-let my_postconditions = []
-  in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
     let features = def_features @ my_features in
     let postconds = def_postconditions @ my_postconditions in
-        (List.filter (fun (pc, grp) -> grp != [])
-                     (List.map (fun postcond -> (postcond, missingFeatures f tests features postcond)) postconds),
-         (pacLearnSpec f tests features postconds))
+      resolveAndPacLearnSpec f tests features postconds trans []
 ;;
