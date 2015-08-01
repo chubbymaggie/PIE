@@ -5,9 +5,6 @@ ROOT="`cd \"$ROOT\" && pwd`"
 
 TARGET="`cd \"$1\" && pwd`"
 
-cd "$ROOT/../mistral/example/"
-make all > /dev/null
-
 cd "$TARGET"
 
 ln -fs "$ROOT/../base/escher_core.ml"         escher_core.ml
@@ -21,12 +18,6 @@ ln -fs "$ROOT/../base/top_helper.ml"  top_helper.ml
 ln -fs "$ROOT/../base/makefile"       makefile
 
 ln -fs "$ROOT/../base/preprocess.py"  preprocess
-
-#ln -fs "$ROOT/../mistral/example/abduce"    abduce
-#ln -fs "$ROOT/../mistral/example/chkSAT"    chkSAT
-#ln -fs "$ROOT/../mistral/example/chkVALID"  chkVALID
-#ln -fs "$ROOT/../mistral/example/simplify"  simplify
-#ln -fs "$ROOT/../mistral/example/verify"    verify
 
 ln -fs "$ROOT/../z3/mcf2smtlib.py"  mcf2smtlib.py
 ln -fs "$ROOT/../z3/chkSAT.py"      chkSAT
