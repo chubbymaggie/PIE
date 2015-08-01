@@ -21,6 +21,8 @@ type truthAssignment = (int, bool) BatHashtbl.t
 exception NoSuchFunction    
 exception BadCounterExample
 
+let conflict_counter = ref 0
+
 let string_of_truthAssignment ta =
   "[" ^ (BatHashtbl.fold (fun i b str -> str ^ "(" ^ (string_of_int i) ^ "," ^ (string_of_bool b) ^ "); ") ta "") ^ "]"
 
@@ -407,7 +409,18 @@ let synthFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~missing_features:(mis
                                                    Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
                 components = default_components
             } in
-            List.map (fun (annot, func) -> (fun data -> (func (snd trans) data) = VBool true), annot) (solve xtask iconsts))
+            let solutions = solve xtask iconsts in
+            let conflict_log = open_out ("conflict." ^ (string_of_int !conflict_counter) ^ ".log") in
+              conflict_counter := !conflict_counter + 1;
+              output_string conflict_log "\nData::\n";
+              List.iter (fun (d,_,_,b) -> output_string conflict_log ((string_of_bool b) ^ " <= ");
+                                          print_data conflict_log (VList ((snd trans) d));
+                                          output_string conflict_log "\n")
+                        missing_features;
+              output_string conflict_log "\nSolutions::\n";
+              List.iter (fun (a,_) -> output_string conflict_log a; output_string conflict_log "\n") solutions;
+              close_out conflict_log;
+              List.map (fun (annot, func) -> (fun data -> (func (snd trans) data) = VBool true), annot) solutions)
 
 
 (* try to resolve the first group of conflicting tests that can be resolved *)

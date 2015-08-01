@@ -1,3 +1,5 @@
+open Batteries
+
 type bin_tree =
   | BTLeaf of int
   | BTNode of int * bin_tree * bin_tree
@@ -37,5 +39,17 @@ let of_string s = VString(s)
 let of_tree btree = VTree(btree)
 let of_list f l = VList(List.map f l)
 
-let wrap_escher_type transformer data =
-  transformer data
+let rec print_data chan (data: value) : unit = match data with
+    VError       -> output_string chan "- ERROR -"
+  | VDontCare    -> output_string chan "- UNKNOWN -"
+  | VTree(tree)  -> output_string chan "- TREE -"
+  | VString(str) -> output_string chan str
+  | VInt(i)      -> output_string chan (string_of_int i)
+  | VBool(b)     -> output_string chan (string_of_bool b)
+  | VChar(c)     -> output_char chan c
+  | VList(vl)    -> (output_string chan "[ ";
+                     print_data chan (List.hd vl);
+                     List.iter (fun v -> output_string chan ", ";
+                                         print_data chan v)
+                               (List.tl vl);
+                     output_string chan " ]")

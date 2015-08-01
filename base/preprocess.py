@@ -6,7 +6,11 @@ import re
 import sys
 import types
 
-###
+''' Parser for type annotations
+
+type = B | I | C | S | L(type) | T(name0:type, name1:type, ...)
+
+'''
 
 from pyparsing import alphanums, delimitedList, Forward, Group, Keyword, nums, Suppress, Word
 
@@ -30,9 +34,8 @@ tuple_type = Group(TKW + LPAR + Group(delimitedList(Group(Word(alphanums) + ':' 
 
 any_type << (atom_types | list_type | tuple_type)
 
-###
+### End of pyparsing parser for type annotations ###
 
-mode = ''
 huge = False
 
 RAND_MIN = -4
@@ -41,8 +44,6 @@ LIST_MAX = 5
 STR_MAX = 8
 
 def ifHuge(l):
-    global huge
-
     return (l if huge else [])
 
 def print_usage():
@@ -70,13 +71,19 @@ def getProperties(fromTyp, toTyp):
     except KeyError:
         return []
 
+
 def getConvergedPreds(typ1, var1, prop1, typ2, var2, prop2):
+    # At least one of the variables should not have any property
+    # so that we know the exact type of at least one variable
     if prop1 is not None and prop2 is not None:
         return []
 
     allPreds = {}
     if typ1 == typ2:
         allPreds.update({typ1[0][0]: []})
+
+    # Which-ever variable doesn't have a property applied, apply a property to it if required (type-mismatch)
+    # and then get binary predicates between the variables with any applied properties
 
     if prop2 is not None and typ1 != typ2:
         props = getProperties(typ1[0][0], typ2[0][0])
@@ -85,6 +92,9 @@ def getConvergedPreds(typ1, var1, prop1, typ2, var2, prop2):
     if prop1 is not None and typ1 != typ2:
         props = getProperties(typ2[0][0], typ1[0][0])
         allPreds = allPreds.update({typ1[0][0]: sum((getBinaryPreds(typ1, var1, prop1, typ1, var2, prop) for prop in props), [])})
+
+    # If both variables don't have any properties applied, find all common types to which they can be transformed using properties
+    # and then compute binary predicates between the variables
 
     if prop1 is None and prop2 is None:
         for T in TYPES:
@@ -102,9 +112,9 @@ def getConvergedPreds(typ1, var1, prop1, typ2, var2, prop2):
 
     return sum([allPreds[k] for k in allPreds], [])
 
-def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
-    global mode
 
+def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
+    # nvar is the property applied on var
     nvar1 = [var1 if prop1 is None else '%s(%s)' % (prop1[0],var1), var1 if prop1 is None else '%s(%s)' % (prop1[1], var1)]
     nvar2 = [var2 if prop2 is None else '%s(%s)' % (prop2[0],var2), var2 if prop2 is None else '%s(%s)' % (prop2[1], var2)]
 
@@ -134,53 +144,48 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
                          [('(fun %s %s-> %s > %s)', '"%s > %s"'),
                           ('(fun %s %s-> %s = %s)', '"%s = %s"')]
-                         + ifHuge([('(fun %s %s-> %s == %s)', '"%s == %s"'),
-                                   ('(fun %s %s-> %s <> %s)', '"%s <> %s"'),
-                                   ('(fun %s %s-> %s != %s)', '"%s != %s"'),
+                         + ifHuge([('(fun %s %s-> %s != %s)', '"%s != %s"'),
                                    ('(fun %s %s-> %s < %s)', '"%s < %s"')])))
-                
+
     if var2 is not None:
         if typ1 == typ2 and typ1[0][0] not in ATOM_TYPES:
             preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
                             [('(fun %s %s-> %s = %s)', '"%s = %s"')]
-                            + ifHuge([('(fun %s %s-> %s == %s)', '"%s == %s"'),
-                                    ('(fun %s %s-> %s <> %s)', '"%s <> %s"'),
-                                    ('(fun %s %s-> %s != %s)', '"%s != %s"')])))
+                            + ifHuge([('(fun %s %s-> %s != %s)', '"%s != %s"')])))
 
-        if mode == 'F':
-            if typ1[0][0] == LT:
-                preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) %s)' % (var1, var2, var1, f[0], var1, var2, var1),
-                            '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
-                            in getBinaryPreds(typ1[0][1], '%se' % var1, None, typ2, var2, None))
-                preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %se %s) %s)' % (var1, var2, var1, f[0], var1, var2, var1),
-                            '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
-                            in getBinaryPreds(typ1[0][1], '%se' % var1, None, typ2, var2, None))
+        if typ1[0][0] == LT and typ1[0][1][0][0] in ATOM_TYPES:
+            preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) %s)' % (var1, var2, var1, f[0], var1, var2, var1),
+                        '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
+                        in getBinaryPreds(typ1[0][1], '%se' % var1, None, typ2, var2, None))
+            preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %se %s) %s)' % (var1, var2, var1, f[0], var1, var2, var1),
+                        '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
+                        in getBinaryPreds(typ1[0][1], '%se' % var1, None, typ2, var2, None))
 
-            elif typ2[0][0] == LT:
-                preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) %s)' % (var1, var2, var2, f[0], var1, var2, var2),
-                            '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
-                            in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
-                preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %s %se) %s)' % (var1, var2, var2, f[0], var1, var2, var2),
-                            '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
-                            in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
+        elif typ2[0][0] == LT and typ2[0][1][0][0] in ATOM_TYPES:
+            preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) %s)' % (var1, var2, var2, f[0], var1, var2, var2),
+                        '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
+                        in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
+            preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %s %se) %s)' % (var1, var2, var2, f[0], var1, var2, var2),
+                        '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
+                        in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
 
-            if typ1[0][0] == ST:
-                preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
-                            '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
-                            in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
-                preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
-                            '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
-                            in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
+        if typ1[0][0] == ST:
+            preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
+                        '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
+                        in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
+            preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
+                        '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
+                        in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
 
-            elif typ2[0][0] == ST:
-                preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) (BatString.to_list %s)))' % (var1, var2, var2, f[0], var1, var2, var2),
-                            '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
-                            in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
-                preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %s %se) (BatString.to_list %s)))' % (var1, var2, var2, f[0], var1, var2, var2),
-                            '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
-                            in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
+        elif typ2[0][0] == ST:
+            preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) (BatString.to_list %s))' % (var1, var2, var2, f[0], var1, var2, var2),
+                        '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
+                        in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
+            preds.extend(('(fun %s %s -> List.exists (fun %se -> %s %s %se) (BatString.to_list %s))' % (var1, var2, var2, f[0], var1, var2, var2),
+                        '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
+                        in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
 
-
+        # Predicates between one variable and elements of the other variable (which is a tuple)
         if typ1[0][0] == TT:
             tps = [([t], var1+str(i)) for (i,t) in enumerate(typ1[0][1])]
             head = '(fun (%s) %s -> ' % (','.join(t[1] for t in tps), var2)
@@ -197,23 +202,27 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
 
     return preds + getConvergedPreds(typ1, var1, prop1, typ2, var2, prop2)
 
+
 def explodeUnaryPredsInTuple(allTypsNVars):
     subFeatures = ((getFeatures([t], v) or (), v) for (t,v) in allTypsNVars)
     head = '(fun (%s) -> ' % (','.join(t[1] for t in allTypsNVars))
     return sum(([(head + ('(%s %s))' % (fa[0], v)), fa[1]) for fa in fas] for (fas,v)
-                in subFeatures if fas != ()),
+                  in subFeatures if fas != ()),
                [])
+
 
 def explodeBinaryPredsInTuple(allTypsNVars):
     head = '(fun (%s) -> ' % (','.join([t[1] for t in allTypsNVars]))
     return sum(([(head + '(%s %s %s))' % (f, v1, v2), a) for (f,a)
-                 in getBinaryPreds([t1], v1, None, [t2], v2, None)] for ((t1,v1),(t2,v2))
-                in itertools.combinations(allTypsNVars, 2)),
+                    in getBinaryPreds([t1], v1, None, [t2], v2, None)] for ((t1,v1),(t2,v2))
+                  in itertools.combinations(allTypsNVars, 2)),
                [])
+
 
 def getFeatures(typ, var):
     features = []
 
+    # Quantifiers on features of the list's type
     if typ[0][0] == LT:
         features.extend(('(fun %s -> List.for_all %s %s)' % (var, f[0], var),
                          '"for all %se in %s -> %s"' % (var, var, f[1][1:-1])) for f
@@ -222,13 +231,18 @@ def getFeatures(typ, var):
                          '"for any %se in %s -> %s"' % (var, var, f[1][1:-1])) for f
                         in getFeatures(typ[0][1], '%se' % var))
 
+    # Unary and binary predicates on tuple elements
     elif typ[0][0] == TT:
         tps = [(tp[2],tp[0]) for tp in typ[0][1]]
         features.extend(explodeUnaryPredsInTuple(tps))
         features.extend(explodeBinaryPredsInTuple(tps))
 
+    # Without the var2, some default values are used in binary predicates,
+    # like 0 for Ints, true for Bools etc.
     features.extend(getBinaryPreds(typ, var, None, typ, None, None))
+
     return features
+
 
 def getTests(typ, count):
     tests = []
@@ -248,26 +262,18 @@ def getTests(typ, count):
     return tests
 
 def Tanalyze(pat):
-    global mode
-
-    mode = "T"
     cnt, typ = pat.split('|')
     return stringify(getTests(any_type.parseString(typ).asList(), int(cnt)))
 
 def Fanalyze(pat):
-    global mode
-
-    mode = "F"
     var, typ = pat.split('|')
     return stringify(getFeatures(any_type.parseString(typ).asList(), var))
 
 def Panalyze(pat):
-    global mode
-
-    mode = "P"
     var, ityp, otyp = pat.split('|')
     ityp = any_type.parseString(ityp).asList()
     otyp = any_type.parseString(otyp).asList()
+
     ofeatures = [('(fun z r -> match r with Bad _ -> false | Ok ' + f[5:], a)
                  for (f,a) in getFeatures(otyp, 'res')]
     iofeatures = [('(fun ' + f[5:].replace(' ', ' r -> match r with Bad _ -> false | Ok ', 1), a)
