@@ -32,15 +32,18 @@ ATOM_TYPES = [BT, IT, CT, ST]
 list_type = Group(LKW + LPAR + Group(any_type) + RPAR)
 tuple_type = Group(TKW + LPAR + Group(delimitedList(Group(Word(alphanums) + ':' + any_type))) + RPAR)
 
+COMPLEX_TYPES = [LT, TT]
+
 any_type << (atom_types | list_type | tuple_type)
 
 ### End of pyparsing parser for type annotations ###
 
 huge = False
+mode = ''
 
-RAND_MIN = -4
-RAND_MAX = 4
-LIST_MAX = 5
+RAND_MIN = -2
+RAND_MAX = 2
+LIST_MAX = 3
 STR_MAX = 8
 
 def ifHuge(l):
@@ -131,7 +134,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                          [('(fun %s %s-> %s > %s)', '"%s > %s"'),
                           ('(fun %s %s-> %s = %s)', '"%s = %s"')]
                          + ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
-        if var2 is None:
+        if var2 is None and mode == 'F':
             preds.extend([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"%s %% 2 = 0"' % nvar1[1])])
 
     elif typ1[0][0] == CT and typ2[0][0] == CT and var2 is not None:
@@ -153,7 +156,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                             [('(fun %s %s-> %s = %s)', '"%s = %s"')]
                             + ifHuge([('(fun %s %s-> %s != %s)', '"%s != %s"')])))
 
-        if typ1[0][0] == LT and typ1[0][1][0][0] in ATOM_TYPES:
+        if typ1[0][0] == LT and typ1[0][1][0][0] not in COMPLEX_TYPES:
             preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) %s)' % (var1, var2, var1, f[0], var1, var2, var1),
                         '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
                         in getBinaryPreds(typ1[0][1], '%se' % var1, None, typ2, var2, None))
@@ -161,7 +164,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                         '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
                         in getBinaryPreds(typ1[0][1], '%se' % var1, None, typ2, var2, None))
 
-        elif typ2[0][0] == LT and typ2[0][1][0][0] in ATOM_TYPES:
+        elif typ2[0][0] == LT and typ2[0][1][0][0] not in COMPLEX_TYPES:
             preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) %s)' % (var1, var2, var2, f[0], var1, var2, var2),
                         '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
                         in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
@@ -262,14 +265,23 @@ def getTests(typ, count):
     return tests
 
 def Tanalyze(pat):
+    global mode
+    mode = 'T'
+
     cnt, typ = pat.split('|')
     return stringify(getTests(any_type.parseString(typ).asList(), int(cnt)))
 
 def Fanalyze(pat):
+    global mode
+    mode = 'F'
+
     var, typ = pat.split('|')
     return stringify(getFeatures(any_type.parseString(typ).asList(), var))
 
 def Panalyze(pat):
+    global mode
+    mode = 'P'
+
     var, ityp, otyp = pat.split('|')
     ityp = any_type.parseString(ityp).asList()
     otyp = any_type.parseString(otyp).asList()
@@ -296,7 +308,8 @@ if __name__ == "__main__":
     Tpat = "\(\*PYT:(%s)\*\)"
     Tmat = re.compile(Tpat % '[^\*]+')
 
-    for l in open(sys.argv[1]).readlines():
+    for (i,l) in enumerate(open(sys.argv[1]).readlines()):
+        sys.stderr.write("\rScanning line %d ..." % (i+1))
         Fres = Fmat.search(l)
         Frep = l if Fres is None else Fmat.sub(Fanalyze(Fres.group(1)), l)
         Pres = Pmat.search(Frep)
@@ -304,3 +317,4 @@ if __name__ == "__main__":
         Tres = Tmat.search(Prep)
         Trep = Prep if Tres is None else Tmat.sub(Tanalyze(Tres.group(1)), Prep)
         sys.stdout.write(Trep)
+    sys.stderr.write(" DONE\n")

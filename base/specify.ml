@@ -31,8 +31,3 @@ let gen_post_conds ((in_vals, out_val) : 'a * 'b)
                                  Bad _ -> false
                                | Ok res -> (f (fun (o,i) -> (out_trans o)::(in_trans i)) (res, ins) = VBool true)), a))
               (List.filter (fun (a, _) -> BatString.exists a out_name) synthed)
-
-(*FIXME*)
-let specify f tests features (dom, codom) (ins, out) (in_trans, out_trans) iconsts =
-  let posts = gen_post_conds (List.hd tests, f (List.hd tests)) (ins, dom) (out, codom) (in_trans, out_trans)
-  in pacLearnSpec f ~tests:tests ~features:features posts

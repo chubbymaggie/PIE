@@ -461,19 +461,18 @@ let rec convergeAllFeatures (f: 'a -> 'b) ~tests:(tests : 'a list) ~features:(fe
 *)
 let pacLearnSpec ?(k=3) (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features : (('a -> bool) * 'c) list)
     ?(costs = hash_of_list(BatList.map (fun v -> (v,1.0)) (range (BatList.length features))))
-    (posts : (('a -> 'b result -> bool) * 'c) list)
-    : ('c cnf option * 'c) list =
+    (post : ('a -> 'b result -> bool) * 'c) : 'c cnf option * 'c =
 
   let featureLen = BatList.length features in
-  prerr_string ("\r    [%] Inferring [k = " ^ (string_of_int k) ^ "] (" ^ (string_of_int featureLen) ^ "f x " ^ (string_of_int (List.length tests)) ^ "t) ...                                     "); flush_all();
-  
+  prerr_string ("\r    [%] Inferring {" ^ (snd post) ^ "} [k = " ^ (string_of_int k) ^ "] (" ^ (string_of_int featureLen) ^ "f x " ^ (string_of_int (List.length tests)) ^ "t) ...                                     "); flush_all();
+
   (* create the truth assignment corresponding to each test in tests by evaluating the features *)
   let examples =
     BatList.map
       (fun arg ->
 	 (* if a feature throws an exception treat it as if the feature returns false *)
 	 BatList.mapi (fun index (p,_) -> (index + 1, try p arg with _ -> false)) features) tests in
-  
+
   (* run all the tests to get their outputs *)
   let testResults = BatList.map (fun test -> (test, BatResult.catch f test)) tests in
 
@@ -495,20 +494,14 @@ let pacLearnSpec ?(k=3) (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(featu
       with
 	  NoSuchFunction -> (None, str) in
 
-  BatList.map pacLearnOne posts
-
-
-let learnAndPrintSpec (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
-    (posts : (('a -> 'b result -> bool) * 'c) list) : unit =
-  print_specs stdout (pacLearnSpec f tests features posts)
-
+  pacLearnOne post
 
 let rec pacLearnSpecIncrK ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a -> bool) * 'c) list)
     (post : ('a -> 'b result -> bool) * 'c) : 'c cnf option * 'c =
 
-  let res = List.hd (pacLearnSpec ~k:k f ~tests:tests ~features:features [post]) in
+  let res = pacLearnSpec ~k:k f ~tests:tests ~features:features post in
     if fst res != None then res
-    else pacLearnSpecIncrK ~k:(k+1) f tests features post
+    else (try pacLearnSpecIncrK ~k:(k+1) f tests features post with ClauseEncodingError -> (Some [[Pos "~~ FAILED ~~"]], snd post))
 
 
 let resolveAndPacLearnSpec ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a -> bool) * 'c) list)
@@ -528,7 +521,7 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
   let features = if fst trans = [] then features else convergeAllFeatures f tests features [post] trans iconsts in
 
   if missingFeatures f tests features post != [] then None else (
-    let res = fst (List.hd (pacLearnSpec ~k:k f ~tests:tests ~features:features [post])) in
+    let res = fst (pacLearnSpec ~k:k f ~tests:tests ~features:features post) in
     if res = None then (
       pacLearnSpecNSATVerify ~k:(k + 1) ~unsats:unsats f tests features post trans iconsts trans_test smtfile
     (* TODO: res is FALSE, add new model ::

@@ -48,8 +48,9 @@ let rec print_data chan (data: value) : unit = match data with
   | VBool(b)     -> output_string chan (string_of_bool b)
   | VChar(c)     -> output_char chan c
   | VList(vl)    -> (output_string chan "[ ";
-                     print_data chan (List.hd vl);
-                     List.iter (fun v -> output_string chan ", ";
-                                         print_data chan v)
-                               (List.tl vl);
+                     if vl != [] then ()
+                     else (print_data chan (List.hd vl);
+                       List.iter (fun v -> output_string chan ", ";
+                                           print_data chan v)
+                                 (List.tl vl));
                      output_string chan " ]")

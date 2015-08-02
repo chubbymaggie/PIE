@@ -1,7 +1,154 @@
 #use "top_helper.ml"
 
-
 open SpecInfer
+
+
+(* #################### PROPERTIES  #################### *)
+
+(*** List.length ***)
+
+let llengthRes = fun () ->
+let f = List.length in
+let tests = (*PYT:4096|L(I)*) in
+let typ = [ TList ] in
+let tfun = fun l -> [ of_list of_int l ] in
+let def_features = (*PYF:l|L(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|L(1)|I*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+
+(*** List.hd ***)
+
+let lhdRes = fun () ->
+let f = List.hd in
+let tests = (*PYT:4096|L(I)*) in
+let typ = [ TList ] in
+let tfun = fun l -> [ of_list of_int l ] in
+let def_features = (*PYF:l|L(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|L(1)|1*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+
+(*** List.nth ***)
+
+let lnth = fun (l,n) -> List.nth l n;;
+
+let lnthRes = fun () ->
+let f = lnth in
+let tests = (*PYT:4096|T(l:L(I),n:I)*) in
+let typ = [ TList ; TInt ] in
+let tfun = fun (l,n) -> [ of_list of_int l ; of_int n ] in
+let def_features = (*PYF:l|T(l:L(1),n:I)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(l:L(1),n:I)|1*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+
+(*** List.mem ***)
+
+let lmem = fun (m,l) -> List.mem m l;;
+
+let lmemRes = fun () ->
+let f = lmem in
+let tests = (*PYT:4096|T(m:I,l:L(I))*) in
+let typ = [ TInt ; TList ] in
+let tfun = fun (m,l) -> [ of_int m ; of_list of_int l ] in
+let def_features = (*PYF:l|T(m:1,l:L(1))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(m:1,l:L(1))|B*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+
+(*
+ *
+(*** List.assoc ***)
+
+let lassoc = fun (m,l) -> List.assoc m l;;
+
+let lassocRes = fun () ->
+let f = lassoc in
+let tests = (*PYT:4096|T(m:I,l:L(T(x0:I,x1:I)))*) in
+let typ = [ TInt ; TList ] in
+let tfun = fun (m,l) -> [ of_int m ; of_list of_int l ] in
+let def_features = (*PYF:l|T(m:1,l:L(T(x0:1,x1:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(m:1,l:L(T(x0:1,x1:2)))|2*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+
+(*** List.mem_assoc ***)
+
+let lmem_assoc = fun (m,l) -> List.mem_assoc m l;;
+
+let lmem_assocRes = fun () ->
+let f = lmem_assoc in
+let tests = (*PYT:4096|T(m:I,l:L(T(x0:I,x1:I)))*) in
+let typ = [ TInt ; TList ] in
+let tfun = fun (m,l) -> [ of_int m ; of_list of_int l ] in
+let def_features = (*PYF:l|T(m:1,l:L(T(x0:1,x1:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(m:1,l:L(T(x0:1,x1:2)))|B*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+ *
+ *)
+
+
+(* #################### MUTATORS  #################### *)
+
+(*** List.tl ***)
+
+let ltlRes = fun () ->
+let f = List.tl in
+let tests = (*PYT:4096|L(I)*) in
+let typ = [ TList ] in
+let tfun = fun l -> [ of_list of_int l ] in
+let def_features = (*PYF:l|L(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|L(1)|L(1)*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
 
 
 (*** List.append ***)
@@ -25,6 +172,7 @@ let my_postconditions = [
     let postconds = def_postconditions @ my_postconditions in
       resolveAndPacLearnSpec f tests features postconds trans []
 ;;
+
 
 
 (*** List.combine ***)
@@ -159,3 +307,25 @@ let my_postconditions = [] in
     let postconds = def_postconditions @ my_postconditions in
       resolveAndPacLearnSpec f tests features postconds trans []
 ;;
+
+
+(*
+(*** List.remove_assoc ***)
+
+let lremove_assoc = fun (m,l) -> List.remove_assoc m l;;
+
+let lremove_assocRes = fun () ->
+let f = lremove_assoc in
+let tests = (*PYT:4096|T(m:I,l:L(T(x0:I,x1:I)))*) in
+let typ = [ TInt ; TList ] in
+let tfun = fun (m,l) -> [ of_int m ; of_list of_int l ] in
+let def_features = (*PYF:l|T(m:1,l:L(T(x0:1,x1:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(m:1,l:L(T(x0:1,x1:2)))|L(T(x0:1,x1:2))*) in
+let my_postconditions = [] in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+*)
