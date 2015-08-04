@@ -44,57 +44,122 @@ let pruneWithPositiveExamples (conj : int list) (example : truthAssignment) =
 (* use a greedy heuristic to identify a set of literals in conj that cover all of the negative examples in
    remainingNeg (i.e., that conjunction of literals suffices to falsify all of the examples).
 *)
-let rec pruneWithNegativeExamples (conj : int list) (costs: (int, float) BatHashtbl.t) (remainingNeg : truthAssignment list) : int list =
-  match remainingNeg with
-      [] -> []
-    | _ ->
-      (* for each variable in conj, count how many of the negative examples it covers
-	 (i.e, on how many of the examples it has the truth value false) *)
-      let counts =
-	BatList.map
-	  (fun var ->
-	    (var, BatList.fold_left
-	      (fun c ex ->
-		if BatHashtbl.find_default ex var true then c else c+1) 0 remainingNeg)) conj in
-      (* find the variable with the largest inverted cost, computed as n/c where c is the cost of the variable
-	 and n is the number of negative examples it covers
-      *)
-      let (chosenVar, maxCost) =
-	BatList.fold_left
-	  (fun ((currChosen,currCost) as curr) ((v,n) as item) ->
-	    let cost = float(n) /. (BatHashtbl.find costs v) in
-	    if cost > currCost then (v,cost) else curr
+let pruneWithNegativeExamples (conj : int list) (costs: (int, float) BatHashtbl.t) (remainingNeg : truthAssignment list) : int list =
+  let rec helper conj remainingNeg accum =
+    match remainingNeg with
+      [] -> accum
+      | _ ->
+	  (* for each variable in conj, count how many of the negative examples it covers
+	     (i.e, on how many of the examples it has the truth value false) *)
+	  let counts =
+	    BatList.map
+	      (fun var ->
+		 (var, BatList.fold_left
+		    (fun c ex ->
+		       if BatHashtbl.find_default ex var true then c else c+1) 0 remainingNeg)) conj in
+	    (* find the variable with the largest inverted cost, computed as n/c where c is the cost of the variable
+	       and n is the number of negative examples it covers
+	    *)
+	  let (chosenVar, maxCost) =
+	    BatList.fold_left
+	      (fun ((currChosen,currCost) as curr) ((v,n) as item) ->
+		 let cost = float(n) /. (BatHashtbl.find costs v) in
+		   if cost > currCost then (v,cost) else curr
 	  ) (0,0.0) counts in
 
-      (* if no literals cover any of the remaining negative examples, then
-	 there is no boolean function that properly classifies all of the original
-	 positive and negative examples *)
-      if maxCost = 0.0 then raise NoSuchFunction else
+	    (* if no literals cover any of the remaining negative examples, then
+	       there is no boolean function that properly classifies all of the original
+	       positive and negative examples *)
+	    if maxCost = 0.0 then raise NoSuchFunction else
       
-      (* keep the chosen variable and recurse,
-	 filtering out this variable from the conjunction
-	 and filtering out the negative examples that it covers.
+	      (* keep the chosen variable and recurse,
+		 filtering out this variable from the conjunction
+		 and filtering out the negative examples that it covers.
 
-	 we also filter out the negated version of the chosen
-	 variable.  this is necessary when we are using this function
-	 to find missing tests, so we don't say that (X and (not X))
-	 is a missing test.  when this function is used as part of
-	 learning a conjunction, there will be no negative variables
-	 (see the comment on pacLearnConjunction about not including
-	 negative literals), so it will be a no-op in that case.  it's
-	 also not necessary in that case as long as we have already
-	 pruned with at least one positive test case, which ensures
-	 that a variable and its negation cannot both appear in conj *)
-	
-      chosenVar::(pruneWithNegativeExamples
-		    (* the filter on -chosenVar is needed only because of the way we use this function to infer
-		       missing tests (see the missingTests function below; it is useless in the context of
-		       PAC learning of a conjunction *)
-		    (BatList.filter (fun v -> v <> chosenVar && v <> -chosenVar) conj)
-        costs
-		    (BatList.filter (fun ex -> BatHashtbl.find_default ex chosenVar true)
-		     remainingNeg))
+		 we also filter out the negated version of the chosen
+		 variable.  this is necessary when we are using this function
+		 to find missing tests, so we don't say that (X and (not X))
+		 is a missing test.  when this function is used as part of
+		 learning a conjunction, there will be no negative variables
+		 (see the comment on pacLearnConjunction about not including
+		 negative literals), so it will be a no-op in that case.  *)
 
+		helper
+		  (BatList.filter (fun v -> v <> chosenVar && v <> -chosenVar) conj)
+		  (BatList.filter (fun ex -> BatHashtbl.find_default ex chosenVar true) remainingNeg)
+		  (chosenVar::accum)
+  in
+	      
+    helper conj remainingNeg []
+
+
+(* learn a simple conjunction that falsifies all negative examples but may not satisfy all positive examples
+*)
+let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) (pos : truthAssignment list) (remainingNeg : truthAssignment list)
+    : int list =
+
+  (* for each variable in conj, count how many of the positive examples it covers
+     (i.e, on how many of the examples it has the truth value true) *)
+  let poscounts =
+    hash_of_list
+      (BatList.map
+	 (fun var ->
+	    (var, BatList.fold_left
+	       (fun c ex ->
+		  if BatHashtbl.find ex var then c+1 else c) 0 pos)) conj) in
+  
+  let rec helper conj remainingNeg accum =
+    match remainingNeg with
+      [] -> accum
+      | _ ->
+	  (* for each variable in conj, count how many of the negative examples it covers
+	     (i.e, on how many of the examples it has the truth value false) *)
+	  let counts =
+	    BatList.map
+	      (fun var ->
+		 (var, BatList.fold_left
+		    (fun c ex ->
+		       if BatHashtbl.find_default ex var true then c else c+1) 0 remainingNeg)) conj in
+	    (* find the variable with the largest inverted cost, computed as n/c where c is the cost of the variable
+	       and n is the number of negative examples it covers
+	    *)
+	  let (chosenVar, maxCost) =
+	    BatList.fold_left
+	      (fun ((currChosen,currCost) as curr) ((v,n) as item) ->
+		 let cost = float(n) /. (BatHashtbl.find costs v) in
+		   if cost > currCost then (v,cost) else curr
+	  ) (0,0.0) counts in
+
+	    (* if no literals cover any of the remaining negative examples, then
+	       there is no boolean function that properly classifies all of the original
+	       positive and negative examples *)
+	    if maxCost = 0.0 then raise NoSuchFunction else
+      
+	      (* keep the chosen variable and recurse,
+		 filtering out this variable from the conjunction
+		 and filtering out the negative examples that it covers.
+
+		 we also filter out the negated version of the chosen
+		 variable.  this is necessary when we are using this function
+		 to find missing tests, so we don't say that (X and (not X))
+		 is a missing test.  when this function is used as part of
+		 learning a conjunction, there will be no negative variables
+		 (see the comment on pacLearnConjunction about not including
+		 negative literals), so it will be a no-op in that case.  *)
+
+	      let newconj = BatList.filter (fun v -> v <> chosenVar && v <> -chosenVar) conj in
+	      let newaccum = chosenVar::accum in
+
+		if List.for_all (fun ta -> List.exists (fun i -> not (BatHashtbl.find ta i)) newaccum) pos
+		  then
+		      (* if the addition of chosenVar makes it so our result will not satisfy any positive tests,
+			 then we throw out that chosenVar and keep looking *)
+		      helper newconj remainingNeg accum
+		  else
+		      helper newconj (BatList.filter (fun ex -> BatHashtbl.find_default ex chosenVar true) remainingNeg) newaccum in
+	      
+    helper conj remainingNeg []
+      
 (* learn an unknown conjunct over the variables in list vars using the given set of
    positive and negative examples (list of truth assignments for which the unknown
    conjunct evaluates to true and false respectively).
@@ -111,16 +176,24 @@ let rec pruneWithNegativeExamples (conj : int list) (costs: (int, float) BatHash
 
    so this is not a general algorithm for learning conjunctions
 
+   if the flag strengthen is true, we attempt to find a conjunct that falsifies
+   all negative examples and satisfies at least one positive example but might
+   falsify others.  this is useful if we are trying to find a simple strengthening
+   of the "true" precondition.
+
    costs is a map from variables to an integer cost, which is used as
    part of the greedy heuristic for learning from negative examples.
 *)    
-let pacLearnConjunction (vars : int list) (costs: (int, float) BatHashtbl.t) (pos : truthAssignment list) (neg : truthAssignment list) =
+let pacLearnConjunction (strengthen : bool) (vars : int list) (costs: (int, float) BatHashtbl.t) (pos : truthAssignment list) (neg : truthAssignment list) =
   (* the initial conjunction is the AND of all variables *)
   let conj = vars in
 
-  let conj = BatList.fold_left pruneWithPositiveExamples conj pos in
-  
-  pruneWithNegativeExamples conj costs neg
+    match strengthen with
+	false ->
+	  let conj = BatList.fold_left pruneWithPositiveExamples conj pos in
+	    pruneWithNegativeExamples conj costs neg
+      | true ->
+	  learnStrongConjunction conj costs pos neg
 
     
 (* PAC learning a CNF formula *)
@@ -213,9 +286,16 @@ let cnfVarsToConjunctVars k n : (int * (int list)) list =
 (* PAC-learn a k-CNF formula over the variables numbered 1 to n, given
    a set of positive and negative examples (list of truth assignments, each represented as a list of
    (int, bool) pairs.
+
+   if the flag strengthen is true, we attempt to find a formula that falsifies
+   all negative examples and satisfies at least one positive example but might
+   falsify others.  this is useful if we are trying to find a simple strengthening
+   of the "true" precondition.
+
+   
    costs associates a cost with each variable, which is used as a heuristic in the learning algorithm
 *)
-let pacLearnKCNF ?(k=3) (n : int) (costs : (int, float) BatHashtbl.t)
+let pacLearnKCNF ?(k=3) (strengthen : bool) (n : int) (costs : (int, float) BatHashtbl.t)
     (pos : (int * bool) list list) (neg : (int * bool) list list) : int cnf =
 
   (* create one variable per possible k-clause over the given variables *)
@@ -249,7 +329,7 @@ let pacLearnKCNF ?(k=3) (n : int) (costs : (int, float) BatHashtbl.t)
 
   (* learn a conjunction on the new variables *)
   let vars = BatList.map (fun (i,_) -> i) varEncoding in
-  let learnedConjunct = pacLearnConjunction vars costs newPos newNeg in
+  let learnedConjunct = pacLearnConjunction strengthen vars costs newPos newNeg in
 
   (* translate the result back to the old variables *)
   let decodeClause i =
@@ -450,16 +530,25 @@ let rec convergeAllFeatures (f: 'a -> 'b) ~tests:(tests : 'a list) ~features:(fe
     if postconds = [] then features else convergeAllFeatures f tests (convergePCondFeatures f tests features (List.hd postconds) trans iconsts) (List.tl postconds) trans iconsts
 
 
+(* a postcondition should raise this exception to indicate that the given test input should be ignored *)
+exception IgnoreTest
+
 (* k is the maximum clause length for the formula we will provide (i.e., it's a k-cnf formula)
    f is the function whose spec we are inferring
    tests is a set of inputs on which to test f
    features is a set of predicates on inputs that we use as features for our learning
+
+   if the flag strengthen is true, we attempt to find a formula that falsifies
+   all negative examples and satisfies at least one positive example but might
+   falsify others.  this is useful if we are trying to find a simple strengthening
+   of the "actual" precondition.
+
    costs is an optional mapping from the nth feature (numbered 1 through N according to their order) to
      a cost (float) - lower is better
-   posts is the set of postconditions whose corresponding preconditions formula we are trying to learn
+   post is the postcondition whose corresponding precondition formula we are trying to learn
    we associate some kind of description (of polymorphic type 'c) with each feature and postcondition
 *)
-let pacLearnSpec ?(k=3) (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features : (('a -> bool) * 'c) list)
+let pacLearnSpec ?(k=3) ?(strengthen=false) (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features : (('a -> bool) * 'c) list)
     ?(costs = hash_of_list(BatList.map (fun v -> (v,1.0)) (range (BatList.length features))))
     (post : ('a -> 'b result -> bool) * 'c) : 'c cnf option * 'c =
 
@@ -481,14 +570,14 @@ let pacLearnSpec ?(k=3) (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(featu
 
   (* separate the tests into positive and negative examples *)
     let (pos, neg) =
-      BatList.fold_left2 (fun (l1,l2) (arg, res) ex -> try if postcond arg res then (ex::l1,l2) else (l1,ex::l2) with _ -> (l1,ex::l2))
+      BatList.fold_left2 (fun (l1,l2) (arg, res) ex -> try if postcond arg res then (ex::l1,l2) else (l1,ex::l2) with IgnoreTest -> (l1,l2) | _ -> (l1,ex::l2))
         ([],[]) testResults examples in
       
     (* remove duplicates *)
     let (pos, neg) = (BatList.unique pos, BatList.unique neg) in
 
       try
-	let cnf = pacLearnKCNF ~k:k featureLen costs pos neg in
+	let cnf = pacLearnKCNF ~k:k strengthen featureLen costs pos neg in
 	let precond = mapCNF (fun i -> let (_,s) = BatList.nth features (i-1) in s) cnf in
 	(Some precond, str)
       with
