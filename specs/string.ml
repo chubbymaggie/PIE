@@ -7,6 +7,8 @@ open Generator
 
 open SpecInfer
 
+(* SOME GENERATORS FOR RANDOM TESTS *)  
+  
 let genOne ?(rand=Random.State.make_self_init()) gen = run gen rand
 
 (* generate n random values with the given generator *)
@@ -28,8 +30,14 @@ let strtests = generate 10000 stringGen
 (* generator for pairs, given generators for each component *)
 let genPair g1 g2 = app (app (pure (fun x y -> (x,y))) g1) g2
 
-(* generator for pairs, given generators for each component *)
+(* generator for triples, given generators for each component *)
 let genTriple g1 g2 g3 = app (app (app (pure (fun x y z -> (x,y,z))) g1) g2) g3
+
+(* generator for quads, given generators for each component *)
+let genQuad g1 g2 g3 g4 = app (app (app (app (pure (fun x y z w -> (x,y,z,w))) g1) g2) g3) g4
+
+(* generator for quints, given generators for each component *)
+let genQuint g1 g2 g3 g4 g5 = app (app (app (app (app (pure (fun x y z w v -> (x,y,z,w,v))) g1) g2) g3) g4) g5
 
 (* generator for random tuples of the above strings and small ints *)
 let stringintGen = genPair stringGen smallintGen
@@ -44,6 +52,8 @@ let stringintinttests = generate 10000 stringintintGen
 let intcharGen = genPair smallintGen charGen
 let intchartests = generate 10000 intcharGen
 
+
+(* INFERRING SPECS FOR STRING MODULE FUNCTIONS *)  
 
 (*** String.copy ***)
 
@@ -183,3 +193,28 @@ let my_postconditions = []
     let postconds = def_postconditions @ my_postconditions in
       resolveAndPacLearnSpec f tests features postconds trans []
 ;;
+
+
+(*** String.indexFrom ***)
+
+let sindexFrom = (fun (s,i,c) -> String.index_from s i c)
+
+let sindexFromRes = fun () ->
+let f = sindexFrom in
+let tests = generate 10000 (genTriple stringGen smallintGen charGen) in
+let typ = [ TString ; TInt; TChar ] in
+let tfun = fun (s, i, c) -> [ of_string s ; of_int i; of_char c ] in
+let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
+let my_features = [] in
+(* let def_postconditions = (\*PYP:t|T(s:S,i:I,c:C)|I*\) in *)
+let def_postconditions = [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
+let my_postconditions = []
+  in
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec f tests features postconds trans []
+;;
+
+
+		     

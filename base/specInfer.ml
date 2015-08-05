@@ -95,24 +95,57 @@ let pruneWithNegativeExamples (conj : int list) (costs: (int, float) BatHashtbl.
 
 (* learn a simple conjunction that falsifies all negative examples but may not satisfy all positive examples
 *)
-let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) (pos : truthAssignment list) (remainingNeg : truthAssignment list)
+let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) (pos : truthAssignment list) (neg : truthAssignment list)
     : int list =
 
-  (* for each variable in conj, count how many of the positive examples it covers
-     (i.e, on how many of the examples it has the truth value true) *)
+  let nvars = float(BatList.length conj) in
+  let epsilon = 0.1 in
+  
+  let poslen = float(BatList.length pos) in
+  let neglen = float(BatList.length neg) in
+  let totlen = poslen +. neglen in
+
+  (* for each variable in conj, count how many of the positive examples it falsifies
+     (i.e, on how many of the examples it has the truth value false) *)
   let poscounts =
     hash_of_list
       (BatList.map
 	 (fun var ->
 	    (var, BatList.fold_left
 	       (fun c ex ->
-		  if BatHashtbl.find ex var then c+1 else c) 0 pos)) conj) in
-  
+		  if BatHashtbl.find ex var then c else c +. 1.0) 0.0 pos)) conj) in
+
+  (* for each variable in conj, count how many of the negative examples it falsifies
+     (i.e, on how many of the examples it has the truth value false) *)
+  let negcounts =
+    hash_of_list
+      (BatList.map
+	 (fun var ->
+	    (var, BatList.fold_left
+	       (fun c ex ->
+		  if BatHashtbl.find ex var then c else c +. 1.0) 0.0 neg)) conj) in
+
+
+(* keep only variables that are "significant" and not "harmful"
+   see Kearns and Vazirani, p.106
+   algorithm for learning conjunctions in the presence of noise
+*)
+  let conj =
+    BatList.filter (fun v ->
+  		      let p = (BatHashtbl.find poscounts v) in
+  		      let n = (BatHashtbl.find negcounts v) in
+  		      let p0 = (p +. n) /. totlen in
+  		      let p01 = p /. totlen in
+  		      let bound = epsilon /. (8.0 *. nvars) in
+  		      let significant = p0 >= bound in
+  		      let harmful = p01 >= bound in
+  			(* significant && *) not(harmful)) conj in
+    
   let rec helper conj remainingNeg accum =
     match remainingNeg with
       [] -> accum
       | _ ->
-	  (* for each variable in conj, count how many of the negative examples it covers
+	  (* for each variable in conj, count how many of the remaining negative examples it covers
 	     (i.e, on how many of the examples it has the truth value false) *)
 	  let counts =
 	    BatList.map
@@ -120,20 +153,20 @@ let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) 
 		 (var, BatList.fold_left
 		    (fun c ex ->
 		       if BatHashtbl.find_default ex var true then c else c+1) 0 remainingNeg)) conj in
-	    (* find the variable with the largest inverted cost, computed as n/c where c is the cost of the variable
-	       and n is the number of negative examples it covers
+
+	  (* find the variable with the largest count of covered negative examples.
+	     note that currently we don't use the cost metric provided as an argument.
 	    *)
-	  let (chosenVar, maxCost) =
+	  let (chosenVar, maxCount) =
 	    BatList.fold_left
-	      (fun ((currChosen,currCost) as curr) ((v,n) as item) ->
-		 let cost = float(n) /. (BatHashtbl.find costs v) in
-		   if cost > currCost then (v,cost) else curr
-	  ) (0,0.0) counts in
+	      (fun ((currChosen,currCount) as curr) ((v,count) as item) ->
+		   if count > currCount then (v,count) else curr
+	  ) (0,0) counts in
 
 	    (* if no literals cover any of the remaining negative examples, then
 	       there is no boolean function that properly classifies all of the original
 	       positive and negative examples *)
-	    if maxCost = 0.0 then raise NoSuchFunction else
+	    if maxCount = 0 then raise NoSuchFunction else
       
 	      (* keep the chosen variable and recurse,
 		 filtering out this variable from the conjunction
@@ -158,7 +191,8 @@ let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) 
 		  else
 		      helper newconj (BatList.filter (fun ex -> BatHashtbl.find_default ex chosenVar true) remainingNeg) newaccum in
 	      
-    helper conj remainingNeg []
+    (* helper conj neg [] *)
+    conj
       
 (* learn an unknown conjunct over the variables in list vars using the given set of
    positive and negative examples (list of truth assignments for which the unknown
