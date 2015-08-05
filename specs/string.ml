@@ -8,23 +8,21 @@ open Generator
 open SpecInfer
 
 let genOne ?(rand=Random.State.make_self_init()) gen = run gen rand
-  
-(* generate n random values with the given generator *)  
+
+(* generate n random values with the given generator *)
 let rec generate n ?(rand=Random.State.make_self_init()) gen =
   match n with
       0 -> []
-    | _ ->
-	(run gen rand)::(generate (n-1) ~rand:rand gen)
+    | _ -> (run gen rand)::(generate (n-1) ~rand:rand gen)
 
-let smallintGen = make_int (-3) 4	  
+let smallintGen = make_int (-3) 4
 
 (* let charGen = (choose [lowercase; uppercase; select ['0';'1';'2';'3';'4';'5';'6';'7';'8';'9']]) *)
 let charGen = lowercase
-  
+
 (* generator for alphanumeric strings of size up to 4 *)
-let stringGen =
-  string (make_int 0 5) charGen
-    
+let stringGen = string (make_int 0 12) charGen
+
 let strtests = generate 10000 stringGen
 
 (* generator for pairs, given generators for each component *)
@@ -32,20 +30,20 @@ let genPair g1 g2 = app (app (pure (fun x y -> (x,y))) g1) g2
 
 (* generator for pairs, given generators for each component *)
 let genTriple g1 g2 g3 = app (app (app (pure (fun x y z -> (x,y,z))) g1) g2) g3
-  
+
 (* generator for random tuples of the above strings and small ints *)
 let stringintGen = genPair stringGen smallintGen
-let stringinttests = generate 10000 stringintGen  
+let stringinttests = generate 10000 stringintGen
 
 
 (* generator for random tuples of the above strings and two small ints *)
 let stringintintGen = genTriple stringGen smallintGen smallintGen
-let stringintinttests = generate 10000 stringintintGen  
+let stringintinttests = generate 10000 stringintintGen
 
 (* generator for random tuples of small ints and characters *)
 let intcharGen = genPair smallintGen charGen
 let intchartests = generate 10000 intcharGen
-  
+
 
 (*** String.copy ***)
 
@@ -132,7 +130,7 @@ let tests = stringintinttests in
 let typ = [ TString ; TInt ; TInt ] in
 let tfun = fun (s, i1, i2) -> [ of_string s ; of_int i1 ; of_int i2 ] in
 let def_features = (*PYF:t|T(s:S,i1:I,i2:I)*) in
-let my_features = [((fun (s,i1,i2) -> String.length(s) >= (i1 + i2)), "len(s) >= i1+i2")] in
+let my_features = [] in
 (* let def_postconditions =  (\*PYP:t|T(s:S,i1:I,i2:I)|S*\) in *)
 let def_postconditions = [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
 let my_postconditions = []

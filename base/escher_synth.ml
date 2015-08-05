@@ -1,3 +1,4 @@
+open Batteries
 open Escher_components
 open Escher_core
 open Escher_types
@@ -102,7 +103,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
     print_endline ("       with " ^ (Vector.string vector));
   end else ();
   goal.status <- Closed vector;
-  match final_goal.status with Closed cls -> all_solutions := cls::all_solutions.contents | _ -> ()
+  match final_goal.status with Closed cls -> (all_solutions := cls::all_solutions.contents; if not ast then raise Success else ()) | _ -> ()
   in
 
   let int_array = Array.make max_h [] in
@@ -179,7 +180,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
     List.iter (fun v -> print_endline ("   " ^ (Vector.string v))) task.inputs);
     if not (!quiet) then print_endline ("Goal: " ^ (varray_string final_goal.varray));
     list_array.(1) <- [nil];
-    int_array.(1) <- List.fold_left (fun p i -> ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i))::p) [zero] iconsts;
+    int_array.(1) <- List.fold_left (fun p i -> ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i))::p) [zero] (BatList.sort_unique compare (1::iconsts));
     bool_array.(1) <- [btrue ; bfalse];
     List.iter
       (fun input ->
@@ -203,8 +204,8 @@ let solve_impl ?ast:(ast=false) task iconsts =
       tree_array.(i-1) <- List.filter check_vector tree_array.(i-1);
       string_array.(i-1) <- List.filter check_vector string_array.(i-1);
       begin match final_goal.status with
-    | Closed p -> (if not ast then raise Success else ()) ; final_goal.status <- Open
-	| Open -> () end;
+        | Closed p -> final_goal.status <- Open
+        | Open -> () end;
       if not (!quiet) then print_endline ("At " ^ (string_of_int i));
       if !noisy then begin
 	let print_goal k _ = print_endline (" * " ^ (varray_string k)) in
@@ -220,7 +221,7 @@ let solve ?ast:(ast=false) task iconsts =
   if not (!quiet) then (print_endline "Synthesis Result: "; List.iter (fun v -> print_endline (Vector.string v)) all_solutions.contents) ;
   List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
 
-let default_int = [plus;mult;minus;leq;equal;modulo ; addone;subone]
+let default_int = [plus;mult;minus;geq;leq;lt;gt;equal;modulo ; addone;subone]
 let default_list = [empty;tail;head;cat;cons;length;reverse;listEq]
 let default_bool = [notc]
 let default_char = [cequal]

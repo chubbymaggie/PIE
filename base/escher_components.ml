@@ -87,6 +87,36 @@ let leq = {
     dump = (fun l -> "(" ^ (List.hd l) ^ " <= " ^ List.(hd (tl l)) ^ ")")
 }
 
+let geq = {
+    domain = [TInt;TInt];
+    codomain = TBool;
+    apply = (function
+             | [VInt x; VInt y] -> VBool (x >= y)
+             | _ -> VError);
+    name = "leq";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " >= " ^ List.(hd (tl l)) ^ ")")
+}
+
+let lt = {
+    domain = [TInt;TInt];
+    codomain = TBool;
+    apply = (function
+             | [VInt x; VInt y] -> VBool (x < y)
+             | _ -> VError);
+    name = "leq";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " < " ^ List.(hd (tl l)) ^ ")")
+}
+
+let gt = {
+    domain = [TInt;TInt];
+    codomain = TBool;
+    apply = (function
+             | [VInt x; VInt y] -> VBool (x > y)
+             | _ -> VError);
+    name = "leq";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " > " ^ List.(hd (tl l)) ^ ")")
+}
+
 let equal = {
     domain = [TInt;TInt];
     codomain = TBool;
@@ -119,7 +149,7 @@ let notc = {
     dump = (fun l -> "(! " ^ (List.hd l) ^ ")")
 }
 
- 
+
 (* Default CHAR components *)
 let cequal = {
     domain = [TChar;TChar];

@@ -597,6 +597,7 @@ let resolveAndPacLearnSpec ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('
     (posts : (('a -> 'b result -> bool) * 'c) list) (trans : typ list * ('a -> value list))
     (iconsts: int list) : ('c cnf option * 'c) list =
 
+  Sys.command("rm -rf conflict.*.log");
   prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
   let features = if fst trans = [] then features else convergeAllFeatures f tests features posts trans iconsts in
     List.map (fun post -> pacLearnSpecIncrK ~k:k f tests features post) posts
