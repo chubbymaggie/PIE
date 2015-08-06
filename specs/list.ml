@@ -1,45 +1,4 @@
-#require "qcheck"
-
 #use "top_helper.ml"
-
-open Generator
-
-open SpecInfer
-
-(* generate n random values with the given generator *)
-let rec generate n ?(rand=Random.State.make_self_init()) gen =
-  match n with
-      0 -> []
-    | _ -> (run gen rand)::(generate (n-1) ~rand:rand gen)
-
-let int_gen = make_int (-3) 4
-let posInt_gen = make_int (0) 6
-
-(* generator for lists, given generator for element and an integer generator for length *)
-let list_gen g (l: int gen) = fun rand ->
-  let len = l rand in
-  let res = ref [] in
-  for i = 0 to len - 1 do res := ((g rand)::!res) done;
-  !res
-
-(* generator for pairs, given generators for each component *)
-let pair_gen g1 g2 = app (app (pure (fun x y -> (x,y))) g1) g2
-
-let intList_gen = list_gen int_gen posInt_gen
-let intListList_gen = list_gen intList_gen posInt_gen
-let intList_int_gen = pair_gen intList_gen int_gen
-let int_intList_gen = pair_gen int_gen intList_gen
-let intList_intList_gen = pair_gen intList_gen intList_gen
-let int_int_List_gen = list_gen (pair_gen int_gen int_gen) posInt_gen
-
-let test_size = 8192
-
-let intList_tests = generate test_size intList_gen
-let intListList_tests = generate test_size intListList_gen
-let intList_int_tests = generate test_size intList_int_gen
-let int_intList_tests = generate test_size int_intList_gen
-let intList_intList_tests = generate test_size intList_intList_gen
-let int_int_List_tests = generate test_size int_int_List_gen
 
 (* #################### PROPERTIES  #################### *)
 

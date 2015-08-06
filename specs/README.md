@@ -10,10 +10,10 @@
 #### String.get
 
 ```
-precondition: (!(i > 0) || !(len(s) > i)) && (!(i = 0) || len(s) = i)
+precondition: (i < 0 || !(len(s) > i))
 postcondition: exception thrown
 
-precondition: len(s) > i && (i > 0 || i = 0)
+precondition: !(i < 0) && len(s) > i
 postcondition: terminates normally
 ```
 
@@ -57,20 +57,20 @@ postcondition: len(s) = len(res)
 #### String.sub
 
 ```
-precondition: (!(i1 > 0) || !(i2 > 0) || (x1g > ((len "x0g") - x2g))) && (!(i1 = 0) || i1 > i2 || (x1g > ((len "x0g") - x2g))) && (!(i2 = 0) || !(i1 > i2) || (x1g > ((len "x0g") - x2g)))
+precondition: (i1 < 0 || i2 < 0 || (x1g > ((len "x0g") - x2g)))
 postcondition: exception thrown
 ```
 
 #### String.make
 
 ```
-precondition: !(i > 0) && !(i = 0)
+precondition: (i < 0)
 postcondition: exception thrown
 
-precondition: (i > 0 || i = 0)
+precondition: !(i < 0)
 postcondition: terminates normally
 
-precondition: i > 0
+precondition: !(i = 0)
 postcondition: len(res) > 0
 
 precondition: i = 0
@@ -91,10 +91,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: len(l) <> 0
+precondition: !(len(l) = 0)
 postcondition: res > 0
 
-precondition: !(len(l) <> 0)
+precondition: len(l) = 0
 postcondition: res = 0
 
 precondition: false
@@ -107,10 +107,10 @@ postcondition: len(l) = res
 #### List.hd
 
 ```
-precondition: !(len(l) <> 0)
+precondition: len(l) = 0
 postcondition: exception thrown
 
-precondition: len(l) <> 0
+precondition: !(len(l) = 0)
 postcondition: terminates normally
 ```
 
@@ -142,22 +142,22 @@ postcondition: res = true
 #### List.tl
 
 ```
-precondition: !(len(l) <> 0)
+precondition: len(l) = 0
 postcondition: exception thrown
 
-precondition: len(l) <> 0
+precondition: !(len(l) = 0)
 postcondition: terminates normally
 
 precondition: (! ((tl x0g) = []))
 postcondition: len(res) > 0
 
-precondition: !((! ((tl x0g) = []))) && !(len(l) % 2 = 0)
+precondition: !((! ((tl x0g) = [])))
 postcondition: len(res) = 0
 
 precondition: false
 postcondition: l = res
 
-precondition: !(len(l) = 0)
+precondition: true
 postcondition: len(l) > len(res)
 
 precondition: false
@@ -173,10 +173,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: (l0 <> l1 || for any l0e in l0 -> for any l1e in l1 -> l0e = l1e)
+precondition: (!(l0  l1) || for any l0e in l0 -> for any l1e in l1 -> l0e = l1e)
 postcondition: len(res) > 0
 
-precondition: !(len(l1) <> 0) && !(len(l0) <> len(l1))
+precondition: len(l1) = 0 && len(l0) = len(l1)
 postcondition: len(res) = 0
 
 precondition: true
@@ -189,16 +189,16 @@ postcondition: len(res) != len(l0)+len(l1)
 #### List.combine
 
 ```
-precondition: len(l0) <> len(l1)
+precondition: !(len(l0) = len(l1))
 postcondition: exception thrown
 
-precondition: !(len(l0) <> len(l1))
+precondition: len(l0) = len(l1)
 postcondition: terminates normally
 
-precondition: !(len(l0) <> len(l1)) && len(l1) <> 0
+precondition: !(len(l1) = 0)
 postcondition: len(res) > 0
 
-precondition: !(len(l0) <> len(l1)) && !(len(l1) <> 0)
+precondition: len(l1) = 0
 postcondition: len(res) = 0
 ```
 
@@ -211,10 +211,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: for any le in l -> len(le) <> 0
+precondition: for any le in l -> len(le) > 0
 postcondition: len(res) > 0
 
-precondition: !(for any le in l -> len(le) <> 0)
+precondition: !(for any le in l -> len(le) > 0)
 postcondition: len(res) = 0
 
 precondition: ~~~ FAILED ~~~
@@ -242,10 +242,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: for any le in l -> len(le) <> 0
+precondition: for any le in l -> len(le) > 0
 postcondition: len(res) > 0
 
-precondition: !(for any le in l -> len(le) <> 0)
+precondition: !(for any le in l -> len(le) > 0)
 postcondition: len(res) = 0
 
 precondition: ~~~ FAILED ~~~
@@ -273,10 +273,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: len(a) <> 0
+precondition: !(len(a) = 0)
 postcondition: len(res) > 0
 
-precondition: !(len(a) <> 0)
+precondition: len(a) = 0
 postcondition: len(res) = 0
 
 precondition: (x0g = (rev x0g))
@@ -298,10 +298,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: (l0 <> l1 || for any l0e in l0 -> for any l1e in l1 -> l0e = l1e)
+precondition: (!(l0 = l1) || for any l0e in l0 -> for any l1e in l1 -> l0e = l1e)
 postcondition: len(res) > 0
 
-precondition: !(len(l1) <> 0) && !(len(l0) <> len(l1))
+precondition: len(l1) = 0 && len(l0) = len(l1)
 postcondition: len(res) = 0
 
 precondition: true
@@ -320,16 +320,16 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: len(l) <> 0
+precondition: !(len(l) = 0)
 postcondition: len(r0) > 0
 
-precondition: !(len(l) <> 0)
+precondition: len(l) = 0
 postcondition: len(r0) = 0
 
-precondition: len(l) <> 0
+precondition: !(len(l) = 0)
 postcondition: len(r1) > 0
 
-precondition: !(len(l) <> 0)
+precondition: len(l) = 0
 postcondition: len(r1) = 0
 
 precondition: false

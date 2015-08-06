@@ -1,59 +1,6 @@
-(* for generating random tests *)
-#require "qcheck"
-
 #use "top_helper.ml"
 
-open Generator
-
-open SpecInfer
-
-(* SOME GENERATORS FOR RANDOM TESTS *)  
-  
-let genOne ?(rand=Random.State.make_self_init()) gen = run gen rand
-
-(* generate n random values with the given generator *)
-let rec generate n ?(rand=Random.State.make_self_init()) gen =
-  match n with
-      0 -> []
-    | _ -> (run gen rand)::(generate (n-1) ~rand:rand gen)
-
-let smallintGen = make_int (-3) 4
-
-(* let charGen = (choose [lowercase; uppercase; select ['0';'1';'2';'3';'4';'5';'6';'7';'8';'9']]) *)
-let charGen = lowercase
-
-(* generator for alphanumeric strings of size up to 4 *)
-let stringGen = string (make_int 0 12) charGen
-
-let strtests = generate 10000 stringGen
-
-(* generator for pairs, given generators for each component *)
-let genPair g1 g2 = app (app (pure (fun x y -> (x,y))) g1) g2
-
-(* generator for triples, given generators for each component *)
-let genTriple g1 g2 g3 = app (app (app (pure (fun x y z -> (x,y,z))) g1) g2) g3
-
-(* generator for quads, given generators for each component *)
-let genQuad g1 g2 g3 g4 = app (app (app (app (pure (fun x y z w -> (x,y,z,w))) g1) g2) g3) g4
-
-(* generator for quints, given generators for each component *)
-let genQuint g1 g2 g3 g4 g5 = app (app (app (app (app (pure (fun x y z w v -> (x,y,z,w,v))) g1) g2) g3) g4) g5
-
-(* generator for random tuples of the above strings and small ints *)
-let stringintGen = genPair stringGen smallintGen
-let stringinttests = generate 10000 stringintGen
-
-
-(* generator for random tuples of the above strings and two small ints *)
-let stringintintGen = genTriple stringGen smallintGen smallintGen
-let stringintinttests = generate 10000 stringintintGen
-
-(* generator for random tuples of small ints and characters *)
-let intcharGen = genPair smallintGen charGen
-let intchartests = generate 10000 intcharGen
-
-
-(* INFERRING SPECS FOR STRING MODULE FUNCTIONS *)  
+(* INFERRING SPECS FOR STRING MODULE FUNCTIONS *)
 
 (*** String.copy ***)
 
@@ -61,7 +8,7 @@ let scopy = String.copy
 
 let scopyRes = fun () ->
 let f = scopy in
-let tests = strtests in
+let tests = string_tests in
 let typ = [ TString ] in
 let tfun = fun s -> [ of_string s ] in
 let def_features = (*PYF:s|S*) in
@@ -86,7 +33,7 @@ let sget = (fun (s, i) -> String.get s i)
 *)
 let sgetRes = fun () ->
 let f = sget in
-let tests = stringinttests in
+let tests = string_int_tests in
 let typ = [ TString ; TInt ] in
 let tfun = fun (s, i) -> [ of_string s ; of_int i ] in
 let def_features = (*PYF:t|T(s:S,i:I)*) in
@@ -133,10 +80,9 @@ let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
    - remove some features to try to get conflicts?
 *)
 
-  
 let ssubRes = fun () ->
 let f = ssub in
-let tests = stringintinttests in
+let tests = string_int_int_tests in
 let typ = [ TString ; TInt ; TInt ] in
 let tfun = fun (s, i1, i2) -> [ of_string s ; of_int i1 ; of_int i2 ] in
 let def_features = (*PYF:t|T(s:S,i1:I,i2:I)*) in
@@ -158,7 +104,7 @@ let smake = (fun (i,c) -> String.make i c)
 
 let smakeRes = fun () ->
 let f = smake in
-let tests = intchartests in
+let tests = int_char_tests in
 let typ = [ TInt ; TChar ] in
 let tfun = fun (i, c) -> [ of_int i ; of_char c ] in
 let def_features = (*PYF:t|T(i:I,c:C)*) in
@@ -179,7 +125,7 @@ let sindex = (fun (s,c) -> String.index s c)
 
 let sindexRes = fun () ->
 let f = sindex in
-let tests = generate 10000 (genPair stringGen charGen) in
+let tests = string_char_tests in
 let typ = [ TString ; TChar ] in
 let tfun = fun (s, c) -> [ of_string s ; of_char c ] in
 let def_features = (*PYF:t|T(s:S,c:C)*) in
@@ -201,7 +147,7 @@ let sindexFrom = (fun (s,i,c) -> String.index_from s i c)
 
 let sindexFromRes = fun () ->
 let f = sindexFrom in
-let tests = generate 10000 (genTriple stringGen smallintGen charGen) in
+let tests = string_int_char_tests in
 let typ = [ TString ; TInt; TChar ] in
 let tfun = fun (s, i, c) -> [ of_string s ; of_int i; of_char c ] in
 let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
@@ -215,6 +161,3 @@ let my_postconditions = []
     let postconds = def_postconditions @ my_postconditions in
       resolveAndPacLearnSpec f tests features postconds trans []
 ;;
-
-
-		     
