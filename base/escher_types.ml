@@ -43,7 +43,7 @@ let rec print_data chan (data: value) : unit = match data with
     VError       -> output_string chan "- ERROR -"
   | VDontCare    -> output_string chan "- UNKNOWN -"
   | VTree(tree)  -> output_string chan "- TREE -"
-  | VString(str) -> output_string chan str
+  | VString(str) -> output_string chan ("\"" ^ str ^ "\"")
   | VInt(i)      -> output_string chan (string_of_int i)
   | VBool(b)     -> output_string chan (string_of_bool b)
   | VChar(c)     -> output_char chan c

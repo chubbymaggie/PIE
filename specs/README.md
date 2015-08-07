@@ -7,7 +7,7 @@
 
 ### Properties
 
-#### String.get
+#### String.get (s,i)
 
 ```
 precondition: (i < 0 || !(len(s) > i))
@@ -17,7 +17,7 @@ precondition: !(i < 0) && len(s) > i
 postcondition: terminates normally
 ```
 
-#### String.index
+#### String.index (s,c)
 
 ```
 precondition: !(for any se in s -> se = c)
@@ -26,7 +26,7 @@ postcondition: exception thrown
 
 ### Mutators
 
-#### String.copy
+#### String.copy (s)
 
 ```
 precondition: false
@@ -54,14 +54,14 @@ precondition: true
 postcondition: len(s) = len(res)
 ```
 
-#### String.sub
+#### String.sub (s,i1,i2)
 
 ```
 precondition: (i1 < 0 || i2 < 0 || (x1g > ((len "x0g") - x2g)))
 postcondition: exception thrown
 ```
 
-#### String.make
+#### String.make (i,c)
 
 ```
 precondition: (i < 0)
@@ -77,12 +77,28 @@ precondition: i = 0
 postcondition: len(res) = 0
 ```
 
+#### String.concat (s,sl)
+
+```
+precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: !(for all sle in sl -> s = sle) && (for any sle in sl -> len(sle) > 0 || (! ((tl x1g) = [])))
+postcondition: len(res) > 0
+
+precondition: (for any sle in sl -> len(s) = len(sle) || !((! ((tl x1g) = [])))) && !(for any sle in sl -> len(sle) > 0)
+postcondition: len(res) = 0
+```
+
 
 ## List
 
 ### Properties
 
-#### List.length
+#### List.length (l)
 
 ```
 precondition: false
@@ -104,7 +120,7 @@ precondition: true
 postcondition: len(l) = res
 ```
 
-#### List.hd
+#### List.hd (l)
 
 ```
 precondition: len(l) = 0
@@ -114,7 +130,7 @@ precondition: !(len(l) = 0)
 postcondition: terminates normally
 ```
 
-#### List.nth
+#### List.nth  (l,n)
 
 ```
 precondition: (n < 0 || !(len(l) > n))
@@ -124,7 +140,7 @@ precondition: len(l) > n && !(n < 0)
 postcondition: terminates normally
 ```
 
-#### List.mem
+#### List.mem (m,l)
 
 ```
 precondition: false
@@ -139,7 +155,7 @@ postcondition: res = true
 
 ### Mutators
 
-#### List.tl
+#### List.tl (l)
 
 ```
 precondition: len(l) = 0
@@ -164,7 +180,7 @@ precondition: false
 postcondition: len(l) = len(res)
 ```
 
-#### List.append
+#### List.append (l0,l1)
 
 ```
 precondition: false
@@ -186,7 +202,7 @@ precondition: false
 postcondition: len(res) != len(l0)+len(l1)
 ```
 
-#### List.combine
+#### List.combine (l0,l1)
 
 ```
 precondition: !(len(l0) = len(l1))
@@ -202,7 +218,7 @@ precondition: len(l1) = 0
 postcondition: len(res) = 0
 ```
 
-#### List.concat
+#### List.concat (l)
 
 ```
 precondition: false
@@ -233,7 +249,7 @@ precondition: false
 postcondition: len(res) < sum(len(l0:lN))
 ```
 
-#### List.flatten
+#### List.flatten (l)
 
 ```
 precondition: false
@@ -264,7 +280,7 @@ precondition: false
 postcondition: len(res) < sum(len(l0:lN))
 ```
 
-#### List.rev
+#### List.rev (a)
 
 ```
 precondition: false
@@ -289,7 +305,7 @@ precondition: true
 postcondition: len(a) = len(res)
 ```
 
-#### List.rev_append
+#### List.rev_append (l0,l1)
 
 ```
 precondition: false
@@ -311,7 +327,7 @@ precondition: false
 postcondition: len(res) != len(l0)+len(l1)
 ```
 
-#### List.split
+#### List.split (l)
 
 ```
 precondition: false

@@ -185,7 +185,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                             '"for any %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
                             in getBinaryPreds(typ1, var1, None, typ2[0][1], '%se' % var2, None))
 
-            if typ1[0][0] == ST:
+            if typ1[0][0] == ST and typ2[0][0] == CT:
                 preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) (BatString.to_list %s))' % (var1, var2, var1, f[0], var1, var2, var1),
                             '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
                             in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
@@ -193,7 +193,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                             '"for any %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
                             in getBinaryPreds(CT, '%se' % var1, None, typ2, var2, None))
 
-            elif typ2[0][0] == ST:
+            elif typ2[0][0] == ST and typ2[0][0] == CT:
                 preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %s %se) (BatString.to_list %s))' % (var1, var2, var2, f[0], var1, var2, var2),
                             '"for all %se in %s -> %s"' % (var2, var2, f[1][1:-1])) for f
                             in getBinaryPreds(typ1, var1, None, CT, '%se' % var2, None))
