@@ -98,49 +98,6 @@ let pruneWithNegativeExamples (conj : int list) (costs: (int, float) BatHashtbl.
 let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) (pos : truthAssignment list) (neg : truthAssignment list)
     : int list =
 
-  let nvars = float(BatList.length conj) in
-  let epsilon = 0.1 in
-  
-  let poslen = float(BatList.length pos) in
-  let neglen = float(BatList.length neg) in
-  let totlen = poslen +. neglen in
-
-  (* for each variable in conj, count how many of the positive examples it falsifies
-     (i.e, on how many of the examples it has the truth value false) *)
-  let poscounts =
-    hash_of_list
-      (BatList.map
-	 (fun var ->
-	    (var, BatList.fold_left
-	       (fun c ex ->
-		  if BatHashtbl.find ex var then c else c +. 1.0) 0.0 pos)) conj) in
-
-  (* for each variable in conj, count how many of the negative examples it falsifies
-     (i.e, on how many of the examples it has the truth value false) *)
-  let negcounts =
-    hash_of_list
-      (BatList.map
-	 (fun var ->
-	    (var, BatList.fold_left
-	       (fun c ex ->
-		  if BatHashtbl.find ex var then c else c +. 1.0) 0.0 neg)) conj) in
-
-
-(* keep only variables that are "significant" and not "harmful"
-   see Kearns and Vazirani, p.106
-   algorithm for learning conjunctions in the presence of noise
-*)
-  let conj =
-    BatList.filter (fun v ->
-  		      let p = (BatHashtbl.find poscounts v) in
-  		      let n = (BatHashtbl.find negcounts v) in
-  		      let p0 = (p +. n) /. totlen in
-  		      let p01 = p /. totlen in
-  		      let bound = epsilon /. (8.0 *. nvars) in
-  		      let significant = p0 >= bound in
-  		      let harmful = p01 >= bound in
-  			(* significant && *) not(harmful)) conj in
-    
   let rec helper conj remainingNeg accum =
     match remainingNeg with
       [] -> accum
@@ -164,23 +121,15 @@ let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) 
 	  ) (0,0) counts in
 
 	    (* if no literals cover any of the remaining negative examples, then
-	       there is no boolean function that properly classifies all of the original
-	       positive and negative examples *)
+	       we can't find a satisfiable boolean function that covers all of the original
+	       negative examples.  not sure if that can ever happen. *)
 	    if maxCount = 0 then raise NoSuchFunction else
       
 	      (* keep the chosen variable and recurse,
 		 filtering out this variable from the conjunction
 		 and filtering out the negative examples that it covers.
-
-		 we also filter out the negated version of the chosen
-		 variable.  this is necessary when we are using this function
-		 to find missing tests, so we don't say that (X and (not X))
-		 is a missing test.  when this function is used as part of
-		 learning a conjunction, there will be no negative variables
-		 (see the comment on pacLearnConjunction about not including
-		 negative literals), so it will be a no-op in that case.  *)
-
-	      let newconj = BatList.filter (fun v -> v <> chosenVar && v <> -chosenVar) conj in
+	      *)
+	      let newconj = BatList.filter (fun v -> v <> chosenVar) conj in
 	      let newaccum = chosenVar::accum in
 
 		if List.for_all (fun ta -> List.exists (fun i -> not (BatHashtbl.find ta i)) newaccum) pos
@@ -191,8 +140,8 @@ let learnStrongConjunction (conj : int list) (costs: (int, float) BatHashtbl.t) 
 		  else
 		      helper newconj (BatList.filter (fun ex -> BatHashtbl.find_default ex chosenVar true) remainingNeg) newaccum in
 	      
-    (* helper conj neg [] *)
-    conj
+    helper conj neg []
+
       
 (* learn an unknown conjunct over the variables in list vars using the given set of
    positive and negative examples (list of truth assignments for which the unknown
