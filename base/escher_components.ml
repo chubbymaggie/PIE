@@ -47,6 +47,16 @@ let subone = {
     dump = (fun l -> "(" ^ (List.hd l) ^ " - 1)")
 }
 
+let iabs = {
+  domain = [TInt];
+  codomain = TInt;
+  apply = (function
+           | [VInt x] -> VInt (abs x)
+           | _ -> VError);
+  name = "abs";
+  dump = (fun l -> "(abs " ^ (List.hd l) ^ ")")
+}
+
 let plus = {
     domain = [TInt; TInt];
     codomain = TInt;

@@ -3,6 +3,19 @@
 ## Notes
 - The synthesized features have input variables names as `x0g`, `x1g` and so on ...
 
+
+## BatAvlTree
+
+### Mutators
+
+#### BatAvlTree.create (l,v,r)
+
+```
+precondition: ((x0g > (x2g + 1)) || (x2g > (x0g + 1)))
+postcondition: exception thrown
+```
+
+
 ## String
 
 ### Properties

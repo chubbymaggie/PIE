@@ -221,7 +221,7 @@ let solve ?ast:(ast=false) task iconsts =
   if not (!quiet) then (print_endline "Synthesis Result: "; List.iter (fun v -> print_endline (Vector.string v)) all_solutions.contents) ;
   List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
 
-let default_int = [plus;mult;minus;geq;leq;lt;gt;equal;modulo ; addone;subone]
+let default_int = [plus;mult;minus;geq;leq;lt;gt;equal;modulo ; addone;subone ; iabs]
 let default_list = [empty;tail;head;cat;cons;length;reverse;listEq]
 let default_bool = [notc]
 let default_char = [cequal]
