@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $# -ne 2 ]];
+  echo "Please provide path to LLVM_ROOT as a parameter"
+  exit 1
+fi
+
 OWN_ROOT="`dirname "$0"`"
 OWN_ROOT="`cd \"$OWN_ROOT\" && pwd`"
 

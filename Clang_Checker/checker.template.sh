@@ -17,7 +17,11 @@ WORKING_PATH="__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/$FILE"
 
 # Compile the program
 cd "`dirname \"$1\"`"
-g++ --std=c++11 "$FILE" -o "$FILE.x"
+g++ --std=c++11 "$FILE" -o "$FILE.x" 2>&1
+
+if [[ $? -ne 0 ]]; then
+  exit 1
+fi
 
 rm -rf "$WORKING_PATH"
 mkdir "$WORKING_PATH"

@@ -58,5 +58,6 @@ pred << ( (BOps + LPAR + Group(delimitedList(pred)) + RPAR).setParseAction(lambd
 
 if __name__ == '__main__':
     goal = z3.Goal()
-    goal.add(z3.parse_smt2_string(smtlib2_string_from_file(sys.argv[1], "1" if len(sys.argv) > 2 and sys.argv[2] == "0" else "0")))
+    goal.add(z3.parse_smt2_string(smtlib2_string_from_file(sys.argv[1], "1" if len(sys.argv) > 2 and sys.argv[2] == "0" else "0"
+                                  + "(assert goal)"))
     print(flatString(pred.parseString(str(z3.simplify(goal.as_expr())), parseAll = True).asList()[0]))

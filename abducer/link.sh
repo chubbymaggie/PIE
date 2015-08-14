@@ -20,11 +20,28 @@ ln -fs "$ROOT/../base/makefile"       makefile
 ln -fs "$ROOT/../base/testGen.ml"     testGen.ml
 ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
-ln -fs "$ROOT/../z3/mcf2smtlib.py"  mcf2smtlib.py
-ln -fs "$ROOT/../z3/chkSAT.py"      chkSAT
-ln -fs "$ROOT/../z3/chkVALID.py"    chkVALID
-ln -fs "$ROOT/../z3/simplify.py"    simplify
-ln -fs "$ROOT/../z3/verify.py"      verify
+# Solvers:
+#
+#  Mistral : (mistral)
+#  Z3      : (z3)
+#  CVC4    : (cvc4)
+
+SOLVER="cvc4"
+
+EXT=""
+if [ "$SOLVER" != "mistral" ]; then
+  EXT=".py"
+  ln -fs "$ROOT/../$SOLVER/mcf2smtlib$EXT"  mcf2smtlib.py
+else
+  cd "$ROOT/../mistral"
+  make
+  cd "$TARGET"
+fi
+
+ln -fs "$ROOT/../$SOLVER/chkSAT$EXT"      chkSAT
+ln -fs "$ROOT/../$SOLVER/chkVALID$EXT"    chkVALID
+ln -fs "$ROOT/../$SOLVER/simplify$EXT"    simplify
+ln -fs "$ROOT/../$SOLVER/verify$EXT"      verify
 
 ln -fs "$ROOT/replay.sh"        replay
 ln -fs "$ROOT/smt2ml.py"        smt2ml

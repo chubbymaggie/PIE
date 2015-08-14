@@ -34,18 +34,20 @@ NOT = Literal('!')
 
 rop = oneOf('< > <= >= = !=').setParseAction(lambda s,l,t: 'distinct' if t[0] == '!=' else t[0])
 
-val = Combine(Optional('-') + Word(nums))
+val = Combine(Optional('-') + Word(nums)).setParseAction(lambda s,l,t: ['(- %s)' % t[0][1:]] if t[0][0] == '-' else t)
 var = Word(alphas+'_:$', alphanums+'_:$').setParseAction(addVar)
 
 term = val | var
 
-expr = operatorPrecedence(term, [
-                            (aop0, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
-                            (aop1, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
-                            (aop2, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])])
-                         ])
-
 stmt = Forward()
+expr = Forward()
+
+expr << ( operatorPrecedence(term, [
+                                     (aop0, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
+                                     (aop1, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
+                                     (aop2, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])])
+                                   ])
+        | (LPAR + expr + RPAR))
 
 stmt << ( const
         | ((expr + rop + expr).setParseAction(lambda s,l,t: [[t[1], t[0], t[2]]]))
@@ -71,7 +73,7 @@ def string_from_cvc4_model(cvc4_proc):
     model = {pair.partition(' ')[0]:pair.partition(' ')[2] for pair in model}
     return '-\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
 
-def smtlib2_string_from_file(filename, headless, implicant=None, implicantHeadless=None):
+def smtlib2_string_from_file(action, filename, headless, implicant=None, implicantHeadless=None):
     global uvars
 
     uvars = {'true', 'false'}
@@ -89,10 +91,11 @@ def smtlib2_string_from_file(filename, headless, implicant=None, implicantHeadle
     uvars.discard('true')
     uvars.discard('false')
 
-    smtstr = '%s\n(define-fun goal () Bool\n            %s)' % (
+    smtstr = '%s\n(%s %s)' % (
         '\n'.join('(declare-const %s Int)' % var for var in uvars),
+        action,
         smtstr)
     return smtstr
 
 if __name__ == "__main__":
-    print(smtlib2_string_from_file(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1"))
+    print(smtlib2_string_from_file('assert', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1"))
