@@ -1,4 +1,4 @@
-#include "bm_strings.h"
+#include "../bm_strings.h"
 
 int main() {
   int i;

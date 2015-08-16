@@ -78,6 +78,11 @@ string unknown_s() {
 void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 
+
+bool contains(string haystack, string needle) {
+  return haystack.find(needle) != string::npos;
+}
+
 #define OUTPUT_STREAM stdout
 
 // In-string substring replacement (http://stackoverflow.com/a/15372760/554436)
