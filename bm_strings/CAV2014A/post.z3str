@@ -1,0 +1,11 @@
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (len(r) == 2i + 1) /\ (r = "a" \/ contains(r, "(a)"))
+
+(define-fun post_check () Bool
+            (=> (and (= (Length r) (+ 1 (* 2 i))) (or (= r "a") (Contains r "(a)")))
+                (and (= (Length r) (+ 1 (* 2 i))) (=> (> i 0) (Contains r "(a)")))))
+
+(assert (not post_check))
+(check-sat)

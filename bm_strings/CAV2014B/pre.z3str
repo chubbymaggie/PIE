@@ -1,0 +1,11 @@
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (= i (str.len r))
+
+(define-fun pre_check () Bool
+            (=> (= i (Length r))
+                (= i (Length r))))
+
+(assert (not pre_check))
+(check-sat)

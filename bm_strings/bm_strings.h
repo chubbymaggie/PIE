@@ -73,6 +73,12 @@ string unknown_s() {
   return s;
 }
 
+string unknown_s2() {
+  string s(unknown(0, RAND_STR_LEN_MAX), 0);
+  for(int i = 0; i < s.length(); ++i) s[i] = (unknown4() ? 'a' : unknown_alpha());
+  return s;
+}
+
 
 
 void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
@@ -81,6 +87,15 @@ void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 
 bool contains(string haystack, string needle) {
   return haystack.find(needle) != string::npos;
+}
+
+int indexOf(string haystack, string needle) {
+  return (haystack.find(needle) != string::npos ? haystack.find(needle) : -1);
+}
+
+string replace(string src, string from, string to) {
+  if(!contains(src, from)) return src;
+  return src.substr(0, indexOf(src, from)) + to + (indexOf(src, from) + from.length() < src.length() ? src.substr(indexOf(src, from) + from.length()) : "");
 }
 
 #define OUTPUT_STREAM stdout

@@ -1,0 +1,11 @@
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (= i (Length r))
+
+(define-fun ind_check () Bool
+            (=> (and (= i (Length r)) (>= (Indexof r "aa") 0))
+                (= i (Length (Concat (Replace r "aa" ")") "a")))))
+
+(assert (not ind_check))
+(check-sat)

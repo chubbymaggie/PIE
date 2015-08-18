@@ -1,0 +1,18 @@
+(declare-const s0 String)
+(declare-const r String)
+(declare-const i Int)
+(declare-const j Int)
+(declare-const x Int)
+
+(assert (> (Length s0) 0))
+(assert (and (>= i 0) (< i (Length s0))))
+(assert (and (>= j i) (< j (Length s0))))
+
+;; Invariant :: (r == s0.substr(i, x - i)) /\ (x <= j+1)
+
+(define-fun ind_check () Bool
+            (=> (and (and (= r (Substring s0 i (- x i))) (<= x (+ j 1))) (<= x j))
+                (and (= (Concat r (CharAt s0 x)) (Substring s0 i (- (+ 1 x) i))) (<= (+ 1 x) (+ j 1)))))
+
+(assert (not ind_check))
+(check-sat)

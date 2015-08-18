@@ -1,0 +1,18 @@
+(set-option :produce-models true)
+(set-option :strings-fmf true)
+
+(set-logic QF_S)
+
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (= i (str.len r))
+
+(define-fun pre_check () Bool
+            (=> (= i (str.len r))
+                (= i (str.len r))))
+
+(assert (not pre_check))
+(check-sat)
+
+(get-value (r i))

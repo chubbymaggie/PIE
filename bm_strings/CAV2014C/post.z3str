@@ -1,0 +1,11 @@
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (> (str.len r) i) && (i >= 0) && (str.contains r "a")
+
+(define-fun post_check () Bool
+            (=> (and (> (Length r) i) (>= i 0) (Contains r "a"))
+                (and (> (Length r) i) (>= i 0) (Contains r "a"))))
+
+(assert (not post_check))
+(check-sat)

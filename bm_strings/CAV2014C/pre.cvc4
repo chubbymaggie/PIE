@@ -1,0 +1,18 @@
+(set-option :produce-models true)
+(set-option :strings-fmf true)
+
+(set-logic QF_S)
+
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (> (str.len r) i) && (i >= 0) && (str.contains r "a")
+
+(define-fun pre_check () Bool
+            (=> (and (= i 0) (= r "a"))
+                (and (> (str.len r) i) (>= i 0) (str.contains r "a"))))
+
+(assert (not pre_check))
+(check-sat)
+
+(get-value (r i))

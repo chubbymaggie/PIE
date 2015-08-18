@@ -1,0 +1,13 @@
+(declare-const r String)
+(declare-const i Int)
+
+;; Invariant :: (len(r) == 2i + 1) /\ (r = "a" \/ contains(r, "(a)"))
+
+(define-fun ind_check () Bool
+            (=> (and (= (Length r) (+ 1 (* 2 i)))
+                     (or (= r "a") (Contains r "(a)")))
+                (and (= (Length (Concat "(" (Concat r ")"))) (+ 1 (* 2 (+ i 1))))
+                     (or (= (Concat "(" (Concat r ")")) "a") (Contains (Concat "(" (Concat r ")")) "(a)")))))
+
+(assert (not ind_check))
+(check-sat)
