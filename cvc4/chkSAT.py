@@ -3,18 +3,18 @@
 import subprocess
 import sys
 
-from mcf2smtlib import string_from_cvc4_model, smtlib2_string_from_file
+from mcf2smtlib import z3str_to_cvc4, string_from_cvc4_model, smtlib2_string_from_file
 
 if __name__ == '__main__':
-    smtdata = smtlib2_string_from_file('assert', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1")
+    smtdata = z3str_to_cvc4(smtlib2_string_from_file('assert', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1"))
 
     cvc4_in = ('\n'.join([
                  '(set-option :produce-models true)',
                  '(set-option :strings-fmf true)',
-                 '(set-logic ALL_SUPPORTED)'])
+                 '(set-logic QF_S)'])
                + smtdata
                + '\n(check-sat)\n')
-    cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk'],
+    cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=sys.stderr)

@@ -11,7 +11,7 @@ make clean ; make
 echo -ne "\n... $FILE ... \n"
 
 # Just verify SAT, use old .tml
-./smt2ml "$FILE" > "/tmp/$FILE.tml"
+./mcf2ml "$FILE" > "/tmp/$FILE.tml"
 if [[ $? != 0 ]]; then
   echo "false" > "$FILE.sinf"
   exit 1

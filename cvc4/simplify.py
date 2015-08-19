@@ -3,7 +3,7 @@
 import subprocess
 import sys
 
-from mcf2smtlib import smtlib2_string_from_file
+from mcf2smtlib import z3str_to_cvc4, smtlib2_string_from_file
 
 lets = dict()
 
@@ -61,14 +61,14 @@ let << ( pred
        | (LPAR + Suppress('let') + LPAR + LPAR + term + (expr | pred) + RPAR + RPAR + let + RPAR).setParseAction(let_action))
 
 if __name__ == '__main__':
-    smtdata = smtlib2_string_from_file("simplify", sys.argv[1], "1" if len(sys.argv) > 2 and sys.argv[2] == "0" else "0")
+    smtdata = z3str_to_cvc4(smtlib2_string_from_file("simplify", sys.argv[1], "1" if len(sys.argv) > 2 and sys.argv[2] == "0" else "0"))
 
     cvc4_in = ('\n'.join([
                  '(set-option :produce-models true)',
                  '(set-option :strings-fmf true)',
-                 '(set-logic ALL_SUPPORTED)'])
+                 '(set-logic QF_S)'])
                + smtdata + '\n')
-    cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk'],
+    cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=sys.stderr)
