@@ -138,7 +138,7 @@ namespace {
     replaceAll(c_str, "<==", "<=");
 
     c_str = "const int " + joinStringSet(getIdentifiersIn(c_str), " = 1, ")
-           + "__end__; int res = " + c_str + ";";
+           + "__end__; int res = (" + c_str + ");";
 
     return c_str;
   }
@@ -167,7 +167,7 @@ namespace {
     std::string command = WORKING_PATH + "/chkVALID ";
     command += target;
     command += " 0 > ";
-    command += target + ".res";
+    command += target + ".res 2>/dev/null";
     system(command.c_str());
 
     std::string result;
@@ -196,7 +196,7 @@ namespace {
     std::string command = WORKING_PATH + "/simplify ";
     command += target;
     command += " 0 > ";
-    command += target + ".sim";
+    command += target + ".sim 2>/dev/null";
     system(command.c_str());
 
     {
@@ -281,11 +281,12 @@ namespace {
 
     if(FnInfo->isStr("assert") || FnInfo->isStr("static_assert")) {
       pred = new (fd->getASTContext()) ParenExpr(
-        SourceLocation(),
-        SourceLocation(),
+        SourceLocation(), SourceLocation(),
         new (fd->getASTContext()) BinaryOperator(
+          new (fd->getASTContext()) ParenExpr(
+            SourceLocation(), SourceLocation(),
+            const_cast<Expr*>(call->getArg(0))),
           pred,
-          const_cast<Expr*>(call->getArg(0)),
           BO_LAnd,
           pred->getType(),
           VK_LValue,
@@ -294,11 +295,12 @@ namespace {
           false));
     } else if(FnInfo->isStr("assume")) {
       pred = new (fd->getASTContext()) ParenExpr(
-        SourceLocation(),
-        SourceLocation(),
+        SourceLocation(), SourceLocation(),
         new (fd->getASTContext()) BinaryOperator(
           new (fd->getASTContext()) UnaryOperator(
-            const_cast<Expr*>(call->getArg(0)),
+            new (fd->getASTContext()) ParenExpr(
+              SourceLocation(), SourceLocation(),
+              const_cast<Expr*>(call->getArg(0))),
             UO_LNot,
             pred->getType(),
             VK_LValue,
@@ -454,7 +456,9 @@ namespace {
              );
     }
     Expr* ncond = new (ac) UnaryOperator (
-                    cond,
+                    new (ac) ParenExpr(
+                      SourceLocation(), SourceLocation(),
+                      cond),
                     UO_LNot,
                     cond->getType(),
                     VK_LValue,
@@ -465,8 +469,7 @@ namespace {
     // cond => pred
     wpOfSubgraph(pred, from, *(to->succ_begin()), dom_tree, reachables, mgr);
     pred = new (ac) ParenExpr(
-      SourceLocation(),
-      SourceLocation(),
+      SourceLocation(), SourceLocation(),
       new (ac) BinaryOperator(
         ncond,
         pred,
