@@ -4,6 +4,7 @@ import re
 import sys
 
 uvars = {'true', 'false'}
+string_vars = set()
 
 def addVar(s,l,t):
     if t[0] not in uvars:
@@ -24,11 +25,37 @@ def fix_indexOf(l):
 def infix2postfix(l):
     return (l[0] if len(l) < 3 else [l[-2], infix2postfix(l[:-2]), l[-1]])
 
+def chkString(token):
+    if type(token) is str:
+        if token not in string_vars:
+            string_vars.add(token)
+    return token
+
+def chkStringSibling(s,l,t):
+    if (type(t[0]) is not str) and (type(t[2]) is not str):
+        return [[t[1],t[0],t[2]]]
+
+    if type(t[2]) is str:
+        if type(t[0]) is not str or ((t[0][0] == '"') == (t[2][0] == '"')):
+            return [[t[1],t[0],t[2]]]
+        elif t[0][0] == '"':
+            chkString(t[2])
+        elif t[2][0] == '"':
+            chkString(t[0])
+    else:
+        if len(t[2]) == 1:
+            return chkStringSibling(s,l,[t[0], t[1], t[2][0]])
+
+        if t[2][0] in ['CharAt','Concat','Replace','Substring']:
+            chkString(t[0])
+
+    return [[t[1],t[0],t[2]]]
+
 ###
 
 from pyparsing import alphas, alphanums, Combine, Forward, Literal, nums, \
                       nestedExpr, oneOf, opAssoc, operatorPrecedence, \
-                      Optional, ParserElement, Suppress, Word
+                      Optional, ParserElement, QuotedString, Suppress, Word
 
 ParserElement.enablePackrat()
 
@@ -44,25 +71,24 @@ NOT = Literal('!')
 
 rop = oneOf('< > <= >= = !=').setParseAction(lambda s,l,t: ['distinct'] if t[0] == '!=' else t)
 
-GET, CAT, HAS, IND, LEN, REP, SUB = map(Literal, 'get cat has ind len rep sub'.split())
+GET, CAT, HAS, IND, LEN, REP, SUB = map(Literal, '#get #cat #has #ind #len #rep #sub'.split())
 
 var = Word(alphas+'_:$', alphanums+'_:$').setParseAction(addVar)
 ival = Combine(Optional('-') + Word(nums)).setParseAction(lambda s,l,t: ['(- %s)' % t[0][1:]] if t[0][0] == '-' else t)
 ivar = (ival + var).setParseAction(lambda s,l,t: ['*', t[0], t[1]])
 
-term = ivar | ival | var
+term = ivar | ival | var | QuotedString(quoteChar='"', unquoteResults=False)
 
 stmt = Forward()
 expr = Forward()
 sexpr = Forward()
 
-sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['CharAt', t[1], t[2]]])
-         | (CAT + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Concat', t[1], t[2]]])
-         | (HAS + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Contains', t[1], t[2]]])
-         | (IND + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Indexof', t[1],  t[2]]])
-         | (LEN + LPAR + expr + RPAR).setParseAction(lambda s,l,t: [['Length', t[1]]])
-         | (REP + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Replace', t[1],  t[2], t[3]]])
-         | (SUB + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Substring', t[1],  t[2], t[3]]])
+sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['CharAt', chkString(t[1]), t[2]]])
+         | (CAT + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Concat', chkString(t[1]), chkString(t[2])]])
+         | (IND + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Indexof', chkString(t[1]), chkString(t[2])]])
+         | (LEN + LPAR + expr + RPAR).setParseAction(lambda s,l,t: [['Length', chkString(t[1])]])
+         | (REP + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Replace', chkString(t[1]), chkString(t[2]), chkString(t[3])]])
+         | (SUB + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Substring', chkString(t[1]), t[2], t[3]]])
          | term
          | (LPAR + sexpr + RPAR))
 
@@ -74,7 +100,8 @@ expr << ( operatorPrecedence(sexpr, [
         | (LPAR + expr + RPAR))
 
 stmt << ( const
-        | ((expr + rop + expr).setParseAction(lambda s,l,t: [[t[1], t[0], t[2]]]))
+        | (HAS + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Contains', chkString(t[1]), chkString(t[2])]])
+        | (expr + rop + expr).setParseAction(chkStringSibling)
         | (LPAR + stmt + RPAR))
 
 pred = operatorPrecedence(stmt, [
@@ -143,7 +170,7 @@ def smtlib2_string_from_file(action, filename, headless, implicant=None, implica
     uvars.discard('false')
 
     smtstr = '%s\n(%s %s)' % (
-        '\n'.join('(declare-const %s Int)' % var for var in uvars),
+        '\n'.join('(declare-const %s %s)' % (var, 'String' if var in string_vars else 'Int') for var in uvars),
         action,
         smtstr)
     return smtstr

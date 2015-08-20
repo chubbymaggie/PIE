@@ -6,6 +6,8 @@ import sys
 def fix(string):
     if string[0] == '(' and string[-1] == ')':
         return '-' + string[3:-1]
+    elif string[0] == '"' and string[-1] == '"':
+        return string[1:-1]
     return string
 
 if __name__ == '__main__':

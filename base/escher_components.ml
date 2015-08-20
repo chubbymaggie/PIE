@@ -328,7 +328,7 @@ let str_get = {
                    with Invalid_argument _ -> VError end
              | _ -> VError);
     name = "str_get";
-    dump = (fun l -> "(get(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(#get(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_concat = {
@@ -338,7 +338,7 @@ let str_concat = {
              | [VString x; VString y] -> VString (x ^ y)
              | _ -> VError);
     name = "str_concat";
-    dump = (fun l -> "(cat(" ^ (List.hd l) ^ "," ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(#cat(" ^ (List.hd l) ^ "," ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_contains = {
@@ -348,7 +348,7 @@ let str_contains = {
              | [VString x; VString y] -> VBool (BatString.exists x y)
              | _ -> VError);
     name = "str_contains";
-    dump = (fun l -> "(has(" ^ (List.hd l) ^ "," ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(#has(" ^ (List.hd l) ^ "," ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_index_of = {
@@ -360,7 +360,7 @@ let str_index_of = {
                        with Not_found -> VInt (-1) end
              | _ -> VError);
     name = "str_index_of";
-    dump = (fun l -> "(ind(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(#ind(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_len = {
@@ -370,7 +370,7 @@ let str_len = {
              | [VString x] -> VInt (String.length x)
              | _ -> VError);
     name = "str_len";
-    dump = (fun l -> "(len(" ^ (List.hd l) ^ "))")
+    dump = (fun l -> "(#len(" ^ (List.hd l) ^ "))")
 }
 
 let str_replace = {
@@ -380,7 +380,7 @@ let str_replace = {
              | [VString str; VString src ; VString dst] -> VString (snd (BatString.replace str src dst))
              | _ -> VError);
     name = "str_replace";
-    dump = (fun l -> "(rep(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ ", " ^ (List.hd (List.tl (List.tl l))) ^ "))")
+    dump = (fun l -> "(#rep(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ ", " ^ (List.hd (List.tl (List.tl l))) ^ "))")
 }
 
 let str_sub = {
@@ -392,7 +392,7 @@ let str_sub = {
                    with Invalid_argument _ -> VError end
              | _ -> VError);
     name = "str_sub";
-    dump = (fun l -> "(sub(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ ", " ^ (List.hd (List.tl (List.tl l))) ^ "))")
+    dump = (fun l -> "(#sub(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ ", " ^ (List.hd (List.tl (List.tl l))) ^ "))")
 }
 
 (* not using these for now *)

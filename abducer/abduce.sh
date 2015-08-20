@@ -36,11 +36,11 @@ fi
 ./preprocess "$FILE.tml" > "T$FILE.ml" 2> /dev/null
 
 # Compile OCaml code to binary
-ocamlfind ocamlopt -package batteries -c "T$FILE.ml" 2>/dev/null
-ocamlfind ocamlopt -o "$FILE.e" -linkpkg -package batteries escher_types.cmx   \
-                                         escher_core.cmx escher_components.cmx \
-                                         escher_synth.cmx specInfer.cmx        \
-                                         "T$FILE.cmx" 2> /dev/null
+ocamlfind ocamlopt -package qcheck -package batteries -c "T$FILE.ml" 2>/dev/null
+ocamlfind ocamlopt -o "$FILE.e" -linkpkg -package qcheck -package batteries            \
+                                         testGen.cmx escher_types.cmx escher_core.cmx  \
+                                         escher_components.cmx escher_synth.cmx        \
+                                         specInfer.cmx "T$FILE.cmx" 2> /dev/null
 
 # Replace variables & simplify
 echo -ne "-\n-\n" > "$FILE.inf"

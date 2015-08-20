@@ -12,7 +12,7 @@ if __name__ == '__main__':
     cvc4_in = ('\n'.join([
                  '(set-option :produce-models true)',
                  '(set-option :strings-fmf true)',
-                 '(set-logic QF_S)'])
+                 '(set-logic ALL_SUPPORTED)'])
                + smtdata
                + '\n(check-sat)\n')
     cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],

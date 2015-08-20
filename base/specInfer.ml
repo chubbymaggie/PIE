@@ -632,14 +632,14 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a 
         prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
         let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
         prerr_string "                            \n" ; flush_all();
-        Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour ") ;
+        Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour 2>/dev/null") ;
         let res_file = open_in (smtfile ^ ".zour") in
           if input_line res_file = "UNSAT" then (close_in res_file ; res)
           else (close_in res_file ;
                 Sys.command("./var_replace revVals " ^ smtfile ^ ".tml < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
                 let res_file = open_in (smtfile ^ ".our") in
-                let int_args = (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans)) in
-                prerr_endline ("      [+] Added test ... " ^ (String.concat "," (List.map string_of_int int_args)));
+                let args = (List.map (fun vtyp -> let data = input_line res_file in match vtyp with TInt -> VInt(int_of_string data) | TString -> VString(data)) (fst trans)) in
+                prerr_string ("      [+] Added test ... "); print_data stderr (VList(args));
                 close_in res_file;
-                if f (trans_test int_args) then raise BadCounterExample else (
-                pacLearnSpecNSATVerify ~k:1 ~unsats:unsats f ((trans_test int_args) :: tests) features post trans iconsts trans_test smtfile))))
+                if f (trans_test args) then raise BadCounterExample else (
+                pacLearnSpecNSATVerify ~k:1 ~unsats:unsats f ((trans_test args) :: tests) features post trans iconsts trans_test smtfile))))

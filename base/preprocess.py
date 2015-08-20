@@ -68,8 +68,8 @@ def stringify(obj, top = True):
 def getProperties(fromTyp, toTyp):
     try:
         return {
-            ST: {IT: [("String.length", "len")]},
-            LT: {IT: [("List.length", "len")]}
+            ST: {IT: [("String.length", "#len")]},
+            LT: {IT: [("List.length", "#len")]}
         }[fromTyp][toTyp]
     except KeyError:
         return []
@@ -144,9 +144,9 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
 
     elif typ1[0][0] == ST and typ2[0][0] == ST and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
-                         [('(fun %s %s-> %s > %s)', '"%s > %s"'),
-                          ('(fun %s %s-> %s = %s)', '"%s = %s"')]
-                         + ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
+                         [#('(fun %s %s-> %s > %s)', '"%s > %s"'),
+                          ('(fun %s %s-> %s = %s)', '"%s = %s"')] ))
+                         #+ ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
 
     if var2 is not None:
         if typ1 == typ2 and typ1[0][0] not in ATOM_TYPES:

@@ -1,0 +1,3 @@
+append ind check
+status: UNSAT
+!(!((i < #len(s1)) & (r = #cat(s0, #sub(s1, 0, i)))) | (#cat(r, #get(s1, i)) = #cat(s0, #sub(s1, 0, i+1))))

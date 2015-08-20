@@ -39,6 +39,13 @@ let of_string s = VString(s)
 let of_tree btree = VTree(btree)
 let of_list f l = VList(List.map f l)
 
+let from_int = function | VInt(i) -> i
+let from_bool = function | VBool(b) -> b
+let from_char = function | VChar(c) -> c
+let from_string = function | VString(s) -> s
+let from_tree = function | VTree(t) -> t
+let from_list f = function | VList(l) -> List.map f l
+
 let rec print_data chan (data: value) : unit = match data with
     VError       -> output_string chan "- ERROR -"
   | VDontCare    -> output_string chan "- UNKNOWN -"

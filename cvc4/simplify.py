@@ -61,12 +61,21 @@ let << ( pred
        | (LPAR + Suppress('let') + LPAR + LPAR + term + (expr | pred) + RPAR + RPAR + let + RPAR).setParseAction(let_action))
 
 if __name__ == '__main__':
+    with open(sys.argv[1]) as f:
+        mcf = f.readlines()
+    mcf = (mcf[0] if len(sys.argv) > 2 and sys.argv[2] == '0' else mcf[2]).strip()
+    print(mcf)
+    sys.exit(0)
+
+    # FIXME: No simplification for now. Weird __ufSS output from CVC4
+    # FIXME: Replace CVC string functions with the new MCF format
+
     smtdata = z3str_to_cvc4(smtlib2_string_from_file("simplify", sys.argv[1], "1" if len(sys.argv) > 2 and sys.argv[2] == "0" else "0"))
 
     cvc4_in = ('\n'.join([
                  '(set-option :produce-models true)',
                  '(set-option :strings-fmf true)',
-                 '(set-logic QF_S)'])
+                 '(set-logic ALL_SUPPORTED)'])
                + smtdata + '\n')
     cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],
                             stdin=subprocess.PIPE,
@@ -75,6 +84,8 @@ if __name__ == '__main__':
     cvc4.stdin.write(cvc4_in)
     cvc4_res = cvc4.stdout.readline().strip()
 
+    print(cvc4_in)
+    print(cvc4_res)
     mcf = flatString(let.parseString(cvc4_res, parseAll = True).asList())
     while('_let_' in mcf):
         for var in lets:

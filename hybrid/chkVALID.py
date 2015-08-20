@@ -20,13 +20,17 @@ def runZ3Str2(smtdata, queue):
             f.write(z3str_in)
 
         z3str_out = subprocess.check_output(['/data/Repos/Z3-str/Z3-str.py', '-f', '/tmp/z3str.in']).split('\n')
-        z3str_res = z3str_out[1][3:].lower()
+        z3str_res = z3str_out[2 if z3str_out[0][:4] == '* v-' else 1][3:].lower()
 
+        res = 'ERROR'
         if z3str_res == 'unsat':
             res = 'UNSAT'
-        else:
+        elif z3str_res == 'sat':
             res = string_from_z3str_model(z3str_out)
 
+        if res == 'ERROR':
+            sleep(timeout)
+        sys.stderr.write('(Z3Str2)\n')
         queue.put(['z3str', res])
 
 def runCVC4(smtdata, queue):
@@ -34,9 +38,9 @@ def runCVC4(smtdata, queue):
         cvc4_in = ('\n'.join([
                     '(set-option :produce-models true)',
                     '(set-option :strings-fmf true)',
-                    '(set-logic QF_S)'])
-                + smtdata
-                + '\n(check-sat)\n')
+                    '(set-logic ALL_SUPPORTED)\n'])
+                  + smtdata
+                  + '\n(check-sat)\n')
         cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],
                                 stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
@@ -52,6 +56,7 @@ def runCVC4(smtdata, queue):
 
         if res == 'ERROR':
             sleep(timeout)
+        sys.stderr.write('(CVC4)\n')
         queue.put(['cvc4', res])
 
 if __name__ == '__main__':
@@ -89,8 +94,8 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # Only remaining case is Z3Str reporting a model which we need to verify
-    smtdata = z3str_to_cvc4(smtdata).strip().split('\n')[-1]
-    smtdata = substitute_model(smtdata, vals['z3str']) + '\n(check-sat)'
+    smtdata = z3str_to_cvc4(smtdata).strip().split('\n')[-2]
+    smtdata = substitute_model(smtdata, vals['z3str'])
 
     sema.release()
     runCVC4(smtdata, q)

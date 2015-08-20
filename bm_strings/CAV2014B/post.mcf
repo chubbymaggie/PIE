@@ -1,0 +1,3 @@
+CAV'14 B post check
+status: UNSAT
+!(!(i = #len(r) & !(#ind(r, "aa") >= 0)) | ((i = #len(r)) & !(#has(r, "aa"))))
