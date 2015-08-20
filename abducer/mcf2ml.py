@@ -30,34 +30,56 @@ def flatString(l):
 
 ###
 
-from pyparsing import alphas, alphanums, Combine, Literal, nums, oneOf, opAssoc, \
-                      operatorPrecedence, Optional, ParserElement, Suppress, Word
+from pyparsing import alphas, alphanums, Combine, Forward, Literal, nums, \
+                      oneOf, opAssoc, operatorPrecedence, Optional, \
+                      ParserElement, Suppress, Word
 
 ParserElement.enablePackrat()
 
-LPAR, RPAR = map(Suppress, '()')
+LPAR, RPAR, COMMA = map(Suppress, '(),')
+const = oneOf('true false')
 
 aop0 = oneOf('* /')
 aop1 = oneOf('+ -')
 aop2 = oneOf('%').setParseAction(lambda s,l,t: ['mod'])
+
 bop = oneOf('& |').setParseAction(lambda s,l,t: [t[0]+t[0]])
 NOT = Literal('!')
+
 rop = oneOf('< > <= >= = !=')
-const = oneOf('true false')
+
+GET, CAT, HAS, IND, LEN, REP, SUB = map(Literal, 'get cat has ind len rep sub'.split())
 
 var = Word(alphas+'_:$', alphanums+'_:$').setParseAction(addVar)
 ival = Combine(Optional('-') + Word(nums)).setParseAction(addConst)
-ivar = (ival + var).setParseAction(lambda s,l,t: ['%s*%s' % tuple(t)])
+ivar = (ival + var).setParseAction(lambda s,l,t: [t[0], '*', t[1]])
 
 term = ivar | ival | var
 
-expr = operatorPrecedence(term, [
-                            (aop0, 2, opAssoc.LEFT, ),
-                            (aop1, 2, opAssoc.LEFT, ),
-                            (aop2, 2, opAssoc.LEFT, lambda s,l,t: [[[t[0][0], 'mod', t[0][2]], '+', t[0][2]], 'mod', t[0][2]])
-                         ])
+stmt = Forward()
+expr = Forward()
+sexpr = Forward()
 
-stmt = const | (expr + rop + expr)
+sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['String.get', t[1], t[2]]])
+         | (CAT + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [[t[1], '^', t[2]]])
+         | (HAS + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['BatString.exists', t[1], t[2]]])
+         | (IND + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['index_of', t[1],  t[2]]])
+         | (LEN + LPAR + expr + RPAR).setParseAction(lambda s,l,t: [['String.length', t[1]]])
+         | (REP + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['snd', ['BatString.replace', t[1],  t[2], t[3]]]])
+         | (SUB + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['String.substr', t[1],  t[2], t[3]]])
+         | term
+         | (LPAR + sexpr + RPAR))
+
+expr << ( operatorPrecedence(sexpr,[
+                                    (aop0, 2, opAssoc.LEFT, ),
+                                    (aop1, 2, opAssoc.LEFT, ),
+                                    (aop2, 2, opAssoc.LEFT, lambda s,l,t: [[[t[0][0], 'mod', t[0][2]], '+', t[0][2]], 'mod', t[0][2]])
+                                   ])
+        | (LPAR + expr + RPAR))
+
+stmt << ( const
+        | (expr + rop + expr)
+        | (LPAR + stmt + RPAR))
 
 pred = operatorPrecedence(stmt, [
                             (NOT, 1, opAssoc.RIGHT, lambda s,l,t: ['not', t[0][1:]]),
@@ -114,7 +136,7 @@ if __name__ == "__main__":
     uniq_consts = sorted(list(uniq_consts))
 
     out = check_output(['./chkSAT', sys.argv[1], '0']).decode().split("\n")
-    if out[0] == 'UNSAT':
+    if out[0] == 'UNSAT' or out[0] == '~UNKNOWN~':
         sys.exit(1)
     model = dict((kv[0].strip(), kv[1].strip()) for kv in (line.partition(':')[0::2] for line in out[1:]))
 
@@ -124,6 +146,8 @@ if __name__ == "__main__":
     print("\nopen Batteries")
     print("open Escher_types")
     print("open SpecInfer")
+    print("open TestGen")
+    print("\nlet index_of = fun s0 s1 -> try (BatString.find s0 s1) with Not_found -> (-1)")
     print("\nlet f = fun (%s) -> %s" % (','.join(uvars), ml))
     print("\nlet def_features = (*PYF:x|T(%s)*)" % ','.join(v +':I' for v in uvars))
     print("\nlet my_features = []")

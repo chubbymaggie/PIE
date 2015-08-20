@@ -32,7 +32,7 @@ from pyparsing import alphas, alphanums, Combine, Forward, Literal, nums, \
 
 ParserElement.enablePackrat()
 
-LPAR, RPAR = map(Suppress, '()')
+LPAR, RPAR, COMMA = map(Suppress, '(),')
 const = oneOf('true false')
 
 aop0 = oneOf('* /')
@@ -42,21 +42,35 @@ aop2 = oneOf('%').setParseAction(lambda s,l,t: ['mod'])
 bop = oneOf('& |').setParseAction(lambda s,l,t: ['and'] if t[0] == '&' else ['or'])
 NOT = Literal('!')
 
-rop = oneOf('< > <= >= = !=').setParseAction(lambda s,l,t: 'distinct' if t[0] == '!=' else t[0])
+rop = oneOf('< > <= >= = !=').setParseAction(lambda s,l,t: ['distinct'] if t[0] == '!=' else t)
 
-val = Combine(Optional('-') + Word(nums)).setParseAction(lambda s,l,t: ['(- %s)' % t[0][1:]] if t[0][0] == '-' else t)
+GET, CAT, HAS, IND, LEN, REP, SUB = map(Literal, 'get cat has ind len rep sub'.split())
+
 var = Word(alphas+'_:$', alphanums+'_:$').setParseAction(addVar)
+ival = Combine(Optional('-') + Word(nums)).setParseAction(lambda s,l,t: ['(- %s)' % t[0][1:]] if t[0][0] == '-' else t)
+ivar = (ival + var).setParseAction(lambda s,l,t: ['*', t[0], t[1]])
 
-term = val | var
+term = ivar | ival | var
 
 stmt = Forward()
 expr = Forward()
+sexpr = Forward()
 
-expr << ( operatorPrecedence(term, [
+sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['CharAt', t[1], t[2]]])
+         | (CAT + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Concat', t[1], t[2]]])
+         | (HAS + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Contains', t[1], t[2]]])
+         | (IND + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Indexof', t[1],  t[2]]])
+         | (LEN + LPAR + expr + RPAR).setParseAction(lambda s,l,t: [['Length', t[1]]])
+         | (REP + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Replace', t[1],  t[2], t[3]]])
+         | (SUB + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Substring', t[1],  t[2], t[3]]])
+         | term
+         | (LPAR + sexpr + RPAR))
+
+expr << ( operatorPrecedence(sexpr, [
                                      (aop0, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
                                      (aop1, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
                                      (aop2, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])])
-                                   ])
+                                    ])
         | (LPAR + expr + RPAR))
 
 stmt << ( const

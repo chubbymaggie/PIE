@@ -33,7 +33,7 @@ let rec divide_depth f arity target acc =
 
 
 (* Upper bound on the heuristic value a solution may take *)
-let max_h = 8
+let max_h = 10
 
 let expand_ = ref "size"
 let goal_graph = ref false
@@ -132,20 +132,18 @@ let solve_impl ?ast:(ast=false) task iconsts =
   let string_components = List.filter (fun c -> c.codomain = TString) components in
 
   let apply_comp f types i =
-    let rec apply_cells types acc locations =
-      match types, locations with
-	| (typ::typs, i::locs) ->
-	    List.iter (fun x -> apply_cells typs (x::acc) locs) begin
-	      match typ with
-		| TInt -> int_array.(i)
-		| TBool -> bool_array.(i)
-		| TChar -> char_array.(i)
-		| TList -> list_array.(i)
-		| TTree -> tree_array.(i)
-		| TString -> string_array.(i)
-	    end
-	| ([], []) -> f (List.rev acc)
-	| _ -> failwith "Impossible!"
+    let rec apply_cells types acc locations = match types, locations with
+	    | (typ::typs, i::locs) -> List.iter (fun x -> apply_cells typs (x::acc) locs) begin
+	          match typ with
+            | TInt -> int_array.(i)
+            | TBool -> bool_array.(i)
+            | TChar -> char_array.(i)
+            | TList -> list_array.(i)
+            | TTree -> tree_array.(i)
+            | TString -> string_array.(i)
+          end
+        | ([], []) -> f (List.rev acc)
+        | _ -> failwith "Impossible!"
     in
       divide (apply_cells types []) (List.length types) (i-1) []
   in
@@ -188,7 +186,7 @@ let solve_impl ?ast:(ast=false) task iconsts =
 	   | VList _ -> list_array
 	   | VInt _ -> int_array
 	   | VBool _ -> bool_array
-	   | VChar _ -> char_array
+     | VChar _ -> char_array
 	   | VTree _ -> tree_array
 	   | VString _ -> string_array
 	   | VError -> failwith "Error in input"
@@ -227,7 +225,7 @@ let default_bool = [notc]
 let default_char = [cequal]
 
 let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
-let default_string = [str_concat; str_contains; str_len; str_get]
+let default_string = [str_get; str_concat; str_contains; str_index_of; str_len; str_replace; str_sub]
 
 let default_components =
   default_int @ default_bool @ default_list @ default_string @ default_char
