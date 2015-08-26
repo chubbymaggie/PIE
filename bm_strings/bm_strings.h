@@ -60,7 +60,7 @@ int unknown(int low, int high) { return uni_rand_interval(low, high); }
  * Random string generation
  */
 
-#define RAND_STR_LEN_MAX 16
+#define RAND_STR_LEN_MAX 12
 
 char unknown_upper() { return uni_rand_interval(65, 90); }
 char unknown_lower() { return uni_rand_interval(97, 122); }
@@ -85,18 +85,43 @@ void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 
 
-bool contains(string haystack, string needle) {
-  return haystack.find(needle) != string::npos;
+bool eql(string str1, string str2) {
+  return str1 == str2;
 }
 
-int indexOf(string haystack, string needle) {
+void set(string & str, string val) {
+  str = val;
+}
+
+string get(string str, int pos) {
+  return string(1, str.at(pos));
+}
+
+string cat(string str1, string str2) {
+  return str1 + str2;
+}
+
+int ind(string haystack, string needle) {
   return (haystack.find(needle) != string::npos ? haystack.find(needle) : -1);
 }
 
-string replace(string src, string from, string to) {
-  if(!contains(src, from)) return src;
-  return src.substr(0, indexOf(src, from)) + to + (indexOf(src, from) + from.length() < src.length() ? src.substr(indexOf(src, from) + from.length()) : "");
+int len(string str) {
+  return str.length();
 }
+
+bool has(string haystack, string needle) {
+  return haystack.find(needle) != string::npos;
+}
+
+string rep(string src, string from, string to) {
+  if(!has(src, from)) return src;
+  return src.substr(0, ind(src, from)) + to + (ind(src, from) + from.length() < src.length() ? src.substr(ind(src, from) + from.length()) : "");
+}
+
+string sub(string src, int start, int len) {
+  return src.substr(start, len);
+}
+
 
 #define OUTPUT_STREAM stdout
 
@@ -115,7 +140,7 @@ void replaceAll( string &s, const string &search, const string &replace ) {
 #define INITIALIZE(format, args...)                                       \
           struct timeval ___t___; gettimeofday(&___t___, NULL);           \
           srand(___t___.tv_usec * ___t___.tv_sec);                        \
-          string ___vars___ = #args;                                      \
+          string ___vars___(#args);                                       \
           std::replace(___vars___.begin(), ___vars___.end(), ',', '\t');  \
           replaceAll(___vars___, ".c_str()", "");                         \
           fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());             \

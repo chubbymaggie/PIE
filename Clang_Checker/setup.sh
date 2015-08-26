@@ -17,6 +17,7 @@ patch -bN < "$OWN_ROOT/patch"
 
 perl -pe 's#__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__#'"$WORKING_ROOT"'#g' < "$OWN_ROOT/LoopInvariantChecker.template.cpp" > LoopInvariantChecker.cpp
 perl -pi -e 's#__ABDUCER_PATH_FROM_SETUP_SCRIPT__#'"$ABDUCER_ROOT"'#g' LoopInvariantChecker.cpp
+cp "$OWN_ROOT/tinyxml*" .
 
 cd "$LLVM_ROOT"
 mkdir build ; cd build

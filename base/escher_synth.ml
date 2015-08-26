@@ -33,9 +33,9 @@ let rec divide_depth f arity target acc =
 
 
 (* Upper bound on the heuristic value a solution may take *)
-let max_h = 10
+let max_h = 12
 
-let expand_ = ref "size"
+let expand_ = ref "depth"
 let goal_graph = ref false
 
 let noisy = ref false
@@ -85,7 +85,7 @@ let rec print_goal indent goal =
   if String.length indent > 10 then print_endline (indent ^ "...")
   else print_endline (indent ^ "goal: " ^ (varray_string goal.varray))
 
-let solve_impl ?ast:(ast=false) task iconsts =
+let solve_impl ?ast:(ast=false) task consts =
   let seen = ref [] in
   let vector_size = Array.length (snd (List.hd task.inputs)) in
   let components = task.components in
@@ -177,9 +177,12 @@ let solve_impl ?ast:(ast=false) task iconsts =
   if not (!quiet) then (print_endline ("Inputs: ");
     List.iter (fun v -> print_endline ("   " ^ (Vector.string v))) task.inputs);
     if not (!quiet) then print_endline ("Goal: " ^ (varray_string final_goal.varray));
-    list_array.(1) <- [nil];
-    int_array.(1) <- List.fold_left (fun p i -> ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i))::p) [zero] (BatList.sort_unique compare (1::iconsts));
-    bool_array.(1) <- [btrue ; bfalse];
+    list_array.(1)   <- [nil];
+    int_array.(1)    <- List.fold_left (fun p i -> ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i))::p)
+                        [zero] (BatList.sort_unique compare (1::(BatList.filter_map (fun v -> match v with VInt x -> Some x | _ -> None) consts)));
+    string_array.(1) <- List.fold_left (fun p s -> (((("\"" ^ s ^ "\""), (fun ars -> VString s)), Leaf ("\"" ^ s ^ "\"")), Array.make vector_size (VString s))::p)
+                        [] (BatList.sort_unique compare (BatList.filter_map (fun v -> match v with VString x -> Some x | _ -> None) consts));
+    bool_array.(1)   <- [btrue ; bfalse];
     List.iter
       (fun input ->
 	 let array = match (snd input).(1) with
@@ -213,9 +216,9 @@ let solve_impl ?ast:(ast=false) task iconsts =
       expand i;
     done
 
-let solve ?ast:(ast=false) task iconsts =
+let solve ?ast:(ast=false) task consts =
   all_solutions := [] ;
-  (try solve_impl ~ast:ast task iconsts with Success -> ());
+  (try solve_impl ~ast:ast task consts with Success -> ());
   if not (!quiet) then (print_endline "Synthesis Result: "; List.iter (fun v -> print_endline (Vector.string v)) all_solutions.contents) ;
   List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
 
@@ -225,7 +228,7 @@ let default_bool = [notc]
 let default_char = [cequal]
 
 let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
-let default_string = [str_get; str_concat; str_contains; str_index_of; str_len; str_replace; str_sub]
+let default_string = [str_eq; str_sub; str_get; str_concat; str_contains; str_index_of; str_len; str_replace ]
 
 let default_components =
   default_int @ default_bool @ default_list @ default_string @ default_char

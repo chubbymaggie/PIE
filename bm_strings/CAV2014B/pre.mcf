@@ -1,3 +1,0 @@
-CAV'14 B pre check
-status: UNSAT
-!(!(i = #len(r)) | (i = #len(r)))

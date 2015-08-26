@@ -1,4 +1,4 @@
-#include "../bm_strings.h"
+#include "bm_strings.h"
 
 int main() {
   int i;
@@ -9,15 +9,15 @@ int main() {
   s1 = unknown_s();
 
   i = 0;
-  r = s0;
+  set(r, s0);
 
-  while(i < s1.length()) {
+  while(i < len(s1)) {
     PRINT_VARS();
-    r += s1.at(i);
+    set(r, cat(r, get(s1, i)));
     ++i;
   }
   PRINT_VARS();
 
-  assert(r == s0 + s1);
+  assert(eql(r, cat(s0, s1)));
   return 0;
 }

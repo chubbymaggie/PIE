@@ -69,7 +69,7 @@ def getProperties(fromTyp, toTyp):
     try:
         return {
             ST: {IT: [("String.length", "#len")]},
-            LT: {IT: [("List.length", "#len")]}
+            LT: {IT: [("List.length", "len")]}
         }[fromTyp][toTyp]
     except KeyError:
         return []
@@ -125,33 +125,33 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
     if typ1[0][0] == BT and typ2[0][0] == BT:
         preds.extend(map(lambda (f,n): (f % (var1, '', nvar1[0], ''), n % (nvar1[1], 'true')) if var2 is None else (
                                         f % (var1, var2+' ', nvar1[0], ' = ' + nvar2[0]), n % (nvar1[1], nvar2[1])),
-                         [('(fun %s %s-> %s%s)', '"%s = %s"')]))
+                         [('(fun %s %s-> %s%s)', '"(%s = %s)"')]))
 
     elif typ1[0][0] == IT and typ2[0][0] == IT:
         preds.extend(map(lambda (f,n): (f % (var1, '', nvar1[0], '0'), n % (nvar1[1], '0')) if var2 is None else (
                                         f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
-                         [('(fun %s %s-> %s > %s)', '"%s > %s"'),
-                          ('(fun %s %s-> %s = %s)', '"%s = %s"')]
-                         + ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
+                         [('(fun %s %s-> %s > %s)', '"(%s > %s)"'),
+                          ('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
+                         + ifHuge([('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
         if var2 is None and mode == 'F':
-            preds.extend([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"%s %% 2 = 0"' % nvar1[1])])
+            preds.extend([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"(%s %% 2 = 0)"' % nvar1[1])])
 
     elif typ1[0][0] == CT and typ2[0][0] == CT and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
-                         [('(fun %s %s-> %s > %s)', '"%s > %s"'),
-                          ('(fun %s %s-> %s = %s)', '"%s = %s"')]
-                         + ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
+                         [('(fun %s %s-> %s > %s)', '"(%s > %s)"'),
+                          ('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
+                         + ifHuge([('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
 
     elif typ1[0][0] == ST and typ2[0][0] == ST and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
                          [#('(fun %s %s-> %s > %s)', '"%s > %s"'),
-                          ('(fun %s %s-> %s = %s)', '"%s = %s"')] ))
+                          ('(fun %s %s-> %s = %s)', '"(#eql(%s, %s))"')] ))
                          #+ ifHuge([('(fun %s %s-> %s < %s)', '"%s < %s"')])))
 
     if var2 is not None:
         if typ1 == typ2 and typ1[0][0] not in ATOM_TYPES:
             preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
-                            [('(fun %s %s-> %s = %s)', '"%s = %s"')]))
+                            [('(fun %s %s-> %s = %s)', '"(%s = %s)"')]))
 
         # Predicates between one variable and elements of the other variable (which is a tuple)
         if typ1[0][0] == TT:

@@ -7,6 +7,8 @@ from random import randint
 def fix(string):
     if string[0] == '(' and string[-1] == ')':
         return '-' + string[3:-1]
+    elif string[0] == '"' and string[-1] == '"':
+        return string[1:-1]
     return string
 
 if __name__ == "__main__":
@@ -21,6 +23,6 @@ if __name__ == "__main__":
     model = {var.strip():fix(data[var.strip()]) if var.strip() in data else str(randint(-16,16)) for var in header}
     sys.stderr.write("    [+] Counter example added ... %s\n" % str(model))
 
-    model = [data[var.strip()] if var.strip() in data else str(randint(-16,16)) for var in header]
+    model = [model[var.strip()] for var in header]
     with open(sys.argv[1], 'a') as f:
         f.write('\n%s' % '\t'.join(model))

@@ -338,25 +338,36 @@ let str_concat = {
              | [VString x; VString y] -> VString (x ^ y)
              | _ -> VError);
     name = "str_concat";
-    dump = (fun l -> "(#cat(" ^ (List.hd l) ^ "," ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(#cat(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+}
+
+
+let str_eq = {
+    domain = [TString;TString];
+    codomain = TBool;
+    apply = (function
+             | [VString x; VString y] -> VBool (x = y)
+             | _ -> VError);
+    name = "str_eq";
+    dump = (fun l -> "(#eql(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_contains = {
     domain = [TString;TString];
     codomain = TBool;
     apply = (function
-             | [VString x; VString y] -> VBool (BatString.exists x y)
+             | [VString s; VString t] -> VBool (BatString.exists s t)
              | _ -> VError);
     name = "str_contains";
-    dump = (fun l -> "(#has(" ^ (List.hd l) ^ "," ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(#has(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_index_of = {
     domain = [TString;TString];
     codomain = TInt;
     apply = (function
-             | [VString x; VString y] ->
-                 begin try VInt (BatString.find x y)
+             | [VString s; VString t] ->
+                 begin try VInt (BatString.find s t)
                        with Not_found -> VInt (-1) end
              | _ -> VError);
     name = "str_index_of";
@@ -389,7 +400,7 @@ let str_sub = {
     apply = (function
              | [VString str; VInt lo; VInt len] ->
                    begin try VString (String.sub str lo len)
-                   with Invalid_argument _ -> VError end
+                   with _ -> VError end
              | _ -> VError);
     name = "str_sub";
     dump = (fun l -> "(#sub(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ ", " ^ (List.hd (List.tl (List.tl l))) ^ "))")

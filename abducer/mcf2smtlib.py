@@ -7,8 +7,7 @@ uvars = {'true', 'false'}
 string_vars = set()
 
 def addVar(s,l,t):
-    if t[0] not in uvars:
-        uvars.add(t[0])
+    uvars.add(t[0])
     return t
 
 def flatString(l, newLine=False):
@@ -22,34 +21,14 @@ def fix_indexOf(l):
     else:
         return [fix_indexOf(e) for e in l]
 
-def infix2postfix(l):
-    return (l[0] if len(l) < 3 else [l[-2], infix2postfix(l[:-2]), l[-1]])
+def infix2prefix(l):
+    return (l[0] if len(l) < 3 else [l[-2], infix2prefix(l[:-2]), l[-1]])
 
 def chkString(token):
     if type(token) is str:
         if token not in string_vars:
             string_vars.add(token)
     return token
-
-def chkStringSibling(s,l,t):
-    if (type(t[0]) is not str) and (type(t[2]) is not str):
-        return [[t[1],t[0],t[2]]]
-
-    if type(t[2]) is str:
-        if type(t[0]) is not str or ((t[0][0] == '"') == (t[2][0] == '"')):
-            return [[t[1],t[0],t[2]]]
-        elif t[0][0] == '"':
-            chkString(t[2])
-        elif t[2][0] == '"':
-            chkString(t[0])
-    else:
-        if len(t[2]) == 1:
-            return chkStringSibling(s,l,[t[0], t[1], t[2][0]])
-
-        if t[2][0] in ['CharAt','Concat','Replace','Substring']:
-            chkString(t[0])
-
-    return [[t[1],t[0],t[2]]]
 
 ###
 
@@ -71,7 +50,7 @@ NOT = Literal('!')
 
 rop = oneOf('< > <= >= = !=').setParseAction(lambda s,l,t: ['distinct'] if t[0] == '!=' else t)
 
-GET, CAT, HAS, IND, LEN, REP, SUB = map(Literal, '#get #cat #has #ind #len #rep #sub'.split())
+GET, CAT, HAS, IND, LEN, REP, SUB, EQL = map(Literal, '#get #cat #has #ind #len #rep #sub #eql'.split())
 
 var = Word(alphas+'_:$', alphanums+'_:$').setParseAction(addVar)
 ival = Combine(Optional('-') + Word(nums)).setParseAction(lambda s,l,t: ['(- %s)' % t[0][1:]] if t[0][0] == '-' else t)
@@ -93,20 +72,21 @@ sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t
          | (LPAR + sexpr + RPAR))
 
 expr << ( operatorPrecedence(sexpr, [
-                                     (aop0, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
-                                     (aop1, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])]),
-                                     (aop2, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])])
+                                     (aop0, 2, opAssoc.LEFT, lambda s,l,t: [infix2prefix(t[0])]),
+                                     (aop1, 2, opAssoc.LEFT, lambda s,l,t: [infix2prefix(t[0])]),
+                                     (aop2, 2, opAssoc.LEFT, lambda s,l,t: [infix2prefix(t[0])])
                                     ])
         | (LPAR + expr + RPAR))
 
 stmt << ( const
         | (HAS + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Contains', chkString(t[1]), chkString(t[2])]])
-        | (expr + rop + expr).setParseAction(chkStringSibling)
+        | (EQL + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['=', chkString(t[1]), chkString(t[2])]])
+        | (expr + rop + expr).setParseAction(lambda s,l,t: [[t[1], t[0], t[2]]])
         | (LPAR + stmt + RPAR))
 
 pred = operatorPrecedence(stmt, [
                             (NOT, 1, opAssoc.RIGHT, lambda s,l,t: [['not', t[0][1]]]),
-                            (bop, 2, opAssoc.LEFT, lambda s,l,t: [infix2postfix(t[0])] )
+                            (bop, 2, opAssoc.LEFT, lambda s,l,t: [infix2prefix(t[0])] )
                          ])
 
 ###

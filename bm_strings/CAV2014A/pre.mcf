@@ -1,3 +1,0 @@
-CAV'14 A pre check
-status: UNSAT
-!(!((i = 0) & (r = "a")) | ((#len(r) = 2*i + 1) & ((r = "a") | #has(r, "(a)"))))

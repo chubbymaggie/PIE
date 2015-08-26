@@ -52,6 +52,8 @@ def runCVC4(smtdata, queue):
         if cvc4_res == 'unsat':
             res = 'UNSAT'
         elif cvc4_res == 'sat' or cvc4_res == 'valid':
+            # This will throw an error when we cross-check Z3Str model,
+            # But it doesn't matter anyway.
             res = string_from_cvc4_model(cvc4)
 
         if res == 'ERROR':

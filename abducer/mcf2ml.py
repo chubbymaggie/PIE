@@ -12,7 +12,11 @@ string_vars = set()
 uniq_consts = set([0])
 
 def addConst(s,l,t):
-    uniq_consts.add(int(t[0]))
+    try:
+        uniq_consts.add(int(t[0]))
+    except:
+        uniq_consts.add(t[0])
+
     return t[0]
 
 def addVar(s,l,t):
@@ -33,30 +37,10 @@ def chkString(token):
             string_vars.add(token)
     return token
 
-def chkStringSibling(s,l,t):
-    if (type(t[0]) is not str) and (type(t[2]) is not str):
-        return t
-
-    if type(t[2]) is str:
-        if type(t[0]) is not str or ((t[0][0] == '"') == (t[2][0] == '"')):
-            return t
-        elif t[0][0] == '"':
-            chkString(t[2])
-        elif t[2][0] == '"':
-            chkString(t[0])
-    else:
-        if len(t[2]) == 1:
-            return chkStringSibling(s,l,[t[0], t[1], t[2][0]])
-
-        if t[2][0] in ['Char.escaped','snd','String.sub'] or t[2][1] == '^':
-            chkString(t[0])
-
-    return t
-
 ###
 
-from pyparsing import alphas, alphanums, Combine, Forward, Literal, nums, \
-                      oneOf, opAssoc, operatorPrecedence, Optional, \
+from pyparsing import alphas, alphanums, Combine, Forward, Group, Literal, \
+                      nums, oneOf, opAssoc, operatorPrecedence, Optional, \
                       ParserElement, QuotedString, Suppress, Word
 
 ParserElement.enablePackrat()
@@ -73,13 +57,13 @@ NOT = Literal('!')
 
 rop = oneOf('< > <= >= = !=')
 
-GET, CAT, HAS, IND, LEN, REP, SUB = map(Literal, '#get #cat #has #ind #len #rep #sub'.split())
+GET, CAT, HAS, IND, LEN, REP, SUB, EQL = map(Literal, '#get #cat #has #ind #len #rep #sub #eql'.split())
 
 var = Word(alphas+'_:$', alphanums+'_:$').setParseAction(addVar)
 ival = Combine(Optional('-') + Word(nums)).setParseAction(addConst)
 ivar = (ival + var).setParseAction(lambda s,l,t: [t[0], '*', t[1]])
 
-term = ivar | ival | var | QuotedString(quoteChar='"', unquoteResults=False)
+term = ivar | ival | var | QuotedString(quoteChar='"', unquoteResults=False).setParseAction(addConst)
 
 stmt = Forward()
 expr = Forward()
@@ -102,7 +86,8 @@ expr << operatorPrecedence(sexpr, [
 
 stmt << ( const
         | (HAS + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['BatString.exists', chkString(t[1]), chkString(t[2])]])
-        | (expr + rop + expr).setParseAction(chkStringSibling)
+        | (EQL + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['(=)', chkString(t[1]), chkString(t[2])]])
+        | Group(expr + rop + expr)
         | (LPAR + stmt + RPAR))
 
 pred = operatorPrecedence(stmt, [
@@ -129,7 +114,7 @@ if __name__ == "__main__":
 
     ml = flatString(pred.parseString(smt, parseAll = True).asList())
     uvars = sorted(uniq_vars.values())
-    uniq_consts = sorted(list(uniq_consts))
+    uniq_consts = list(uniq_consts)
 
     with open('/dev/null', 'w') as err:
         out = check_output(['./chkSAT', sys.argv[1], '0'], stderr=err).decode().split("\n")
@@ -147,8 +132,11 @@ if __name__ == "__main__":
     print("open TestGen")
     print("\nlet index_of = fun s0 s1 -> try (BatString.find s0 s1) with Not_found -> (-1)")
     print("\n\nlet n_arg_gen %s = (fun rand -> (%s))" % (' '.join('g%d' % i for i in range(len(uvars))), ', '.join('g%d rand' % i for i in range(len(uvars)))))
+    print("\n\nlet n_arg_dumper %s (%s) = \"(\" ^ %s ^ \")\"" % (' '.join('d%d' % i for i in range(len(uvars))), ', '.join('v%d' % i for i in range(len(uvars))), ' ^ ", " ^ '.join('(d%d v%d)' % (i, i) for i in range(len(uvars)))))
     print("\n\nlet f = fun (%s) -> %s" % (','.join(uvars), ml))
     print("\nlet f_tests () = generate ~n:8192 (n_arg_gen %s)" % (' '.join(('string' if v in string_vars else 'sint') for v in uvars)))
+    print("\nlet f_dumper = n_arg_dumper %s" % (' '.join(('string_dumper' if v in string_vars else 'int_dumper') for v in uvars)))
+    print("\nlet consts = [%s]" % ('; '.join("VString %s" % c if type(c) is str else "VInt %d" % c for c in uniq_consts)))
     print("\nlet def_features = (*PYF:x|T(%s)*)" % ','.join(v + (':S' if v in string_vars else ':I') for v in uvars))
     print("\nlet my_features = []")
     print("\nlet post_cond = ((fun x r -> match r with Bad _ -> false | Ok z -> z), \"true\")")
@@ -156,4 +144,4 @@ if __name__ == "__main__":
     print("\n\nlet typo = [ %s ]" % (' ; '.join(('TString' if v in string_vars else 'TInt') for v in uvars)))
     print("\nlet trans = fun (%s) -> [ %s ]" % (','.join(uvars), ' ; '.join(('of_string ' if v in string_vars else 'of_int ') + v for v in uvars)))
     print("\nlet test_trans = fun (l) -> List.(%s)" % ' , '.join(('(%s (nth l %d))' % (('from_string' if v in string_vars else 'from_int'), i)) for (i,v) in enumerate(uvars)))
-    print("\n\n\nlet () = print_cnf stdout (pacLearnSpecNSATVerify f tests (def_features @ my_features) post_cond (typo, trans) [%s] test_trans \"%s\")" % ('; '.join(str(i) for i in uniq_consts), sys.argv[1]))
+    print("\n\n\nlet () = print_cnf stdout (pacLearnSpecNSATVerify ~dump:(\"%s\", f_dumper) ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % (sys.argv[1], sys.argv[1]))

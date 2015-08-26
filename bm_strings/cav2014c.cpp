@@ -1,4 +1,4 @@
-#include "../bm_strings.h"
+#include "bm_strings.h"
 
 int main() {
   int i;
@@ -6,15 +6,15 @@ int main() {
   INITIALIZE("%d \t %s\n", i, r.c_str());
 
   i = 0;
-  r = "a";
+  set(r, "a");
 
   while(unknown()) {
     PRINT_VARS();
-    r = replace(r, "a", "aa");
+    set(r, rep(r, "a", "aa"));
     ++i;
   }
   PRINT_VARS();
 
-  assert(r.length() > i);
+  assert(len(r) > i);
   return 0;
 }

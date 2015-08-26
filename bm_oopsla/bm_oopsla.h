@@ -58,7 +58,7 @@ void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 #define INITIALIZE(count, args...)                                          \
           struct timeval ___t___; gettimeofday(&___t___, NULL);             \
           srand(___t___.tv_usec * ___t___.tv_sec);                          \
-          string ___vars___ = #args;                                        \
+          string ___vars___(#args);                                         \
           std::replace(___vars___.begin(), ___vars___.end(), ',', '\t');    \
           fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());               \
           auto PRINT_VARS = [&]() {                                         \

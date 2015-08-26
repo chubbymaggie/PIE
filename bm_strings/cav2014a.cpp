@@ -1,4 +1,4 @@
-#include "../bm_strings.h"
+#include "bm_strings.h"
 
 int main() {
   int i;
@@ -6,17 +6,17 @@ int main() {
   INITIALIZE("%d \t %s\n", i, r.c_str());
 
   i = 0;
-  r = "a";
+  set(r, "a");
 
   while(unknown()) {
     PRINT_VARS();
-    r = "(" + r + ")";
+    set(r, cat(cat("(", r), ")"));
     ++i;
   }
   PRINT_VARS();
 
-  assert(r.length() == 2*i + 1);
+  assert(len(r) == 2*i + 1);
   if(i > 0)
-    assert(contains(r, "a"));
+    assert(has(r, "(a)"));
   return 0;
 }

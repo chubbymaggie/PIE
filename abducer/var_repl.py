@@ -25,7 +25,7 @@ if __name__ == '__main__':
         inp = inp.replace('&&', '&').replace('||', '|')
 
     for (k,v) in xvars.items():
-        inp = re.sub(r"\b%s\b" % v, k, inp)
+        inp = re.sub(r"\b%s(?=\b([^\"]*\"[^\"]*\")*[^\"]*$)" % v, k, inp, flags=re.MULTILINE)
 
     # MCF to C++/OCaml with Values
     if sys.argv[1] == 'revVals':

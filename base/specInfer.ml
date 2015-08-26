@@ -448,8 +448,11 @@ let missingFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features 
 
   filtered
 
-let synthFeatures ?(fname="") (f : 'a -> 'b) (tests : 'a list) (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
-    (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list)) (iconsts : int list) : (('a -> bool) * 'c) list =
+
+let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
+                  (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
+                  (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
+                  : (('a -> bool) * 'c) list =
 
     (* TODO-maybe:
         - Only take a pair of conflicts not whole group
@@ -464,15 +467,17 @@ let synthFeatures ?(fname="") (f : 'a -> 'b) (tests : 'a list) (missing_features
                 target = {
                     domain = (fst trans);
                     codomain = TBool;
-                    apply = (fun t -> BatHashtbl.find tab t);
+                    apply = (fun t -> try BatHashtbl.find tab t with _ -> VDontCare);
                     name = "synth";
                     dump = _unsupported_
                 };
-                inputs = BatList.mapi (fun i _ -> (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)), Leaf ("x" ^ (string_of_int i) ^ "g")),
-                                                   Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
+                inputs = BatList.mapi (fun i _ ->
+                  (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
+                    Leaf ("x" ^ (string_of_int i) ^ "g")),
+                   Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab [])))(fst trans);
                 components = default_components
             } in
-            let solutions = solve xtask iconsts in
+            let solutions = solve xtask consts in
               if fname = "" then () else (
                 let conflict_log = open_out (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
                   conflict_counter := !conflict_counter + 1;
@@ -488,30 +493,35 @@ let synthFeatures ?(fname="") (f : 'a -> 'b) (tests : 'a list) (missing_features
 
 
 (* try to resolve the first group of conflicting tests that can be resolved *)
-let rec convergeOneMissingFeature ?(fname="") (f: 'a -> 'b) (tests: 'a list) (missing_features: ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list list)
-    (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list)) (iconsts : int list) : (('a -> bool) * 'c) list =
+let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) (f: 'a -> 'b) (tests: 'a list)
+                                  (missing_features: ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list list)
+                                  (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
+                                  : (('a -> bool) * 'c) list =
 
     if missing_features = [] then []
-    else let new_features = synthFeatures ~fname:fname f tests (List.hd missing_features) postcond trans iconsts
-         in if new_features = [] then convergeOneMissingFeature ~fname:fname f tests (List.tl missing_features) postcond trans iconsts
-            else new_features
+    else let new_features = synthFeatures ~fname:fname ~consts:consts f tests (List.hd missing_features) postcond trans
+            in if not (new_features = []) then new_features
+            else convergeOneMissingFeature ~fname:fname ~consts:consts f tests (List.tl missing_features) postcond trans
 
 
 (* try to resolve all groups of conflicting tests for one post condition*)
-  let rec convergePCondFeatures ?(fname="") (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
-    (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list)) (iconsts : int list) :(('a -> bool) * 'c) list =
+  let rec convergePCondFeatures ?(fname="") ?(consts=[]) (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
+                                (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
+                                :(('a -> bool) * 'c) list =
 
     let all_missing_features = missingFeatures f tests features postcond in
         if all_missing_features = []
         then features
-        else let mf = convergeOneMissingFeature ~fname:fname f tests all_missing_features postcond trans iconsts
-             in if mf = [] then features else convergePCondFeatures ~fname:fname f tests (features @ mf) postcond trans iconsts
+        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts f tests all_missing_features postcond trans
+             in if mf = [] then features else convergePCondFeatures ~fname:fname ~consts:consts f tests (features @ mf) postcond trans
 
 
-let rec convergeAllFeatures ?(fname="") (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
-    (postconds: (('a -> 'b result -> bool) * 'c) list) (trans: typ list * ('a -> value list)) (iconsts : int list) :(('a -> bool) * 'c) list =
+let rec convergeAllFeatures ?(fname="") ?(consts=[]) (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
+                            (postconds: (('a -> 'b result -> bool) * 'c) list) (trans: typ list * ('a -> value list))
+                            :(('a -> bool) * 'c) list =
 
-    if postconds = [] then features else convergeAllFeatures ~fname:fname f tests (convergePCondFeatures ~fname:fname f tests features (List.hd postconds) trans iconsts) (List.tl postconds) trans iconsts
+    if postconds = [] then features
+    else convergeAllFeatures ~fname:fname ~consts:consts f tests (convergePCondFeatures ~fname:fname ~consts:consts f tests features (List.hd postconds) trans) (List.tl postconds) trans
 
 
 (* a postcondition should raise this exception to indicate that the given test input should be ignored *)
@@ -577,9 +587,9 @@ let rec pacLearnSpecIncrK ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a
     else (try pacLearnSpecIncrK ~k:(k+1) f tests features post with ClauseEncodingError -> (Some [[Pos "~~ FAILED ~~"]], snd post))
 
 
-let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) (f: 'a -> 'b) (tests: 'a list)
-    (features : (('a -> bool) * 'c) list) (posts : (('a -> 'b result -> bool) * 'c) list)
-    (trans : typ list * ('a -> value list)) (iconsts: int list) : ('c cnf option * 'c) list =
+let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) (f: 'a -> 'b) (tests: 'a list)
+                           (features : (('a -> bool) * 'c) list) (posts : (('a -> 'b result -> bool) * 'c) list)
+                           (trans : typ list * ('a -> value list)) : ('c cnf option * 'c) list =
 
   if fst dump = "" then () else (
     Sys.command("rm -rf " ^ (fst dump) ^ ".*.con");
@@ -587,59 +597,67 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) (f: 'a -> 'b) (tes
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
       close_out test_file);
   prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
-  let features = if fst trans = [] then features else convergeAllFeatures ~fname:(fst dump) f tests features posts trans iconsts in
+  let features = if fst trans = [] then features else convergeAllFeatures ~fname:(fst dump) ~consts:consts f tests features posts trans in
     List.map (fun post -> pacLearnSpecIncrK ~k:k f tests features post) posts
 
 
-let rec pacLearnSpecNSATVerify ?(k=1) ?(unsats = []) (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
-    (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list)) (iconsts : int list)
-    (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
+let rec pacLearnSpecNSATVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?(unsats=[]) (f : 'a -> 'b) (tests : 'a list)
+                               (features : (('a -> bool) * 'c) list) (post : ('a -> 'b result -> bool) * 'c)
+                               (trans : typ list * ('a -> value list)) (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
 
-  prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
-  let features = if fst trans = [] then features else convergeAllFeatures f tests features [post] trans iconsts in
+  if fst dump = "" then () else (
+    Sys.command("rm -rf " ^ (fst dump) ^ ".*.con");
+    let test_file = open_out ((fst dump) ^ ".tests") in
+      List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
+      close_out test_file);
 
-  if missingFeatures f tests features post <> [] then None else (
-    let res = fst (pacLearnSpec ~k:k f ~tests:tests ~features:features post) in
-    if res = None then (
-      pacLearnSpecNSATVerify ~k:(k + 1) ~unsats:unsats f tests features post trans iconsts trans_test smtfile
-    (* TODO: res is FALSE, add new model ::
-      let mtests = missingTests tests features ~incompatible:unsats in
-        if mtests = None then res
-        else (
-          let Some missing = mtests in
-          let our_output = open_out (smtfile ^ ".xour") in
-            output_string our_output (fst missing) ;
-            close_out our_output ;
-            Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
-            Sys.command ("./chkSAT " ^ smtfile ^ ".your > " ^ smtfile ^ ".zour ") ;
-            let res_file = open_in (smtfile ^ ".zour") in
-              if input_line res_file = "UNSAT"
-              then (close_in res_file ;
-                    let fvector = Array.mapi (fun i _ -> (i+1, false)) (Array.create (List.length features) (0, false)) in
-                      BatList.fold_left (fun _ f -> match f with Pos i -> fvector.(i-1) <- (i, true) | _ -> ()) () (snd missing);
-                      pacLearnSpecNSATVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:((Array.to_list fvector)::unsats))
-              else (close_in res_file ;
-                    Sys.command("./var_replace revVals " ^ smtfile ^ ".tml " ^ (string_of_int (List.length (fst trans))) ^ " < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
-                    let res_file = open_in (smtfile ^ ".our") in
-                      let tests = (trans_test (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans))) :: tests in
-                        (close_in res_file ;
-                         pacLearnSpecNSATVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:unsats))) *)
-    ) else (
-      let our_output = open_out (smtfile ^ ".xour") in
-        print_cnf our_output res ;
-        close_out our_output ;
-        Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
-        prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
-        let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
-        prerr_string "                            \n" ; flush_all();
-        Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour 2>/dev/null") ;
-        let res_file = open_in (smtfile ^ ".zour") in
-          if input_line res_file = "UNSAT" then (close_in res_file ; res)
-          else (close_in res_file ;
-                Sys.command("./var_replace revVals " ^ smtfile ^ ".tml < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
-                let res_file = open_in (smtfile ^ ".our") in
-                let args = (List.map (fun vtyp -> let data = input_line res_file in match vtyp with TInt -> VInt(int_of_string data) | TString -> VString(data)) (fst trans)) in
-                prerr_string ("      [+] Added test ... "); print_data stderr (VList(args));
-                close_in res_file;
-                if f (trans_test args) then raise BadCounterExample else (
-                pacLearnSpecNSATVerify ~k:1 ~unsats:unsats f ((trans_test args) :: tests) features post trans iconsts trans_test smtfile))))
+  let rec helper k unsats tests features = (
+    prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
+    let features = if fst trans = [] then features
+                   else convergeAllFeatures ~fname:(fst dump) ~consts:consts f tests features [post] trans in
+
+    if missingFeatures f tests features post <> [] then None else (
+      let res = fst (pacLearnSpec ~k:k f ~tests:tests ~features:features post) in
+      if res = None then (
+        helper (k + 1) unsats tests features
+      (* TODO: res is FALSE, add new model ::
+        let mtests = missingTests tests features ~incompatible:unsats in
+          if mtests = None then res
+          else (
+            let Some missing = mtests in
+            let our_output = open_out (smtfile ^ ".xour") in
+              output_string our_output (fst missing) ;
+              close_out our_output ;
+              Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
+              Sys.command ("./chkSAT " ^ smtfile ^ ".your > " ^ smtfile ^ ".zour ") ;
+              let res_file = open_in (smtfile ^ ".zour") in
+                if input_line res_file = "UNSAT"
+                then (close_in res_file ;
+                      let fvector = Array.mapi (fun i _ -> (i+1, false)) (Array.create (List.length features) (0, false)) in
+                        BatList.fold_left (fun _ f -> match f with Pos i -> fvector.(i-1) <- (i, true) | _ -> ()) () (snd missing);
+                        pacLearnSpecNSATVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:((Array.to_list fvector)::unsats))
+                else (close_in res_file ;
+                      Sys.command("./var_replace revVals " ^ smtfile ^ ".tml " ^ (string_of_int (List.length (fst trans))) ^ " < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
+                      let res_file = open_in (smtfile ^ ".our") in
+                        let tests = (trans_test (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans))) :: tests in
+                          (close_in res_file ;
+                           pacLearnSpecNSATVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:unsats))) *)
+      ) else (
+        let our_output = open_out (smtfile ^ ".xour") in
+          print_cnf our_output res ;
+          close_out our_output ;
+          Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
+          prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
+          let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
+          prerr_string "                            \n" ; flush_all();
+          Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour 2>/dev/null") ;
+          let res_file = open_in (smtfile ^ ".zour") in
+            if input_line res_file = "UNSAT" then (close_in res_file ; res)
+            else (close_in res_file ;
+                  Sys.command("./var_replace revVals " ^ smtfile ^ ".tml < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
+                  let res_file = open_in (smtfile ^ ".our") in
+                  let args = (List.map (fun vtyp -> let data = input_line res_file in match vtyp with TInt -> VInt(int_of_string data) | TString -> VString(data)) (fst trans)) in
+                  prerr_string "      [+] Added test ... "; print_data stderr (VList(args)); prerr_string "\n";
+                  close_in res_file;
+                  if (try f (trans_test args) with _ -> false) then raise BadCounterExample else (helper 1 unsats ((trans_test args) :: tests) features)))))
+  in helper k unsats tests features

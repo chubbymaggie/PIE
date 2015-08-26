@@ -1,49 +1,51 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <regex>
-#include <set>
+#include <list>
 #include <string>
 #include <vector>
 #include <utility>
+#include <locale>
 
 #include <cstdlib>
+
+#include <clang/AST/ExprCXX.h>
 
 #include "ClangSACheckers.h"
 #include "clang/Analysis/Analyses/Dominators.h"
 #include "clang/Analysis/Analyses/CFGReachabilityAnalysis.h"
-#include "clang/Frontend/ASTUnit.h"
-#include "clang/Frontend/CompilerInstance.h"
-#include "clang/Lex/HeaderSearch.h"
-#include "clang/Lex/Preprocessor.h"
 #include "clang/StaticAnalyzer/Core/Checker.h"
 #include "clang/StaticAnalyzer/Core/PathSensitive/AnalysisManager.h"
 
-#include "llvm/ADT/APInt.h"
-#include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/Support/raw_ostream.h"
 
-#include "../../Sema/TreeTransform.h"
+#include "tinyxml2.h"
+
+using namespace tinyxml2;
+using namespace std;
 
 #define ABDUCER_PATH "__ABDUCER_PATH_FROM_SETUP_SCRIPT__"
 
-std::string MAIN_FILENAME;
-std::string WORKING_PATH = "__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/";
+string MAIN_FILENAME;
+string WORKING_PATH = "__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/";
 
 unsigned long COUNT = 0, ABDUCTION_COUNT = 0, VERIFICATION_COUNT = 0;
 
-namespace clang {
+struct PredicateNode {
+    string val;
+    list<PredicateNode> children;
+};
 
-  template<>
-  ActionResult<Expr*, true>::ActionResult(const void * cv) {}
-
-}
+enum CheckStatus { FAILED, PASSED, VERIFIED };
+struct CheckResult {
+  CheckStatus status;
+  PredicateNode guess;
+};
 
 using namespace clang;
 using namespace ento;
 
 namespace {
-
-  enum CheckResult { FAILED, PASSED, VERIFIED };
 
   class LoopInvariantChecker : public Checker<check::ASTDecl<FunctionDecl>> {
 
@@ -51,22 +53,6 @@ namespace {
     void checkASTDecl(const Decl *D,
                       AnalysisManager &mgr,
                       BugReporter &BR) const;
-  };
-
-  class VarSubstituteTransform : public TreeTransform<VarSubstituteTransform> {
-
-    Expr * val;
-    const std::string & var;
-
-  public:
-    explicit VarSubstituteTransform(Sema & sema, Expr * val, const std::string & var)
-      : TreeTransform<VarSubstituteTransform>(sema), val(val), var(var) {}
-
-    ExprResult TransformDeclRefExpr(DeclRefExpr * dref) {
-      if(dref->getNameInfo().getAsString() == var)
-        return val;
-      return dref;
-    }
   };
 
 } // end anonymous namespace
@@ -78,353 +64,349 @@ namespace {
 namespace {
 
   //FIXME: Add support for whole word replacement only
-  void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+  void replaceAll(string &str, const string &from, const string &to) {
     if(from.empty()) return;
 
     size_t start_pos = 0;
-    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+    while((start_pos = str.find(from, start_pos)) != string::npos) {
       str.replace(start_pos, from.length(), to);
       start_pos += to.length();
     }
   }
 
-  void writeMCF(const Expr * pred, const std::string & filename) {
-    std::string mcf("-\n-\n");
+  string intersperse(string delim, list<string> lstr) {
+    if(lstr.empty()) return "";
+
+    string r = lstr.front();
+    lstr.pop_front();
+
+    while(!lstr.empty()) {
+      r += delim + lstr.front();
+      lstr.pop_front();
+    }
+
+    return r;
+  }
+
+  string PredicateNode2MCF_helper(PredicateNode r) {
+    if(!r.children.size())
+      return r.val;
+
+    list<string> args;
+    transform(r.children.begin(), r.children.end(), std::back_inserter(args), PredicateNode2MCF_helper);
+    if(!isalpha(r.val[0])) {
+      if(r.val == "!")
+        return "(!" + args.front() + ")";
+      else
+        return "(" + intersperse(" " + r.val + " ", args) + ")";
+    } else {
+      return r.val + "(" + intersperse(", ", args) + ")";
+    }
+  }
+
+  string PredicateNode2MCF(PredicateNode r) {
+    string mcf = PredicateNode2MCF_helper(r);
+
+    replaceAll(mcf, "get(", "#get(");
+    replaceAll(mcf, "cat(", "#cat(");
+    replaceAll(mcf, "has(", "#has(");
+    replaceAll(mcf, "eql(", "#eql(");
+    replaceAll(mcf, "ind(", "#ind(");
+    replaceAll(mcf, "len(", "#len(");
+    replaceAll(mcf, "rep(", "#rep(");
+    replaceAll(mcf, "sub(", "#sub(");
+
+    return mcf;
+  }
+
+  PredicateNode XMLElement2PredicateNode(XMLElement *x) {
+    PredicateNode r;
+
+    XMLPrinter p;
+    x->Accept(&p);
+
+    if(!(x->FirstChildElement("expr"))) {
+      r.val = x->GetText();
+    } else {
+      x = x->FirstChildElement("expr");
+      r.val = x->GetText();
+      while(x = x->NextSiblingElement("expr")) {
+        r.children.push_back(XMLElement2PredicateNode(x));
+      }
+    }
+
+    return r;
+  }
+
+  PredicateNode escape(PredicateNode node) {
+    replaceAll(node.val, "&amp;", "&");
+    replaceAll(node.val, "&gt;", ">");
+    replaceAll(node.val, "&lt;", "<");
+
+    list<PredicateNode> nchildren;
+    for(auto & c : node.children)
+      nchildren.push_back(escape(c));
+    node.children = nchildren;
+
+    return node;
+  }
+
+  PredicateNode XMLDoc2PredicateNode(string file) {
+    XMLDocument xmldoc;
+    xmldoc.LoadFile(file.c_str());
+    return escape(XMLElement2PredicateNode(xmldoc.FirstChildElement("expr")));
+  }
+
+  PredicateNode substituteVar(PredicateNode t, string var, PredicateNode r) {
+    PredicateNode res;
+    if(t.children.empty() && t.val == var) {
+      res.val = r.val;
+      res.children = r.children;
+    } else {
+      res.val = t.val;
+      for(auto & c : t.children)
+        res.children.push_back(substituteVar(c, var, r));
+    }
+
+    return res;
+  }
+
+  PredicateNode getAbductionResultFor(const PredicateNode pred) {
+    string target = WORKING_PATH + "/" + to_string(++COUNT) + "A" + to_string(++ABDUCTION_COUNT) + ".mcf";
     {
-      llvm::raw_string_ostream mcf_stream(mcf);
-      LangOptions lo;
-      pred -> printPretty(mcf_stream, nullptr, PrintingPolicy(lo));
+      ofstream mcf_file(target);
+      mcf_file << ("-\n-\n" + PredicateNode2MCF(pred));
     }
 
-    replaceAll(mcf, "true", "1=1");
-    replaceAll(mcf, "false", "1=0");
-    replaceAll(mcf, "==", "=");
-    replaceAll(mcf, "&&", "&");
-    replaceAll(mcf, "||", "|");
-
-    {
-      std::ofstream mcf_file(filename);
-      mcf_file << mcf;
-    }
-  }
-
-  std::set<std::string> getIdentifiersIn(const std::string & exp) {
-    std::regex rx("_*[a-zA-Z]+[a-zA-Z0-9_]*");
-    std::sregex_iterator rit(exp.begin(), exp.end(), rx);
-    std::sregex_iterator rend;
-
-    std::set<std::string> ids;
-    while(rit != rend) {
-      ids.insert(rit->str());
-      rit++;
-    }
-
-    return ids;
-  }
-
-  std::string joinStringSet(const std::set<std::string> & strs, const std::string & d) {
-    return std::accumulate(strs.begin(), strs.end(), std::string(),
-                           [d](const std::string & p, std::string x) {
-                             return p + x + d;
-                           });
-  }
-
-  std::string & doCPPify(std::string & c_str) {
-    replaceAll(c_str, "&", "&&");
-    replaceAll(c_str, "|", "||");
-    replaceAll(c_str, "=", "==");
-    replaceAll(c_str, "!==", "!=");
-    replaceAll(c_str, ">==", ">=");
-    replaceAll(c_str, "<==", "<=");
-
-    c_str = "const int " + joinStringSet(getIdentifiersIn(c_str), " = 1, ")
-           + "__end__; int res = (" + c_str + ");";
-
-    return c_str;
-  }
-
-  std::string getAbductionResultFor(const Expr * pred) {
-    std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "A" + std::to_string(++ABDUCTION_COUNT) + ".mcf";
-    writeMCF(pred, target);
-
-    std::string command = ABDUCER_PATH "/abduce.sh ";
+    string command = ABDUCER_PATH "/abduce.sh ";
     command += target;
     command += " > /dev/null";
     system(command.c_str());
 
-    std::string result;
-    {
-      std::ifstream in(target + ".sinf");
-      std::getline(in, result);
-    }
-    return result;
+    command = WORKING_PATH + "/mcf2xml ";
+    command += target;
+    command += ".sinf > ";
+    command += target + ".xml";
+    system(command.c_str());
+
+    return XMLDoc2PredicateNode(target + ".xml");
   }
 
-  bool chkVALID(const Expr * pred, bool add_counter = false) {
-    std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "V" + std::to_string(++VERIFICATION_COUNT) + ".mcf";
-    writeMCF(pred, target);
+  bool chkVALID(const PredicateNode pred, bool add_counter = false) {
+    string target = WORKING_PATH + "/" + to_string(++COUNT) + "V" + to_string(++VERIFICATION_COUNT) + ".mcf";
+    {
+      ofstream mcf_file(target);
+      mcf_file << ("-\n-\n" + PredicateNode2MCF(pred));
+    }
 
-    std::string command = WORKING_PATH + "/chkVALID ";
+    string command = WORKING_PATH + "/chkVALID ";
     command += target;
     command += " 0 > ";
     command += target + ".res 2>/dev/null";
     system(command.c_str());
 
-    std::string result;
+    string result;
     {
-      std::ifstream in(target + ".res");
-      std::getline(in, result);
+      ifstream in(target + ".res");
+      getline(in, result);
     }
 
     if(result.substr(0,5) == "VALID") return true;
 
     if(add_counter) {
-      std::string command = WORKING_PATH + "/add_counter " + WORKING_PATH + "/final_tests " + target + ".res";
+      string command = WORKING_PATH + "/add_counter " + WORKING_PATH + "/final_tests " + target + ".res";
       system(command.c_str());
     }
 
     return false;
   }
 
-  std::string simplify(std::string mcf_pred) {
-    std::string target = WORKING_PATH + "/" + std::to_string(++COUNT) + "S.mcf";
+  PredicateNode simplify(PredicateNode pred) {
+    string target = WORKING_PATH + "/" + to_string(++COUNT) + "S.mcf";
     {
-      std::ofstream mcf_file(target);
-      mcf_file << mcf_pred;
+      ofstream mcf_file(target);
+      mcf_file << PredicateNode2MCF(pred);
     }
 
-    std::string command = WORKING_PATH + "/simplify ";
+    string command = WORKING_PATH + "/simplify ";
     command += target;
     command += " 0 > ";
     command += target + ".sim 2>/dev/null";
     system(command.c_str());
 
+    command = WORKING_PATH + "/mcf2xml ";
+    command += target;
+    command += ".sim > ";
+    command += target + ".xml";
+    system(command.c_str());
+
+    return XMLDoc2PredicateNode(target + ".xml");
+  }
+
+  PredicateNode getASTFor(const Expr * pred) {
+    string mcf;
     {
-      std::ifstream in(target + ".sim");
-      std::getline(in, mcf_pred);
+      llvm::raw_string_ostream mcf_stream(mcf);
+      LangOptions lo;
+      pred -> printPretty(mcf_stream, nullptr, PrintingPolicy(lo));
     }
 
-    return mcf_pred;
-  }
+    // replaceAll(mcf, "true", "1=1");
+    // replaceAll(mcf, "false", "1=0");
+    replaceAll(mcf, "==", "=");
+    replaceAll(mcf, "&&", "&");
+    replaceAll(mcf, "||", "|");
 
-  Expr * getASTFor(const std::string & mcf, bool in_mcf = true) {
-    std::string c_code = mcf;
-    std::string target = "/tmp/" + MAIN_FILENAME + "_ast_" + std::to_string(COUNT) + ".c";
-    if(in_mcf) doCPPify(c_code);
+    replaceAll(mcf, "get(", "#get(");
+    replaceAll(mcf, "cat(", "#cat(");
+    replaceAll(mcf, "has(", "#has(");
+    replaceAll(mcf, "eql(", "#eql(");
+    replaceAll(mcf, "ind(", "#ind(");
+    replaceAll(mcf, "len(", "#len(");
+    replaceAll(mcf, "rep(", "#rep(");
+    replaceAll(mcf, "sub(", "#sub(");
+
+    string target = "/tmp/" + MAIN_FILENAME + "_ast_" + to_string(COUNT);
     {
-      std::ofstream out(target);
-      out << c_code;
+      ofstream mcf_file(target + ".mcf");
+      mcf_file << mcf;
     }
 
-    std::unique_ptr<std::vector<const char *> > args(new std::vector<const char*>());
-    args->push_back(target.c_str());
+    string command = WORKING_PATH + "/mcf2xml ";
+    command += target;
+    command += ".mcf > ";
+    command += target + ".xml";
+    system(command.c_str());
 
-    //FIXME: Possible memory leak? When is this ASTUnit destroyed?
-    ASTUnit * au = ASTUnit::LoadFromCommandLine(
-      &(*args)[0],
-      &(*args)[0] + args->size(),
-      IntrusiveRefCntPtr<DiagnosticsEngine>(
-        CompilerInstance::createDiagnostics(new DiagnosticOptions)),
-      StringRef()
-    );
-
-    if(au) {
-      Decl * d = *(au -> getASTContext() . getTranslationUnitDecl() -> decls_begin());
-      while(d -> getNextDeclInContext())
-        d = d -> getNextDeclInContext();
-      return const_cast<Expr*>(dyn_cast<VarDecl>(d)->getAnyInitializer());
-    }
-
-    return nullptr;
+    return XMLDoc2PredicateNode(target + ".xml");
   }
 
-  void substituteVarInAST(ASTContext & ac, Expr * & pred, const std::string & var, Expr * val) {
-    ASTConsumer astc;
-    CompilerInstance ci;
+  bool isUnknownFunction(Expr *expr) {
+    expr = expr->IgnoreCasts();
 
-    HeaderSearch hs(IntrusiveRefCntPtr<HeaderSearchOptions>(new HeaderSearchOptions()),
-                    ac.getSourceManager(),
-                    ac.getDiagnostics(),
-                    ac.getLangOpts(),
-                    nullptr);
+    if(dyn_cast<CXXConstructExpr>(expr)) return true;
 
-    Preprocessor pp(IntrusiveRefCntPtr<PreprocessorOptions>(new PreprocessorOptions()),
-                    ac.getDiagnostics(),
-                    const_cast<LangOptions&>(ac.getLangOpts()),
-                    ac.getSourceManager(),
-                    hs,
-                    ci);
+    CallExpr *ce = dyn_cast<CallExpr>(expr);
+    if(!ce) return false;
 
-    Sema sema(pp, ac, astc, TU_Complete, nullptr);
-    pred = VarSubstituteTransform(sema, val, var).TransformExpr(pred).getAs<Expr>();
+    FunctionDecl *fd = ce->getDirectCallee();
+    if(!fd || fd->getNameAsString().find("unknown") == string::npos)
+      return false;
+
+    return true;
   }
 
-  Expr * cloneExpr(ASTContext & ac, Expr * pred) {
-    substituteVarInAST(ac, pred, "", nullptr);
+  PredicateNode wpOfVarDecl(PredicateNode pred, const VarDecl *vdecl) {
+    if(!vdecl->hasInit()) return pred;
+
+    Expr *expr = const_cast<Expr*>(vdecl->getInit()->IgnoreCasts());
+    if(isUnknownFunction(expr)) return pred;
+
+    return substituteVar(pred, vdecl->getNameAsString(), getASTFor(expr));
+  }
+
+  PredicateNode wpOfCallExpr(PredicateNode pred, const CallExpr *call) {
+    const FunctionDecl *fd = call->getDirectCallee();
+    if(!fd) return pred;
+
+    IdentifierInfo *FnInfo = fd->getIdentifier();
+    if (!FnInfo) return pred;
+
+    if(FnInfo->isStr("assert") || FnInfo->isStr("static_assert"))
+      return {"&", {pred, getASTFor(const_cast<Expr*>(call->getArg(0)->IgnoreCasts()))}};
+    else if(FnInfo->isStr("assume"))
+      return {"|", {{"!", {getASTFor(const_cast<Expr*>(call->getArg(0)->IgnoreCasts()))}}, pred}};
+    else if(FnInfo->isStr("set"))
+      return substituteVar(
+          pred,
+          dyn_cast<DeclRefExpr>(call->getArg(0)->IgnoreCasts())->getFoundDecl()->getNameAsString(),
+          getASTFor(const_cast<Expr*>(call->getArg(1))->IgnoreCasts()));
+
     return pred;
   }
 
-  void wpOfVarDecl(Expr * & pred, const VarDecl * vdecl) {
-    if(vdecl->hasInit() && !isa<CallExpr>(vdecl->getInit()->IgnoreCasts()))
-      substituteVarInAST(vdecl->getASTContext(), pred, vdecl->getNameAsString(),
-        new (vdecl->getASTContext()) ParenExpr(
-          SourceLocation(), SourceLocation(),
-          const_cast<Expr*>(vdecl->getInit())));
-  }
-
-  void wpOfCallExpr(Expr * & pred, const CallExpr* call) {
-    const FunctionDecl *fd = call->getDirectCallee();
-    if(!fd) return;
-
-    IdentifierInfo *FnInfo = fd->getIdentifier();
-    if (!FnInfo) return;
-
-    if(FnInfo->isStr("assert") || FnInfo->isStr("static_assert")) {
-      pred = new (fd->getASTContext()) ParenExpr(
-        SourceLocation(), SourceLocation(),
-        new (fd->getASTContext()) BinaryOperator(
-          new (fd->getASTContext()) ParenExpr(
-            SourceLocation(), SourceLocation(),
-            const_cast<Expr*>(call->getArg(0))),
-          pred,
-          BO_LAnd,
-          pred->getType(),
-          VK_LValue,
-          OK_Ordinary,
-          SourceLocation(),
-          false));
-    } else if(FnInfo->isStr("assume")) {
-      pred = new (fd->getASTContext()) ParenExpr(
-        SourceLocation(), SourceLocation(),
-        new (fd->getASTContext()) BinaryOperator(
-          new (fd->getASTContext()) UnaryOperator(
-            new (fd->getASTContext()) ParenExpr(
-              SourceLocation(), SourceLocation(),
-              const_cast<Expr*>(call->getArg(0))),
-            UO_LNot,
-            pred->getType(),
-            VK_LValue,
-            OK_Ordinary,
-            SourceLocation()
-          ),
-          pred,
-          BO_LOr,
-          pred->getType(),
-          VK_LValue,
-          OK_Ordinary,
-          SourceLocation(),
-          false));
-    }
-  }
-
-  void wpOfDeclStmt(Expr * & pred, const DeclStmt * decls) {
+  PredicateNode wpOfDeclStmt(PredicateNode pred, const DeclStmt * decls) {
     for(DeclStmt::const_decl_iterator di = decls->decl_begin(); di != decls->decl_end(); ++di)
       if(const VarDecl * vdecl = dyn_cast<VarDecl>(*di))
-        wpOfVarDecl(pred, vdecl);
+        pred = wpOfVarDecl(pred, vdecl);
+    return pred;
   }
 
-  void wpOfUnaryOperator(Expr * & pred, const UnaryOperator * uop) {
-    ASTContext & ac = (dyn_cast<DeclRefExpr>(uop->getSubExpr()))->getDecl()->getASTContext();
-    std::string var = (dyn_cast<DeclRefExpr>(uop->getSubExpr()))->getNameInfo().getAsString();
-
-    llvm::APInt onev(32, 1);
-    Expr * one = IntegerLiteral::Create(ac, onev, uop->getType(), SourceLocation());
-
-    if(uop->getOpcode() == UO_PostInc || uop->getOpcode() == UO_PreInc) {
-      substituteVarInAST(ac, pred, var, new (ac) ParenExpr(
-                                          SourceLocation(), SourceLocation(),
-                                          new (ac) BinaryOperator(uop->getSubExpr(),
-                                                                  one,
-                                                                  BO_Add,
-                                                                  uop->getType(),
-                                                                  VK_LValue,
-                                                                  OK_Ordinary,
-                                                                  SourceLocation(),
-                                                                  false)));
-    } else if(uop->getOpcode() == UO_PostDec || uop->getOpcode() == UO_PreDec) {
-      substituteVarInAST(ac, pred, var, new (ac) ParenExpr(
-                                          SourceLocation(), SourceLocation(),
-                                          new (ac) BinaryOperator(uop->getSubExpr(),
-                                                                  one,
-                                                                  BO_Sub,
-                                                                  uop->getType(),
-                                                                  VK_LValue,
-                                                                  OK_Ordinary,
-                                                                  SourceLocation(),
-                                                                  false)));
-    }
+  PredicateNode wpOfUnaryOperator(PredicateNode pred, const UnaryOperator * uop) {
+    if(uop->getOpcode() == UO_PostInc || uop->getOpcode() == UO_PreInc)
+      return substituteVar(pred,
+                           (dyn_cast<DeclRefExpr>(uop->getSubExpr()))->getNameInfo().getAsString(),
+                           PredicateNode {"+", {
+                             getASTFor(uop->getSubExpr()),
+                             PredicateNode {"1", {}}}});
+    else if(uop->getOpcode() == UO_PostDec || uop->getOpcode() == UO_PreDec)
+      return substituteVar(pred,
+                           (dyn_cast<DeclRefExpr>(uop->getSubExpr()))->getNameInfo().getAsString(),
+                           PredicateNode {"-", {
+                             getASTFor(uop->getSubExpr()),
+                             PredicateNode {"1", {}}}});
+    return pred;
   }
 
-  void wpOfBinaryOperator(Expr * & pred, const BinaryOperator * bop) {
+  PredicateNode wpOfBinaryOperator(PredicateNode pred, const BinaryOperator * bop) {
     if(bop->getOpcode() == BO_Assign) {
-      if(isa<CallExpr>(bop->getRHS()->IgnoreCasts())) return;
-      ASTContext & ac = (dyn_cast<DeclRefExpr>(bop->getLHS()))->getDecl()->getASTContext();
-      std::string var = (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString();
-      substituteVarInAST(ac, pred, var, new (ac) ParenExpr(
-                                          SourceLocation(), SourceLocation(),
-                                          bop->getRHS()));
+      if(!isUnknownFunction(bop->getRHS()->IgnoreCasts()))
+        return substituteVar(pred,
+                             (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString(),
+                             getASTFor(bop->getRHS()));
     } if(bop->getOpcode() == BO_AddAssign) {
-      ASTContext & ac = (dyn_cast<DeclRefExpr>(bop->getLHS()))->getDecl()->getASTContext();
-      std::string var = (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString();
-      substituteVarInAST(ac, pred, var, new (ac) ParenExpr(
-                                          SourceLocation(), SourceLocation(),
-                                          new (ac) BinaryOperator(bop->getRHS(),
-                                                                  bop->getLHS(),
-                                                                  BO_Add,
-                                                                  bop->getType(),
-                                                                  VK_LValue,
-                                                                  OK_Ordinary,
-                                                                  SourceLocation(),
-                                                                  false)));
+      return substituteVar(pred,
+                           (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString(),
+                           PredicateNode {"+", {getASTFor(bop->getLHS()), getASTFor(bop->getRHS())}});
     }
+    return pred;
   }
 
-  void wpOfStmt(Expr * & pred, const Stmt * stmt) {
-    if(const CallExpr * call = dyn_cast<CallExpr>(stmt))
-      wpOfCallExpr(pred, call);
-    else if(const DeclStmt * decls = dyn_cast<DeclStmt>(stmt))
-      wpOfDeclStmt(pred, decls);
-    else if(const UnaryOperator * uop = dyn_cast<UnaryOperator>(stmt)) {
+  PredicateNode wpOfStmt(PredicateNode pred, const Stmt *stmt) {
+    if(const CallExpr *call = dyn_cast<CallExpr>(stmt))
+      return wpOfCallExpr(pred, call);
+    else if(const DeclStmt *decls = dyn_cast<DeclStmt>(stmt))
+      return wpOfDeclStmt(pred, decls);
+    else if(const UnaryOperator *uop = dyn_cast<UnaryOperator>(stmt)) {
       if(uop->isIncrementDecrementOp())
-        wpOfUnaryOperator(pred, uop);
-    } else if(const BinaryOperator * bop = dyn_cast<BinaryOperator>(stmt)) {
+        return wpOfUnaryOperator(pred, uop);
+    } else if(const BinaryOperator *bop = dyn_cast<BinaryOperator>(stmt)) {
       if(bop->isAssignmentOp())
-        wpOfBinaryOperator(pred, bop);
+        return wpOfBinaryOperator(pred, bop);
     } //else
       //stmt->dump();
+    return pred;
   }
 
-  void wpOfBlock(Expr * & pred, const CFGBlock * block) {
+  PredicateNode wpOfBlock(PredicateNode pred, const CFGBlock *block) {
     for(CFGBlock::const_reverse_iterator bi = block->rbegin(); bi != block->rend(); ++bi)
       if(Optional<CFGStmt> cs = bi->getAs<CFGStmt>())
-        if(const Stmt * stmt = cs->getStmt())
-          wpOfStmt(pred, stmt);
+        if(const Stmt *stmt = cs->getStmt())
+          pred = wpOfStmt(pred, stmt);
+    return pred;
   }
 
-  bool isReachable(CFGReverseBlockReachabilityAnalysis * reachables, const CFGBlock * src, const CFGBlock * dst) {
+  bool isReachable(CFGReverseBlockReachabilityAnalysis *reachables,
+                   const CFGBlock *src, const CFGBlock *dst) {
     return (src == dst || reachables->isReachable(src, dst));
   }
 
-  void wpOfSubgraph(Expr * & pred, CFGBlock* from, CFGBlock* to, const DominatorTree* dom_tree,
-                    CFGReverseBlockReachabilityAnalysis *reachables, AnalysisManager & mgr) {
-    if(from == to) {
-      wpOfBlock(pred, from);
-      return;
-    }
+  PredicateNode wpOfSubgraph(PredicateNode pred, CFGBlock *from, CFGBlock *to,
+                             const DominatorTree* dom_tree,
+                             CFGReverseBlockReachabilityAnalysis *reachables) {
+    if(from == to)
+      return wpOfBlock(pred, from);
 
     CFGBlock* single;
     register unsigned cnt = 0;
-    for(CFGBlock::const_pred_iterator pred = from->pred_begin(), epred = from->pred_end(); pred != epred; ++pred)
-      if(isReachable(reachables, to, *pred) && !dom_tree->dominates(from, *pred)) {
+    for(CFGBlock::const_pred_iterator pre = from->pred_begin(), epre = from->pred_end(); pre != epre; ++pre)
+      if(isReachable(reachables, to, *pre) && !dom_tree->dominates(from, *pre)) {
         ++cnt;
-        single = *pred;
+        single = *pre;
       }
 
-    if(cnt == 1) {
-      wpOfBlock(pred, from);
-      wpOfSubgraph(pred, single, to, dom_tree, reachables, mgr);
-      return;
-    }
+    if(cnt == 1)
+      return wpOfSubgraph(wpOfBlock(pred, from), single, to, dom_tree, reachables);
 
     cnt = 0;
     for(CFGBlock::const_succ_iterator succ = to->succ_begin(), esucc = to->succ_end(); succ != esucc; ++succ)
@@ -433,281 +415,153 @@ namespace {
         single = *succ;
       }
 
-    if(cnt == 1) {
-      wpOfSubgraph(pred, from, single, dom_tree, reachables, mgr);
-      wpOfBlock(pred, to);
-      return;
-    }
+    if(cnt == 1)
+      return wpOfBlock(wpOfSubgraph(pred, from, single, dom_tree, reachables), to);
 
     //FIXME: Exponential exploration happening. Jump from dominator to dominator
 
     //FIXME: Assumed order: then, else
-    ASTContext & ac = mgr.getASTContext();
-    Expr* else_pred = cloneExpr(ac, pred);
-
     bool non_deterministic = false;
-    Expr* cond = dyn_cast<Expr>(to->getTerminatorCondition(false));
-    if(isa<CallExpr>(cond->IgnoreCasts())) {
+    Expr* cond_expr = dyn_cast<Expr>(to->getTerminatorCondition(false));
+    PredicateNode cond;
+
+    if(isUnknownFunction(cond_expr)) {
       non_deterministic = true;
-      cond = new (ac) CXXBoolLiteralExpr (
-               true,
-               cond->getType(),
-               SourceLocation()
-             );
-    }
-    Expr* ncond = new (ac) UnaryOperator (
-                    new (ac) ParenExpr(
-                      SourceLocation(), SourceLocation(),
-                      cond),
-                    UO_LNot,
-                    cond->getType(),
-                    VK_LValue,
-                    OK_Ordinary,
-                    SourceLocation()
-                  );
+      cond = PredicateNode {"true", {}};
+    } else
+      cond = getASTFor(cond_expr);
+    PredicateNode ncond {"!", {cond}};
 
-    // cond => pred
-    wpOfSubgraph(pred, from, *(to->succ_begin()), dom_tree, reachables, mgr);
-    pred = new (ac) ParenExpr(
-      SourceLocation(), SourceLocation(),
-      new (ac) BinaryOperator(
-        ncond,
-        pred,
-        BO_LOr,
-        cond->getType(),
-        VK_LValue,
-        OK_Ordinary,
-        SourceLocation(),
-        false
-      ));
-
-    // !cond => else_pred
-    wpOfSubgraph(else_pred, from, *(to->succ_begin() + 1), dom_tree, reachables, mgr);
-    else_pred = new (ac) ParenExpr(
-      SourceLocation(), SourceLocation(),
-      new (ac) BinaryOperator(
-        non_deterministic ? ncond : cond,
-        else_pred,
-        BO_LOr,
-        cond->getType(),
-        VK_LValue,
-        OK_Ordinary,
-        SourceLocation(),
-        false
-      ));
-
-    pred = new (ac) ParenExpr(
-      SourceLocation(), SourceLocation(),
-      new (ac) BinaryOperator(
-        pred,
-        else_pred,
-        BO_LAnd,
-        cond->getType(),
-        VK_LValue,
-        OK_Ordinary,
-        SourceLocation(),
-        false
-      ));
-
-    wpOfBlock(pred, to);
+    return wpOfBlock(
+        {"&", {
+            {"|", {wpOfSubgraph(pred, from, *(to->succ_begin()), dom_tree, reachables), ncond}},
+            {"|", {wpOfSubgraph(pred, from, *(to->succ_begin() + 1), dom_tree, reachables), non_deterministic ? ncond : cond}}}},
+        to);
   }
 
-  std::string abduce(AnalysisManager & mgr, const Expr * query) {
-    llvm::errs() << "\n   [Q] Abduction query = ";
-    query -> printPretty(llvm::errs(), nullptr, mgr.getASTContext().getPrintingPolicy());
-    llvm::errs() << "\n";
-
-    std::string res = getAbductionResultFor(query);
-    llvm::errs() << "\n     - Result = " << res << "\n";
+  PredicateNode abduce(PredicateNode query) {
+    llvm::errs() << "\n   [Q] Abduction query = " << PredicateNode2MCF(query) << "\n";
+    PredicateNode res = getAbductionResultFor(query);
+    llvm::errs() << "\n     - Result = " << PredicateNode2MCF(res) << "\n";
     return res;
   }
 
-  CheckResult checkValidity(AnalysisManager & mgr,
-                            std::string & pred,
-                            CFGBlock* loop_head,
-                            CFG * cfg,
+  CheckResult checkValidity(PredicateNode pred,
+                            CFGBlock *loop_head,
+                            CFG *cfg,
                             DominatorTree *dom_tree,
                             CFGReverseBlockReachabilityAnalysis *reachables,
-                            Expr * guard,
-                            Expr * nguard);
+                            PredicateNode guard,
+                            PredicateNode nguard);
 
-  CheckResult checkPreconditionValidity(AnalysisManager & mgr,
-                                        std::string & pred,
+  CheckResult checkPreconditionValidity(PredicateNode pred,
                                         CFGBlock* loop_head,
                                         CFG * cfg,
                                         DominatorTree *dom_tree,
                                         CFGReverseBlockReachabilityAnalysis *reachables,
-                                        Expr * guard,
-                                        Expr * nguard) {
+                                        PredicateNode guard,
+                                        PredicateNode nguard) {
 
-    Expr * verif = getASTFor(pred);
+    PredicateNode verif = wpOfSubgraph(pred, loop_head, &(cfg->getEntry()), dom_tree, reachables);
 
-    wpOfSubgraph(verif, loop_head, &(cfg->getEntry()), dom_tree, reachables, mgr);
-
-    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pre} = ";
-    verif -> printPretty(llvm::errs(), nullptr, mgr.getASTContext().getPrintingPolicy());
-    llvm::errs() << "\n";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pre} = "
+                 << PredicateNode2MCF(verif) << "\n";
 
     bool res;
     llvm::errs() << "     - Result = " << (res = chkVALID(verif, true)) << "\n";
 
     if(!res) {
       llvm::errs() << "\n ----------------------------------------< RESTART >---------------------------------------- \n";
-      pred = "true";
-      return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
+      return checkValidity(PredicateNode {"true", {}}, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
 
-    return PASSED;
+    return CheckResult { PASSED, pred };
   }
 
-  CheckResult checkInductiveValidity(AnalysisManager & mgr,
-                                     std::string & pred,
-                                     CFGBlock* loop_head,
-                                     CFG* cfg,
+  CheckResult checkInductiveValidity(PredicateNode pred,
+                                     CFGBlock *loop_head,
+                                     CFG *cfg,
                                      DominatorTree *dom_tree,
                                      CFGReverseBlockReachabilityAnalysis *reachables,
-                                     Expr * guard,
-                                     Expr * nguard) {
+                                     PredicateNode guard,
+                                     PredicateNode nguard) {
 
-    Expr * inv_guess = getASTFor(pred);
-
-    Expr * verif = getASTFor(pred);
     CFGBlock* end_loop;
     for(CFGBlock::const_pred_iterator pred = loop_head->pred_begin(), epred = loop_head->pred_end(); pred != epred; ++pred)
       if(dom_tree->dominates(loop_head, *pred)) {
         end_loop = *pred;
         break;
       }
-    wpOfSubgraph(verif, end_loop, loop_head, dom_tree, reachables, mgr);
 
-    verif = new (mgr.getASTContext()) BinaryOperator(
-      new (mgr.getASTContext()) BinaryOperator(
-        new (mgr.getASTContext()) UnaryOperator(
-          inv_guess,
-          UO_LNot,
-          guard->getType(),
-          VK_LValue,
-          OK_Ordinary,
-          SourceLocation()
-        ),
-        nguard,
-        BO_LOr,
-        guard->getType(),
-        VK_LValue,
-        OK_Ordinary,
-        SourceLocation(),
-        false
-      ),
-      verif,
-      BO_LOr,
-      guard->getType(),
-      VK_LValue,
-      OK_Ordinary,
-      SourceLocation(),
-      false
-    );
+    PredicateNode wp = wpOfSubgraph(pred, end_loop, loop_head, dom_tree, reachables);
+    PredicateNode verif {"|", {{"!", {pred}}, nguard, wp}};
 
-    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {ind} = ";
-    verif -> printPretty(llvm::errs(), nullptr,
-                         mgr.getASTContext().getPrintingPolicy());
-    llvm::errs() << "\n";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {ind} = "
+                 << PredicateNode2MCF(verif) << "\n";
 
     bool res;
     llvm::errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
 
     if(!res) {
-      pred = simplify(abduce(mgr, verif) + " & (" + pred + ")");
-      return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
+      pred = simplify(PredicateNode {"&", {abduce(verif), pred}});
+      return checkValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
 
-    return PASSED;
+    return CheckResult { PASSED, pred };
   }
 
-  CheckResult checkPostconditionValidity(AnalysisManager & mgr,
-                                         std::string & pred,
-                                         CFGBlock* loop_head,
-                                         CFG* cfg,
+  CheckResult checkPostconditionValidity(PredicateNode pred,
+                                         CFGBlock *loop_head,
+                                         CFG *cfg,
                                          DominatorTree *dom_tree,
                                          CFGReverseBlockReachabilityAnalysis *reachables,
-                                         Expr * guard,
-                                         Expr * nguard) {
+                                         PredicateNode guard,
+                                         PredicateNode nguard) {
 
-    Expr * inv_guess = getASTFor(pred);
-
-    Expr * post_cond = getASTFor("true");
-    CFGBlock* post_loop;
+    CFGBlock *post_loop;
     for(CFGBlock::const_succ_iterator succ = loop_head->succ_begin(), esucc = loop_head->succ_end(); succ != esucc; ++succ)
       if(dom_tree->dominates(*succ, &(cfg->getExit()))) {
         post_loop = *succ;
         break;
       }
-    wpOfSubgraph(post_cond, &(cfg->getExit()), post_loop, dom_tree, reachables, mgr);
+    PredicateNode post_cond = wpOfSubgraph({"true", {}}, &(cfg->getExit()), post_loop, dom_tree, reachables);
+    PredicateNode verif {"|", {{"!", {pred}}, guard, post_cond}};
 
-    Expr * verif = new (mgr.getASTContext()) BinaryOperator(
-      new (mgr.getASTContext()) BinaryOperator(
-        new (mgr.getASTContext()) UnaryOperator(
-          inv_guess,
-          UO_LNot,
-          guard->getType(),
-          VK_LValue,
-          OK_Ordinary,
-          SourceLocation()
-        ),
-        guard,
-        BO_LOr,
-        guard->getType(),
-        VK_LValue,
-        OK_Ordinary,
-        SourceLocation(),
-        false
-      ),
-      post_cond,
-      BO_LOr,
-      guard->getType(),
-      VK_LValue,
-      OK_Ordinary,
-      SourceLocation(),
-      false
-    );
-
-    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pos} = ";
-    verif -> printPretty(llvm::errs(), nullptr,
-                         mgr.getASTContext().getPrintingPolicy());
-    llvm::errs() << "\n";
+    llvm::errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pos} = "
+                 << PredicateNode2MCF(verif) << "\n";
 
     bool res;
     llvm::errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
 
     if(!res) {
-      pred = simplify(abduce(mgr, verif) + " & (" + pred + ")");
-      return checkValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
+      pred = simplify({"&", {abduce(verif), pred}});
+      return checkValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
     }
 
-    return PASSED;
+    return CheckResult { PASSED, pred };
   }
 
-  CheckResult checkValidity(AnalysisManager & mgr,
-                     std::string & pred,
-                     CFGBlock* loop_head,
-                     CFG* cfg,
-                     DominatorTree *dom_tree,
-                     CFGReverseBlockReachabilityAnalysis *reachables,
-                     Expr * guard,
-                     Expr * nguard) {
-    llvm::errs() << "\n   # Invariant Guess = " << pred << "\n";
+  CheckResult checkValidity(PredicateNode pred,
+                            CFGBlock *loop_head,
+                            CFG *cfg,
+                            DominatorTree *dom_tree,
+                            CFGReverseBlockReachabilityAnalysis *reachables,
+                            PredicateNode guard,
+                            PredicateNode nguard) {
+    llvm::errs() << "\n   # Invariant Guess = " << PredicateNode2MCF(pred) << "\n";
 
     CheckResult cr;
 
-    if((cr = checkPreconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard)) != PASSED)
+    if((cr = checkPreconditionValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard)).status != PASSED)
       return cr;
 
-    if((cr = checkPostconditionValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard)) != PASSED)
+    if((cr = checkPostconditionValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard)).status != PASSED)
       return cr;
 
-    if((cr = checkInductiveValidity(mgr, pred, loop_head, cfg, dom_tree, reachables, guard, nguard)) != FAILED)
-      return VERIFIED;
+    if((cr = checkInductiveValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard)).status != FAILED)
+      return CheckResult { VERIFIED, cr.guess};
 
-    return FAILED;
+    return { FAILED, cr.guess };
   }
 
 } // end anonymous namespace
@@ -736,7 +590,7 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
 
   //FIXME: Single loop assumed
   CFGBlock *loop_head;
-  std::vector<bool> isLoopHeader(cfg->getNumBlockIDs());
+  vector<bool> isLoopHeader(cfg->getNumBlockIDs());
 
   for(CFG::iterator it = cfg->begin(), ei = cfg->end(); it != ei; ++it) {
     CFGBlock *block = *it;
@@ -749,46 +603,34 @@ void LoopInvariantChecker :: checkASTDecl(const Decl *D,
     }
   }
 
-  Expr *guard = dyn_cast<Expr>(loop_head -> getTerminatorCondition(false));
+  Expr *guard_expr = dyn_cast<Expr>(loop_head -> getTerminatorCondition(false));
+  PredicateNode guard;
 
   llvm::errs() << "\n   + Found guard in B" << loop_head->getBlockID() << "\n";
-  llvm::errs() << "     - guard : ";
-  guard -> printPretty(llvm::errs(), nullptr,
-                       mgr.getASTContext().getPrintingPolicy());
-  llvm::errs() << "\n";
 
   bool non_deterministic = false;
   //FIXME: The guard may `contain' a call instead of `being' a  call
-  if(isa<CallExpr>(guard->IgnoreCasts())) {
+  if(isUnknownFunction(guard_expr)) {
     non_deterministic = true;
-    guard = new (mgr.getASTContext()) CXXBoolLiteralExpr(true,
-                                                         guard->getType(),
-                                                         SourceLocation());
-
+    guard = PredicateNode {"true", {}};
     llvm::errs() << "     - guard : NON-DETERMINISTIC\n";
+  } else {
+    guard = getASTFor(guard_expr);
+    llvm::errs() << "     - guard : " << PredicateNode2MCF(guard) << "\n";
   }
 
-  Expr *nguard = new (mgr.getASTContext()) UnaryOperator(
-                                             guard,
-                                             UO_LNot,
-                                             guard->getType(),
-                                             VK_LValue,
-                                             OK_Ordinary,
-                                             SourceLocation());
+  PredicateNode nguard {"!", {guard}};
 
   //FIXME: Generalize treatment of non-determinism. Can occur elsewhere too.
 
-  // nguard is not not-guard always:
+  // nguard and guard behaviour:
   // NON-DETERMINISTIC ... guard = true  ; nguard = false
   // DETERMINISTIC     ... guard = guard ; nguard = !guard
 
-  //FIXME: Node sharing issues?!
-  //Does TreeTransform do multiple replacements for shared nodes?
+  CheckResult res = checkValidity(PredicateNode {"true", {}}, loop_head, cfg, &dom_tree, &reachables, non_deterministic ? nguard : guard, nguard);
 
-  std::string guess = "true";
-
-  if(checkValidity(mgr, guess, loop_head, cfg, &dom_tree, &reachables, non_deterministic ? nguard : guard, nguard) == VERIFIED)
-    llvm::errs() << "\n\n[###] Final invariant = " << guess << " [###]\n";
+  if(res.status == VERIFIED)
+    llvm::errs() << "\n\n[###] Final invariant = " << PredicateNode2MCF(res.guess) << " [###]\n";
   else
     llvm::errs() << "\n\n[---] Invariant could not be determined. [---]\n";
 }

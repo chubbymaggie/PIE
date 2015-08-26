@@ -1,3 +1,0 @@
-CAV'14 C post check
-status: UNSAT
-!(!((#len(r) > i) & (i >= 0) & #has(r, "a")) | ((#len(r) > i) & (i >= 0) & #has(r, "a")))
