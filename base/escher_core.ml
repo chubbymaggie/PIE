@@ -194,7 +194,7 @@ let filter_map p map =
     VArrayMap.fold f map []
 
 let matches ?typeonly:(typeonly=false) x y =
-  x = y || y = VDontCare || (typeonly && (typeof x == typeof y))
+  x = y || y = VDontCare || x = VDontCare || (typeonly && (typeof x == typeof y))
 
 let varray_matches ?typeonly:(typeonly=false) have want =
   List.for_all2 (matches ~typeonly:typeonly) (Array.to_list have) (Array.to_list want)

@@ -60,7 +60,7 @@ int unknown(int low, int high) { return uni_rand_interval(low, high); }
  * Random string generation
  */
 
-#define RAND_STR_LEN_MAX 12
+#define RAND_STR_LEN_MAX 64
 
 char unknown_upper() { return uni_rand_interval(65, 90); }
 char unknown_lower() { return uni_rand_interval(97, 122); }
@@ -82,7 +82,12 @@ string unknown_s2() {
 
 
 void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
-void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
+void assert(bool condition) {
+  if(!condition) {
+    fprintf(stderr, "[ ASSERTION FAILED! ]\n");
+    exit(EXIT_FAILURE);
+  }
+}
 
 
 bool eql(string str1, string str2) {

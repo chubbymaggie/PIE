@@ -109,7 +109,7 @@ def string_from_z3str_model(z3str_out):
         line = list(line.partition(' : '))
         line[2] = line[2].partition(' -> ')[2].strip()
         model[line[0]] = line[2] if line[2][0] != '-' else '(- %s)' % line[2][1:]
-    return '(From Z3Str)\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
+    return '(From Z3Str)\n' + '\n'.join('%s : %s' % (var, model[var].replace("\\\"","#")) for var in model)
 
 def z3str_to_cvc4(smtlib2_string):
     smtlib2_string = '\n'.join([l for l in smtlib2_string.split('\n') if ';;' not in l])

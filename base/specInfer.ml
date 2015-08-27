@@ -463,6 +463,13 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
     else (
         let tab = BatHashtbl.create (List.length missing_features) in
             BatList.iter (fun (i, _, _, b) -> BatHashtbl.add tab ((snd trans) i) (VBool b)) missing_features;
+            if fname = "" then () else (
+              let conflict_log = open_out (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
+                output_string conflict_log "\nData::\n";
+                List.iter (fun (d,_,_,b) -> output_string conflict_log ((string_of_bool b) ^ " <= ");
+                                            print_data conflict_log (VList ((snd trans) d));
+                                            output_string conflict_log "\n")
+                          missing_features);
             let xtask = {
                 target = {
                     domain = (fst trans);
@@ -479,13 +486,8 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
             } in
             let solutions = solve xtask consts in
               if fname = "" then () else (
-                let conflict_log = open_out (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
+                let conflict_log = open_out_gen [Open_append] 0 (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
                   conflict_counter := !conflict_counter + 1;
-                  output_string conflict_log "\nData::\n";
-                  List.iter (fun (d,_,_,b) -> output_string conflict_log ((string_of_bool b) ^ " <= ");
-                                              print_data conflict_log (VList ((snd trans) d));
-                                              output_string conflict_log "\n")
-                            missing_features;
                   output_string conflict_log "\nSolutions::\n";
                   List.iter (fun (a,_) -> output_string conflict_log a; output_string conflict_log "\n") solutions;
                   close_out conflict_log;);

@@ -138,6 +138,7 @@ if __name__ == "__main__":
     print("\nlet f_dumper = n_arg_dumper %s" % (' '.join(('string_dumper' if v in string_vars else 'int_dumper') for v in uvars)))
     print("\nlet consts = [%s]" % ('; '.join("VString %s" % c if type(c) is str else "VInt %d" % c for c in uniq_consts)))
     print("\nlet def_features = (*PYF:x|T(%s)*)" % ','.join(v + (':S' if v in string_vars else ':I') for v in uvars))
+    #print("\nlet def_features = []")
     print("\nlet my_features = []")
     print("\nlet post_cond = ((fun x r -> match r with Bad _ -> false | Ok z -> z), \"true\")")
     print("\nlet tests = (%s) :: %s" % (', '.join(model[v] for v in uvars), genTests()))

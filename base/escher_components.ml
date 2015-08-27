@@ -161,6 +161,26 @@ let notc = {
     dump = (fun l -> "(! " ^ (List.hd l) ^ ")")
 }
 
+let andc = {
+  domain = [TBool;TBool];
+    codomain = TBool;
+    apply = (function
+             | [VBool x; VBool y] -> VBool (x && y)
+             | _ -> VError);
+    name = "and";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " & " ^ (List.hd (List.tl l)) ^ ")")
+}
+
+let orc = {
+  domain = [TBool;TBool];
+    codomain = TBool;
+    apply = (function
+             | [VBool x; VBool y] -> VBool (x || y)
+             | _ -> VError);
+    name = "or";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " | " ^ (List.hd (List.tl l)) ^ ")")
+}
+
 
 (* Default CHAR components *)
 let cequal = {
