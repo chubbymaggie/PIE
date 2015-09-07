@@ -54,6 +54,4 @@ rm -rf header tests
 # Call the monster
 cd "$ROOT"
 echo -ne "\n(*) Checking loop invariant:\n"
-bin/clang++ --std=c++11 -c -w -Xclang -analyze                          \
-            -Xclang -analyzer-checker=alpha.core.LoopInvariantChecker   \
-            "$1"
+bin/pinvgen --extra-arg=--std=c++11 "$1" --

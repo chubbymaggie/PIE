@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import re
+import subprocess
 import sys
 
 uvars = {'true', 'false'}
@@ -91,17 +92,22 @@ pred = operatorPrecedence(stmt, [
 
 ###
 
+#FIXME: for next 3 funcs, remove dependence on uvars, get variables from smtlib2 string instead
+
+def vars_from_smtlib(smtlib2_string):
+    return {line.split(' ')[1]:line.split(' ')[2][:-1] for line in smtlib2_string.split('\n') if line[:14] == '(declare-const'}
+
 def string_from_z3_model(mod):
     model = {var: 0 for var in uvars}
     for var in mod:
         model[str(var)] = mod[var]
-    return '(From Z3)\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
+    return 'SAT @ Z3\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
 
 def string_from_cvc4_model(cvc4_proc):
     cvc4_proc.stdin.write('(get-value (%s))\n' % (' '.join(uvars)))
     model = cvc4_proc.stdout.readline().strip()[2:-2].split(') (')
     model = {pair.partition(' ')[0]:pair.partition(' ')[2] for pair in model}
-    return '(From CVC4)\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
+    return 'SAT @ CVC4\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
 
 def string_from_z3str_model(z3str_out):
     model = {var: 0 for var in uvars}
@@ -109,7 +115,7 @@ def string_from_z3str_model(z3str_out):
         line = list(line.partition(' : '))
         line[2] = line[2].partition(' -> ')[2].strip()
         model[line[0]] = line[2] if line[2][0] != '-' else '(- %s)' % line[2][1:]
-    return '(From Z3Str)\n' + '\n'.join('%s : %s' % (var, model[var].replace("\\\"","#")) for var in model)
+    return 'SAT @ Z3Str\n' + '\n'.join('%s : %s' % (var, model[var].replace("\\\"","#")) for var in model)
 
 def z3str_to_cvc4(smtlib2_string):
     smtlib2_string = '\n'.join([l for l in smtlib2_string.split('\n') if ';;' not in l])
@@ -121,20 +127,23 @@ def z3str_to_cvc4(smtlib2_string):
                                .replace('Length', 'str.len')
                                .replace('Replace', 'str.replace')
                                .replace('Substring', 'str.substr')
-                               )
+                              )
     smtlib2_string = flatString(fix_indexOf(nestedExpr('(', ')').parseString(smtlib2_string).asList()[0]), True)
     return smtlib2_string[1:-1]
 
 def substitute_model(smtlib2_string, model):
+    smtlib2_string = '\n'.join(filter(lambda l: not(l.startswith('(declare-const ')), smtlib2_string.split('\n')))
     model = {line.partition(' : ')[0]:line.partition(' : ')[2] for line in model[1:].split('\n')}
     for var in model:
         smtlib2_string = re.sub(r'\b{}\b'.format(re.escape(var)), model[var], smtlib2_string)
     return smtlib2_string
 
 def smtlib2_string_from_file(action, filename, headless, implicant=None, implicantHeadless=None):
-    global uvars
+    global uvars, string_vars
 
+    string_vars = set()
     uvars = {'true', 'false'}
+
     with open(filename) as f:
        mcf = f.readlines()
     mcf = mcf[0].strip() if headless != "0" else mcf[2].strip()
@@ -154,6 +163,38 @@ def smtlib2_string_from_file(action, filename, headless, implicant=None, implica
         action,
         smtstr)
     return smtstr
+
+def run_Z3Str2_internal(smtdata, needModel = True):
+    try:
+        z3str_in = smtdata + '\n(check-sat)\n'
+        with open('/tmp/z3str.in', 'w') as f:
+            f.write(z3str_in)
+
+        z3str_out = subprocess.check_output(['./Z3-Str2', '-f', '/tmp/z3str.in'], stderr=sys.stderr).split('\n')
+        z3str_res = z3str_out[2 if z3str_out[0][:4] == '* v-' else 1][3:].lower()
+
+        return (string_from_z3str_model(z3str_out) if needModel else 'SAT') if z3str_res == 'sat' else ('UNSAT' if z3str_res == 'unsat' else 'ERROR')
+    except:
+        return 'ERROR'
+
+def run_CVC4_internal(smtdata, needModel = True):
+    try:
+        cvc4_in = ('\n'.join([
+                    '(set-option :produce-models true)',
+                    '(set-option :strings-fmf true)',
+                    '(set-logic ALL_SUPPORTED)\n'])
+                    + smtdata
+                    + '\n(check-sat)\n')
+        cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=sys.stderr)
+        cvc4.stdin.write(cvc4_in)
+        cvc4_res = cvc4.stdout.readline().strip()
+
+        return (string_from_cvc4_model(cvc4) if needModel else 'SAT') if cvc4_res == 'sat' or cvc4_res == 'valid' else ('UNSAT' if cvc4_res == 'unsat' else 'ERROR')
+    except:
+        return 'ERROR'
 
 if __name__ == "__main__":
     print(smtlib2_string_from_file('assert', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1"))

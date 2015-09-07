@@ -28,5 +28,5 @@ let my_postconditions = [
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-  resolveAndPacLearnSpec ~dump:("avlcreate", iavltree_int_iavltree_dumper) f tests features postconds trans []
+  resolveAndPacLearnSpec ~dump:("avlcreate", iavltree_int_iavltree_dumper) f tests features postconds trans
 ;;

@@ -18,7 +18,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("scopy", string_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("scopy", string_dumper) f tests features postconds trans
 ;;
 
 
@@ -43,7 +43,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sget", string_int_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("sget", string_int_dumper) f tests features postconds trans
 ;;
 
 
@@ -92,7 +92,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("ssub", string_int_int_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("ssub", string_int_int_dumper) f tests features postconds trans
 ;;
 
 
@@ -112,7 +112,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("smake", int_char_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("smake", int_char_dumper) f tests features postconds trans
 ;;
 
 
@@ -133,7 +133,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sindex", string_char_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("sindex", string_char_dumper) f tests features postconds trans
 ;;
 
 
@@ -154,7 +154,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sindexFrom", string_int_char_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("sindexFrom", string_int_char_dumper) f tests features postconds trans
 ;;
 
 
@@ -174,6 +174,6 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sconcat", string_stringList_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("sconcat", string_stringList_dumper) f tests features postconds trans
 ;;
 

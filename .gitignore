@@ -13,9 +13,4 @@ a.out
 
 logs
 
-abducer/X
-
-mistral/build
-mistral/example/*
-!mistral/example/*.cpp
-!mistral/example/Makefile
+hybrid/Z3-str.py

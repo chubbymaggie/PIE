@@ -4,106 +4,105 @@ import multiprocessing as mp
 import subprocess
 import sys
 
-from mcf2smtlib import smtlib2_string_from_file, string_from_cvc4_model, \
-                       string_from_z3str_model, substitute_model, z3str_to_cvc4
 from time import sleep
+from Queue import Empty
+
+from mcf2smtlib import vars_from_smtlib, smtlib2_string_from_file, substitute_model, \
+                       run_CVC4_internal, run_Z3Str2_internal, z3str_to_cvc4
 
 epsilon = 0.03
 timeout = 8.00
 
-sema = mp.Semaphore(2)
-
-def runZ3Str2(smtdata, queue):
+def runZ3Str2(sema, smtdata, queue):
     with sema:
-        z3str_in = smtdata + '\n(check-sat)\n'
-        with open('/tmp/z3str.in', 'w') as f:
-            f.write(z3str_in)
-
-        z3str_out = subprocess.check_output(['/data/Repos/Z3-str/Z3-str.py', '-f', '/tmp/z3str.in']).split('\n')
-        z3str_res = z3str_out[2 if z3str_out[0][:4] == '* v-' else 1][3:].lower()
-
-        res = 'ERROR'
-        if z3str_res == 'unsat':
-            res = 'UNSAT'
-        elif z3str_res == 'sat':
-            res = string_from_z3str_model(z3str_out)
-
+        res = run_Z3Str2_internal(smtdata)
         if res == 'ERROR':
             sleep(timeout)
-        sys.stderr.write('(Z3Str2)\n')
+        elif res[:3] == 'SAT':
+            vsmtdata = substitute_model(smtdata, res)
+            vres = run_Z3Str2_internal(vsmtdata, False)
+            res = 'ERROR' if vres != 'SAT' else res
+
         queue.put(['z3str', res])
+        sleep(epsilon)
 
-def runCVC4(smtdata, queue):
+def runCVC4(sema, smtdata, queue):
     with sema:
-        cvc4_in = ('\n'.join([
-                    '(set-option :produce-models true)',
-                    '(set-option :strings-fmf true)',
-                    '(set-logic ALL_SUPPORTED)\n'])
-                  + smtdata
-                  + '\n(check-sat)\n')
-        cvc4 = subprocess.Popen(['cvc4', '--lang', 'smt', '--rewrite-divk', '--strings-exp'],
-                                stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE,
-                                stderr=sys.stderr)
-        cvc4.stdin.write(cvc4_in)
-        cvc4_res = cvc4.stdout.readline().strip()
-
-        res = 'ERROR'
-        if cvc4_res == 'unsat':
-            res = 'UNSAT'
-        elif cvc4_res == 'sat' or cvc4_res == 'valid':
-            # This will throw an error when we cross-check Z3Str model,
-            # But it doesn't matter anyway.
-            res = string_from_cvc4_model(cvc4)
-
+        res = run_CVC4_internal(smtdata)
         if res == 'ERROR':
             sleep(timeout)
-        sys.stderr.write('(CVC4)\n')
+        elif res[:3] == 'SAT':
+            vsmtdata = substitute_model(smtdata, res)
+            vres = run_CVC4_internal(vsmtdata, False)
+            res = 'ERROR' if vres != 'SAT' else res
+
         queue.put(['cvc4', res])
+        sleep(epsilon)
+
+def unknownAction(smtdata):
+    sys.stderr.write('''[!] None of the verifiers could verify the following SMTLib2 query:
+----------------------------------------------------------------------------------------------------
+%s
+----------------------------------------------------------------------------------------------------
+''' % smtdata)
+
+    satness = -1
+    while satness != 0 and satness != 1:
+        sys.stderr.write('[?] Please enter [0] if the query is SAT; or [1] if it is UNSAT --> ')
+        satness = int(raw_input())
+
+    if satness == 1:
+        return 'UNSAT'
+    else:
+        all_vars = vars_from_smtlib(smtdata)
+        vals = all_vars
+        for var in all_vars.items():
+            sys.stderr.write('  [+] Value of %s (%s) :: ' % var)
+            vals[var[0]] = int(raw_input())
+        return 'SAT @ MANUAL\n%s' % '\n'.join('%s : %s' % v for v in vals.items())
 
 if __name__ == '__main__':
-    q = mp.Queue()
+    error = True
+    acquired = 0
+
     vals = dict()
+    q = mp.Queue()
 
     smtdata = smtlib2_string_from_file('assert', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1")
 
-    jobs = [('str', mp.Process(target=runZ3Str2, args=(smtdata, q))),
-            ('cvc4', mp.Process(target=runCVC4, args=(z3str_to_cvc4(smtdata), q)))]
+    sema = mp.BoundedSemaphore(2)
+    jobs = [('str', mp.Process(target=runZ3Str2, args=(sema, smtdata, q))),
+            ('cvc4', mp.Process(target=runCVC4, args=(sema, z3str_to_cvc4(smtdata), q)))]
     [j.start() for (p, j) in jobs]
     sleep(epsilon)
 
-    sema_status = sema.acquire(timeout=timeout)
-    [subprocess.call(['killall', p]) for (p, j) in jobs if j.is_alive()]
-    [j.terminate() for (p, j) in jobs if j.is_alive()]
+    final_result = ''
+    try:
+        # If we still have error, and have other verifiers running
+        while error and acquired < len(jobs):
+            acquired += 1
+            sema_status = sema.acquire(timeout=timeout)
+            if not sema_status:
+                raise Exception
 
-    # If we have a timeout, abort
-    if not sema_status:
-        print("~UNKNOWN~")
-        sys.exit(1)
+            while True:
+                try:
+                    item = q.get(False)
+                    vals[item[0]] = item[1]
+                    error = error and (item[1] == 'ERROR')
+                except Empty:
+                    break
 
-    assert(not q.empty())
-    while not q.empty():
-        item = q.get(False)
-        vals[item[0]] = item[1]
+        # Stop the running verifiers
+        [subprocess.call(['killall', p]) for (p, j) in jobs if j.is_alive()]
+        [j.terminate() for (p, j) in jobs if j.is_alive()]
 
-    # If we have an answer from CVC4 or we have an UNSAT, trust it
-    if 'cvc4' in vals:
-        print(vals['cvc4'])
-        sys.exit(0)
-    elif vals['z3str'] == 'UNSAT':
-        print(vals['z3str'])
-        sys.exit(0)
+        # If we finally have no non-error answers or we have both SAT and UNSAT
+        if error or ('UNSAT' in vals.values() and True in (v[:4] == 'SAT' for v in vals.values())):
+            raise Exception
 
-    # Only remaining case is Z3Str reporting a model which we need to verify
-    smtdata = z3str_to_cvc4(smtdata).strip().split('\n')[-1]
-    smtdata = substitute_model(smtdata, vals['z3str'])
-
-    sema.release()
-    runCVC4(smtdata, q)
-    item = q.get()
-    if item[1] != 'UNSAT' and item[1] != 'ERROR':
-        print(vals['z3str'])
-        sys.exit(0)
-    else:
-        print('~UNKNOWN~')
-        sys.exit(1)
+        final_result = vals.popitem()[1]
+    except Exception:
+        final_result = unknownAction(smtdata)
+    finally:
+        print(final_result)

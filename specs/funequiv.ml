@@ -52,7 +52,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("stake", string_int_int_int_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("stake", string_int_int_int_dumper) f tests features postconds trans
 ;;
 
 
@@ -72,7 +72,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sdrop", string_int_int_int_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("sdrop", string_int_int_int_dumper) f tests features postconds trans
 ;;
 
 
@@ -91,5 +91,5 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sslice", string_int_int_int_int_dumper) f tests features postconds trans []
+    resolveAndPacLearnSpec ~dump:("sslice", string_int_int_int_int_dumper) f tests features postconds trans
 ;;
