@@ -5,6 +5,7 @@ import subprocess
 import sys
 
 uvars = {'true', 'false'}
+bounds = set()
 string_vars = set()
 
 def addVar(s,l,t):
@@ -30,6 +31,17 @@ def chkString(token):
         if token not in string_vars:
             string_vars.add(token)
     return token
+
+def CharAtAction(t):
+    bounds.add('>= %s 0' % flatString(t[2]))
+    bounds.add('< %s (Length %s)' % (t[2], flatString(t[1])))
+    return [['CharAt', chkString(t[1]), t[2]]]
+
+def SubstringAction(t):
+    bounds.add('>= %s 0' % flatString(t[2]))
+    bounds.add('>= %s 0' % flatString(t[3]))
+    bounds.add('<= (+ %s %s) (Length %s)' % (t[2], t[3], flatString(t[1])))
+    return [['Substring', chkString(t[1]), t[2], t[3]]]
 
 ###
 
@@ -63,12 +75,12 @@ stmt = Forward()
 expr = Forward()
 sexpr = Forward()
 
-sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['CharAt', chkString(t[1]), t[2]]])
+sexpr << ( (GET + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: CharAtAction(t))
          | (CAT + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Concat', chkString(t[1]), chkString(t[2])]])
          | (IND + LPAR + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Indexof', chkString(t[1]), chkString(t[2])]])
          | (LEN + LPAR + expr + RPAR).setParseAction(lambda s,l,t: [['Length', chkString(t[1])]])
          | (REP + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Replace', chkString(t[1]), chkString(t[2]), chkString(t[3])]])
-         | (SUB + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: [['Substring', chkString(t[1]), t[2], t[3]]])
+         | (SUB + LPAR + expr + COMMA + expr + COMMA + expr + RPAR).setParseAction(lambda s,l,t: SubstringAction(t))
          | term
          | (LPAR + sexpr + RPAR))
 
@@ -139,7 +151,7 @@ def substitute_model(smtlib2_string, model):
     return smtlib2_string
 
 def smtlib2_string_from_file(action, filename, headless, implicant=None, implicantHeadless=None):
-    global uvars, string_vars
+    global uvars, bounds, string_vars
 
     string_vars = set()
     uvars = {'true', 'false'}
@@ -158,8 +170,9 @@ def smtlib2_string_from_file(action, filename, headless, implicant=None, implica
     uvars.discard('true')
     uvars.discard('false')
 
-    smtstr = '%s\n(%s %s)' % (
+    smtstr = '%s\n%s\n(%s %s)' % (
         '\n'.join('(declare-const %s %s)' % (var, 'String' if var in string_vars else 'Int') for var in uvars),
+        '\n'.join('(assert (%s))' % cond for cond in bounds),
         action,
         smtstr)
     return smtstr
@@ -170,7 +183,7 @@ def run_Z3Str2_internal(smtdata, needModel = True):
         with open('/tmp/z3str.in', 'w') as f:
             f.write(z3str_in)
 
-        z3str_out = subprocess.check_output(['./Z3-Str2', '-f', '/tmp/z3str.in'], stderr=sys.stderr).split('\n')
+        z3str_out = subprocess.check_output(['Z3-str.py', '-f', '/tmp/z3str.in'], stderr=sys.stderr).split('\n')
         z3str_res = z3str_out[2 if z3str_out[0][:4] == '* v-' else 1][3:].lower()
 
         return (string_from_z3str_model(z3str_out) if needModel else 'SAT') if z3str_res == 'sat' else ('UNSAT' if z3str_res == 'unsat' else 'ERROR')

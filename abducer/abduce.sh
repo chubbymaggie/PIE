@@ -14,7 +14,7 @@ FILE="`basename \"$1\"`"
 "$ROOT/link.sh" "$TARGET"
 cd "$TARGET"
 
-make cleaner ; make
+make clean ; make
 
 echo -ne "\n... $FILE ... \n"
 

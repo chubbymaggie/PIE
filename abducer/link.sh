@@ -32,9 +32,6 @@ SOLVER="hybrid"
 EXT=""
 if [ "$SOLVER" != "mistral" ]; then
   EXT=".py"
-  if [ "$SOLVER" == "hybrid" ]; then
-    ln -fs "$ROOT/../hybrid/Z3-Str2"      Z3-Str2
-  fi
 else
   cd "$ROOT/../mistral"
   make

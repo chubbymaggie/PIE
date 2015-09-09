@@ -14,10 +14,19 @@ type component = {
     }
 
 let apply_component (c : component) (args : Vector.t list) =
-  if (c.name = "not" && (match (snd (fst (List.hd args))) with Node ("not", _) -> true | _ -> false))
-  || (c.name = "addone" && (match (snd (fst (List.hd args))) with Node ("subone", _) -> true | _ -> false))
-  || (c.name = "subone" && (match (snd (fst (List.hd args))) with Node ("addone", _) -> true | _ -> false))
-  || (c.name = "mod" && (match (snd (fst List.(hd (tl args)))) with Node _ -> true | Leaf x -> (try ((int_of_string x); false) with _ -> true)))
+  if (c.name = "not" && (match (snd (fst (List.hd args)))
+                         with Node ("not", _) -> true | _ -> false))
+  || (c.name = "addone" && (match (snd (fst (List.hd args)))
+                            with Node ("subone", _) -> true | _ -> false))
+  || (c.name = "subone" && (match (snd (fst (List.hd args)))
+                            with Node ("addone", _) -> true | _ -> false))
+  || (c.name = "mod" && (match (snd (fst List.(hd (tl args))))
+                         with Node _ -> true | Leaf x -> (try ((int_of_string x); false) with _ -> true)))
+  || (c.name = "mult" && (match ((snd (fst List.(hd args))), (snd (fst List.(hd (tl args)))))
+                          with (Node _, Node _) -> true
+                             | (Node _, Leaf a) -> not (BatString.starts_with a "const_")
+                             | (Leaf a, Node _) -> not (BatString.starts_with a "const_")
+                             | (Leaf a, Leaf b) -> not (BatString.((starts_with a "const_") || (starts_with b "const_")))))
   then ((("", (fun _ -> VBool false)), Node ("", [])), Array.mapi (fun _ _ -> VError) (snd (List.hd args)))
   else (
     let select i l = List.map (fun x -> x.(i)) l in

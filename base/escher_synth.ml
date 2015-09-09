@@ -175,9 +175,9 @@ let solve_impl ?ast:(ast=false) task consts =
     List.iter (fun v -> print_endline ("   " ^ (Vector.string v))) task.inputs;
     print_endline ("Goal: " ^ (varray_string final_goal.varray)));
   list_array.(1)   <- VSet.singleton nil;
-  int_array.(1)    <- List.fold_left (fun p i -> VSet.add ((((string_of_int i), (fun ars -> VInt i)), Leaf (string_of_int i)), Array.make vector_size (VInt i)) p)
+  int_array.(1)    <- List.fold_left (fun p i -> VSet.add ((((string_of_int i), (fun ars -> VInt i)), Leaf ("const_" ^ (string_of_int i))), Array.make vector_size (VInt i)) p)
                       (VSet.singleton zero) (BatList.sort_unique compare (1::(BatList.filter_map (fun v -> match v with VInt x -> Some x | _ -> None) consts)));
-  string_array.(1) <- List.fold_left (fun p s -> VSet.add (((("\"" ^ s ^ "\""), (fun ars -> VString s)), Leaf ("\"" ^ s ^ "\"")), Array.make vector_size (VString s)) p)
+  string_array.(1) <- List.fold_left (fun p s -> VSet.add (((("\"" ^ s ^ "\""), (fun ars -> VString s)), Leaf ("const_\"" ^ s ^ "\"")), Array.make vector_size (VString s)) p)
                       (VSet.empty) (BatList.sort_unique compare (BatList.filter_map (fun v -> match v with VString x -> Some x | _ -> None) consts));
   bool_array.(1)   <- VSet. add btrue (VSet.singleton bfalse);
   List.iter (fun input ->

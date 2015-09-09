@@ -12,7 +12,6 @@ dep-only: escher_components.ml escher_core.ml escher_types.ml escher_synth.ml sp
 
 clean:
 	rm -f *.cm* *.o
-	rm -f *.e
 
 cleaner: clean
-	rm -f *.mcf.*our *.mcf.tml
+	rm -f *.mcf.*our *.mcf.tml *.e

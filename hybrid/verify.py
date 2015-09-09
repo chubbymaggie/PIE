@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import multiprocessing as mp
+import os
 import subprocess
 import sys
 
@@ -12,6 +13,8 @@ from mcf2smtlib import vars_from_smtlib, smtlib2_string_from_file, substitute_mo
 
 epsilon = 0.03
 timeout = 8.00
+
+devnull = open(os.devnull, 'w')
 
 def runZ3Str2(sema, smtdata, queue):
     with sema:
@@ -54,11 +57,12 @@ def unknownAction(smtdata):
     if satness == 1:
         return 'UNSAT'
     else:
+        sys.stderr.write('[>] Please provide a model (quote the string values) :\n')
         all_vars = vars_from_smtlib(smtdata)
         vals = all_vars
         for var in all_vars.items():
             sys.stderr.write('  [+] Value of %s (%s) :: ' % var)
-            vals[var[0]] = int(raw_input())
+            vals[var[0]] = raw_input()
         return 'SAT @ MANUAL\n%s' % '\n'.join('%s : %s' % v for v in vals.items())
 
 if __name__ == '__main__':
@@ -96,16 +100,18 @@ if __name__ == '__main__':
                 except Empty:
                     break
 
-        # Stop the running verifiers
-        [subprocess.call(['killall', p]) for (p, j) in jobs if j.is_alive()]
-        [j.terminate() for (p, j) in jobs if j.is_alive()]
-
         # If we finally have no non-error answers or we have both SAT and UNSAT
         if error or ('UNSAT' in vals.values() and True in (v[:4] == 'SAT' for v in vals.values())):
             raise Exception
 
         final_result = vals.popitem()[1]
+
     except Exception:
         final_result = unknownAction(smtdata)
+
     finally:
+        # Stop the running verifiers
+        [subprocess.call(['killall', p], stdout=devnull, stderr=devnull) for (p, j) in jobs if j.is_alive()]
+        [j.terminate() for (p, j) in jobs if j.is_alive()]
+
         print(final_result)

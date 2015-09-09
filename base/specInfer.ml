@@ -18,7 +18,7 @@ type truthAssignment = (int, bool) BatHashtbl.t
      - a positive and negative example have the identical feature vector
      - there is no k-CNF formula (for some particular k being used) that distinguishes the positive and negative examples
 *)
-exception NoSuchFunction    
+exception NoSuchFunction
 exception BadCounterExample
 
 let conflict_counter = ref 0
@@ -652,7 +652,7 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?
           prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
           let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
           prerr_string "                            \n" ; flush_all();
-          Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour 2>/dev/null") ;
+          Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour") ;
           let res_file = open_in (smtfile ^ ".zour") in
             if input_line res_file = "UNSAT" then (close_in res_file ; res)
             else (close_in res_file ;
