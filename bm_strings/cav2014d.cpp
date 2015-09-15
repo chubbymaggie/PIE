@@ -2,15 +2,16 @@
 
 int main() {
   int i;
-  string r;
-  INITIALIZE("%d \t %s\n", i, r.c_str());
+  string r, t;
+  INITIALIZE("%d \t %s \t %s\n", i, t.c_str(), r.c_str());
 
   set(r, "a");
   i = len(r);
 
   while(unknown()) {
     PRINT_VARS();
-    set(r, cat(r, "x"));
+    t = unknown_s(1);
+    set(r, cat(r, t));
   }
   PRINT_VARS();
 

@@ -7,6 +7,8 @@ using namespace std;
 
 bool isUnknownFunction(Expr *expr) {
   expr = expr->IgnoreCasts();
+  if(dyn_cast<ExprWithCleanups>(expr))
+    return isUnknownFunction(dyn_cast<ExprWithCleanups>(expr)->getSubExpr());
 
   if(dyn_cast<CXXConstructExpr>(expr)) return true;
 

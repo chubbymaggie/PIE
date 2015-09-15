@@ -67,14 +67,14 @@ char unknown_lower() { return uni_rand_interval(97, 122); }
 char unknown_alpha() { return unknown4() ? unknown_lower() : unknown_upper(); }
 char unknown_printable() { return uni_rand_interval(33, 126); }
 
-string unknown_s() {
-  string s(unknown(0, RAND_STR_LEN_MAX), 0);
+string unknown_s(unsigned max_len = RAND_STR_LEN_MAX) {
+  string s(unknown(0, max_len), 0);
   for(int i = 0; i < s.length(); ++i) s[i] = unknown_alpha();
   return s;
 }
 
-string unknown_s2() {
-  string s(unknown(0, RAND_STR_LEN_MAX), 0);
+string unknown_s2(unsigned max_len = RAND_STR_LEN_MAX) {
+  string s(unknown(0, max_len), 0);
   for(int i = 0; i < s.length(); ++i) s[i] = (unknown4() ? 'a' : unknown_alpha());
   return s;
 }
