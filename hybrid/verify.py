@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import multiprocessing as mp
-import os
 import subprocess
 import sys
 
@@ -9,12 +8,8 @@ from time import sleep
 from Queue import Empty
 
 from mcf2smtlib import vars_from_smtlib, smtlib2_string_from_file, substitute_model, \
-                       run_CVC4_internal, run_Z3Str2_internal, z3str_to_cvc4
-
-epsilon = 0.03
-timeout = 8.00
-
-devnull = open(os.devnull, 'w')
+                       run_CVC4_internal, run_Z3Str2_internal, z3str_to_cvc4, \
+                       epsilon, timeout, devnull
 
 def runZ3Str2(sema, smtdata, queue):
     with sema:
@@ -95,8 +90,9 @@ if __name__ == '__main__':
             while True:
                 try:
                     item = q.get(False)
-                    vals[item[0]] = item[1]
-                    error = error and (item[1] == 'ERROR')
+                    if item[1] != 'ERROR':
+                        error = False
+                        vals[item[0]] = item[1]
                 except Empty:
                     break
 

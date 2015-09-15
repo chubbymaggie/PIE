@@ -84,7 +84,7 @@ PredicateNode simplify(PredicateNode pred) {
 }
 
 PredicateNode abduce(PredicateNode query) {
-  errs() << "\n   [Q] Abduction query = " << PredicateNode2MCF(query) << "\n";
+  errs() << "\n   [Q" << ABDUCTION_COUNT+1 << "] Abduction query = " << PredicateNode2MCF(query) << "\n";
   PredicateNode res = getAbductionResultFor(query);
   errs() << "\n     - Result = " << PredicateNode2MCF(res) << "\n";
   return res;
@@ -104,7 +104,7 @@ CheckResult checkPreconditionValidity(PredicateNode pred,
                << PredicateNode2MCF(verif) << "\n";
 
   bool res;
-  errs() << "     - Result = " << (res = chkVALID(verif, true)) << "\n";
+  errs() << "     - Result = " << ((res = chkVALID(verif, true)) ? "VALID" : "FAILED") << "\n";
 
   if(!res) {
     errs() << "\n ----------------------------------------< RESTART >---------------------------------------- \n";
@@ -136,7 +136,7 @@ CheckResult checkInductiveValidity(PredicateNode pred,
                << PredicateNode2MCF(verif) << "\n";
 
   bool res;
-  errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
+  errs() << "     - Result = " << ((res = chkVALID(verif)) ? "VALID" : "FAILED") << "\n";
 
   if(!res) {
     pred = simplify(PredicateNode {"&", {abduce(verif), pred}});
@@ -167,7 +167,7 @@ CheckResult checkPostconditionValidity(PredicateNode pred,
                << PredicateNode2MCF(verif) << "\n";
 
   bool res;
-  errs() << "     - Result = " << (res = chkVALID(verif)) << "\n";
+  errs() << "     - Result = " << ((res = chkVALID(verif)) ? "VALID" : "FAILED") << "\n";
 
   if(!res) {
     pred = simplify({"&", {abduce(verif), pred}});

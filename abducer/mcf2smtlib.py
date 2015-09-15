@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import re
 import subprocess
 import sys
@@ -7,6 +8,11 @@ import sys
 uvars = {'true', 'false'}
 bounds = set()
 string_vars = set()
+
+epsilon = 0.03
+timeout = 16.00
+
+devnull = open(os.devnull, 'w')
 
 def addVar(s,l,t):
     uvars.add(t[0])
@@ -34,13 +40,13 @@ def chkString(token):
 
 def CharAtAction(t):
     bounds.add('>= %s 0' % flatString(t[2]))
-    bounds.add('< %s (Length %s)' % (t[2], flatString(t[1])))
+    bounds.add('< %s (Length %s)' % (flatString(t[2]), flatString(t[1])))
     return [['CharAt', chkString(t[1]), t[2]]]
 
 def SubstringAction(t):
     bounds.add('>= %s 0' % flatString(t[2]))
     bounds.add('>= %s 0' % flatString(t[3]))
-    bounds.add('<= (+ %s %s) (Length %s)' % (t[2], t[3], flatString(t[1])))
+    bounds.add('<= (+ %s %s) (Length %s)' % (flatString(t[2]), flatString(t[3]), flatString(t[1])))
     return [['Substring', chkString(t[1]), t[2], t[3]]]
 
 ###

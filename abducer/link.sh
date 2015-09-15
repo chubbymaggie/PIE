@@ -12,11 +12,11 @@ ln -fs "$ROOT/../base/escher_components.ml"   escher_components.ml
 ln -fs "$ROOT/../base/escher_types.ml"        escher_types.ml
 ln -fs "$ROOT/../base/escher_synth.ml"        escher_synth.ml
 
-ln -fs "$ROOT/../base/specify.ml"     specify.ml
 ln -fs "$ROOT/../base/specInfer.ml"   specInfer.ml
 ln -fs "$ROOT/../base/top_helper.ml"  top_helper.ml
 ln -fs "$ROOT/../base/makefile"       makefile
 
+ln -fs "$ROOT/../base/postGen.ml"     postGen.ml
 ln -fs "$ROOT/../base/testGen.ml"     testGen.ml
 ln -fs "$ROOT/../base/preprocess.py"  preprocess
 

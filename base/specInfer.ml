@@ -469,7 +469,8 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
                 List.iter (fun (d,_,_,b) -> output_string conflict_log ((string_of_bool b) ^ " <= ");
                                             print_data conflict_log (VList ((snd trans) d));
                                             output_string conflict_log "\n")
-                          missing_features);
+                          missing_features;
+                close_out(conflict_log));
             let xtask = {
                 target = {
                     domain = (fst trans);
@@ -481,7 +482,7 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
                 inputs = BatList.mapi (fun i _ ->
                   (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
                     Leaf ("x" ^ (string_of_int i) ^ "g")),
-                   Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab [])))(fst trans);
+                   Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
                 components = default_components
             } in
             let solutions = solve xtask consts in
@@ -594,6 +595,7 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) (f: '
                            (trans : typ list * ('a -> value list)) : ('c cnf option * 'c) list =
 
   if fst dump = "" then () else (
+    conflict_counter := 0;
     Sys.command("rm -rf " ^ (fst dump) ^ ".*.con");
     let test_file = open_out ((fst dump) ^ ".tests") in
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
@@ -603,11 +605,58 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) (f: '
     List.map (fun post -> pacLearnSpecIncrK ~k:k f tests features post) posts
 
 
-let rec pacLearnSpecNSATVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?(unsats=[]) (f : 'a -> 'b) (tests : 'a list)
+let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
+                             (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list))
+                             (trans_test: 'z -> 'a) (smtfile : string): (('a -> bool) * string) =
+
+  if fst dump = "" then () else (
+    let test_file = open_out ((fst dump) ^ ".tests") in
+      List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
+      close_out test_file);
+
+  let target = {
+        domain = (fst trans);
+        codomain = TBool;
+        apply = (fun t -> try VBool(f (trans_test t)) with _ -> VDontCare);
+        name = "synth";
+        dump = _unsupported_
+      } in
+  let rec helper tests = (
+    let xtask = {
+       target = target;
+       inputs = BatList.mapi (fun i _ ->
+          (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
+            Leaf ("x" ^ (string_of_int i) ^ "g")),
+           Array.of_list (List.map (fun k -> (List.nth ((snd trans) k) i)) tests))) (fst trans);
+        components = orc :: andc :: default_components
+    } in
+    let sol = List.hd (solve xtask consts) in
+      let our_output = open_out (smtfile ^ ".xour") in
+        output_string our_output (fst sol) ;
+        close_out our_output ;
+        Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
+        prerr_string ("\r    [?] Verifying --- ");
+        let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
+        prerr_string "                            \n" ; flush_all();
+        Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour") ;
+        let res_file = open_in (smtfile ^ ".zour") in
+          if input_line res_file = "UNSAT" then (close_in res_file ; ((fun data -> ((snd sol) (snd trans) data) = VBool true), (fst sol)))
+          else (close_in res_file ;
+                Sys.command("./var_replace revVals " ^ smtfile ^ ".tml < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
+                let res_file = open_in (smtfile ^ ".our") in
+                let args = (List.map (fun vtyp -> let data = input_line res_file in match vtyp with TInt -> VInt(int_of_string data) | TString -> VString(data)) (fst trans)) in
+                prerr_string "      [+] Added test ... "; print_data stderr (VList(args)); prerr_string "\n";
+                close_in res_file;
+                if (try f (trans_test args) with _ -> false) then raise BadCounterExample else (helper ((trans_test args) :: tests)))
+  ) in helper tests
+
+
+let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?(unsats=[]) (f : 'a -> 'b) (tests : 'a list)
                                (features : (('a -> bool) * 'c) list) (post : ('a -> 'b result -> bool) * 'c)
                                (trans : typ list * ('a -> value list)) (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
 
   if fst dump = "" then () else (
+    conflict_counter := 0;
     Sys.command("rm -rf " ^ (fst dump) ^ ".*.con");
     let test_file = open_out ((fst dump) ^ ".tests") in
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
@@ -637,13 +686,13 @@ let rec pacLearnSpecNSATVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?
                 then (close_in res_file ;
                       let fvector = Array.mapi (fun i _ -> (i+1, false)) (Array.create (List.length features) (0, false)) in
                         BatList.fold_left (fun _ f -> match f with Pos i -> fvector.(i-1) <- (i, true) | _ -> ()) () (snd missing);
-                        pacLearnSpecNSATVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:((Array.to_list fvector)::unsats))
+                        pacLearnSpecAndVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:((Array.to_list fvector)::unsats))
                 else (close_in res_file ;
                       Sys.command("./var_replace revVals " ^ smtfile ^ ".tml " ^ (string_of_int (List.length (fst trans))) ^ " < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
                       let res_file = open_in (smtfile ^ ".our") in
                         let tests = (trans_test (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans))) :: tests in
                           (close_in res_file ;
-                           pacLearnSpecNSATVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:unsats))) *)
+                           pacLearnSpecAndVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:unsats))) *)
       ) else (
         let our_output = open_out (smtfile ^ ".xour") in
           print_cnf our_output res ;

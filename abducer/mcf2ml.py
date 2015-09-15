@@ -97,6 +97,11 @@ pred = operatorPrecedence(stmt, [
 
 ###
 
+RAND_TEST_COUNT = 8192
+NO_DEF_FEATURES = True
+INITIAL_CHK_SAT = False
+ESCHER_MODE = False
+
 def genTests():
     if os.path.isfile('final_tests'):
         with open('final_tests') as f:
@@ -134,15 +139,23 @@ if __name__ == "__main__":
     print("\n\nlet n_arg_gen %s = (fun rand -> (%s))" % (' '.join('g%d' % i for i in range(len(uvars))), ', '.join('g%d rand' % i for i in range(len(uvars)))))
     print("\n\nlet n_arg_dumper %s (%s) = \"(\" ^ %s ^ \")\"" % (' '.join('d%d' % i for i in range(len(uvars))), ', '.join('v%d' % i for i in range(len(uvars))), ' ^ ", " ^ '.join('(d%d v%d)' % (i, i) for i in range(len(uvars)))))
     print("\n\nlet f = fun (%s) -> %s" % (','.join(uvars), ml))
-    print("\nlet f_tests () = generate ~n:8192 (n_arg_gen %s)" % (' '.join(('string' if v in string_vars else 'sint') for v in uvars)))
+    print("\nlet f_tests () = generate ~n:%d (n_arg_gen %s)" % (RAND_TEST_COUNT, ' '.join(('string' if v in string_vars else 'sint') for v in uvars)))
     print("\nlet f_dumper = n_arg_dumper %s" % (' '.join(('string_dumper' if v in string_vars else 'int_dumper') for v in uvars)))
     print("\nlet consts = [%s]" % ('; '.join("VString %s" % c if type(c) is str else "VInt %d" % c for c in uniq_consts)))
-    print("\nlet def_features = (*PYF:x|T(%s)*)" % ','.join(v + (':S' if v in string_vars else ':I') for v in uvars))
-    #print("\nlet def_features = []")
+    if NO_DEF_FEATURES:
+        print("\nlet def_features = []")
+    else:
+        print("\nlet def_features = (*PYF:x|T(%s)*)" % ','.join(v + (':S' if v in string_vars else ':I') for v in uvars))
     print("\nlet my_features = []")
     print("\nlet post_cond = ((fun x r -> match r with Bad _ -> false | Ok z -> z), \"true\")")
-    print("\nlet tests = (%s) :: %s" % (', '.join(model[v] for v in uvars), genTests()))
+    if INITIAL_CHK_SAT:
+        print("\nlet tests = (%s) :: %s" % (', '.join(model[v] for v in uvars), genTests()))
+    else:
+        print("\nlet tests = %s" % genTests())
     print("\n\nlet typo = [ %s ]" % (' ; '.join(('TString' if v in string_vars else 'TInt') for v in uvars)))
     print("\nlet trans = fun (%s) -> [ %s ]" % (','.join(uvars), ' ; '.join(('of_string ' if v in string_vars else 'of_int ') + v for v in uvars)))
     print("\nlet test_trans = fun (l) -> List.(%s)" % ' , '.join(('(%s (nth l %d))' % (('from_string' if v in string_vars else 'from_int'), i)) for (i,v) in enumerate(uvars)))
-    print("\n\n\nlet () = print_cnf stdout (pacLearnSpecNSATVerify ~dump:(\"%s\", f_dumper) ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % (sys.argv[1], sys.argv[1]))
+    if ESCHER_MODE:
+        print("\n\n\nlet () = output_string stdout (snd (escherSynthAndVerify ~dump:(\"%s\", f_dumper) ~consts:consts f tests post_cond (typo, trans) test_trans \"%s\"))" % (sys.argv[1], sys.argv[1]))
+    else:
+        print("\n\n\nlet () = print_cnf stdout (pacLearnSpecAndVerify ~dump:(\"%s\", f_dumper) ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % (sys.argv[1], sys.argv[1]))

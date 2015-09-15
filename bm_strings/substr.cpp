@@ -9,19 +9,19 @@ int main() {
 
   assume(len(s0) > 0);
 
-  i = unknown(0, len(s0)-1);
-  j = unknown(i, len(s0)-1);
+  i = unknown(0, len(s0) - 1);
+  j = unknown(0, len(s0) - i -1);
 
   x = i;
   set(r, "");
 
-  while(x <= j) {
+  while(x < i + j) {
     PRINT_VARS();
     set(r, cat(r, get(s0, x)));
     ++x;
   }
   PRINT_VARS();
 
-  assert(eql(r, sub(s0, i, j - i + 1)));
+  assert(eql(r, sub(s0, i, j)));
   return 0;
 }

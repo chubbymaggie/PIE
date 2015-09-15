@@ -33,7 +33,7 @@ let rec divide_depth f arity target acc =
 
 
 (* Upper bound on the heuristic value a solution may take *)
-let max_h = 12
+let max_h = 16
 
 let expand_ = ref "size"
 let goal_graph = ref false
@@ -168,8 +168,8 @@ let solve_impl ?ast:(ast=false) task consts =
   in
   let zero = ((("0", (fun ars -> VInt 0)), Leaf "0"), Array.make vector_size (VInt 0)) in
   let nil = ((("[]", (fun ars -> VList [])), Leaf "[]"), Array.make vector_size (VList [])) in
-  let btrue = ((("T", (fun ars -> VBool true)), Leaf "true"), Array.make vector_size (VBool true)) in
-  let bfalse = ((("F", (fun ars -> VBool false)), Leaf "false"), Array.make vector_size (VBool false)) in
+  let btrue = ((("true", (fun ars -> VBool true)), Leaf "true"), Array.make vector_size (VBool true)) in
+  let bfalse = ((("false", (fun ars -> VBool false)), Leaf "false"), Array.make vector_size (VBool false)) in
   if !quiet then () else (
     print_endline ("Inputs: ");
     List.iter (fun v -> print_endline ("   " ^ (Vector.string v))) task.inputs;
@@ -223,7 +223,7 @@ let solve_impl ?ast:(ast=false) task consts =
   let default_char = [cequal]
 
   let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
-  let default_string = [str_eq; str_sub; str_get; str_concat; str_contains; str_index_of; str_len; str_replace]
+  let default_string = [str_eq; str_sub; str_get; str_concat; str_contains; (* str_index_of; *) str_len; str_replace]
 
   let default_components = default_int @ default_bool @ default_string
   (* default_int @ default_bool @ default_list @ default_string @ default_char *)
