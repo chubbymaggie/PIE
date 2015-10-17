@@ -27,7 +27,7 @@ mv f "$FILE"
 echo -ne "   [#] Simplified query: $SIM_QUERY\n" >&2
 
 # MCF Query to OCaml code
-./mcf2ml "$FILE" > "$FILE.tml"
+./mcf2ml "$FILE" "$2" > "$FILE.tml"
 if [[ $? != 0 ]]; then
   echo "false" > "$FILE.sinf"
   exit 1

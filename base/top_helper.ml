@@ -6,7 +6,7 @@
 #load "escher_components.cmo"
 #load "escher_synth.cmo"
 #load "specInfer.cmo"
-#load "specify.cmo"
+(* #load "specify.cmo" *)
 #load "testGen.cmo"
 
 open Batteries
@@ -16,5 +16,5 @@ open Escher_components
 open Escher_synth
 open QCheck.Arbitrary
 open SpecInfer
-open Specify
+(* open Specify *)
 open TestGen

@@ -20,7 +20,7 @@ PredicateNode getAbductionResultFor(const PredicateNode pred) {
 
   string command = ABDUCER_PATH + "/abduce.sh ";
   command += target;
-  command += " > /dev/null";
+  command += " count > /dev/null";
   system(command.c_str());
 
   command = WORKING_PATH + "/mcf2xml ";
@@ -41,7 +41,7 @@ bool chkVALID(const PredicateNode pred, bool add_counter = false) {
 
   string command = WORKING_PATH + "/chkVALID ";
   command += target;
-  command += " 0 > ";
+  command += " 0 " + WORKING_PATH + "/count" + " > ";
   command += target + ".res";
   system(command.c_str());
 

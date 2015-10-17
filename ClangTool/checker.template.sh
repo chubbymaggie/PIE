@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAX_RUNS=240
+MAX_RUNS=256
 MAX_TESTS=6400
 
 ROOT="`dirname \"$0\"`"

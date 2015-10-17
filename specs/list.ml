@@ -5,6 +5,7 @@
 (*** List.length ***)
 
 let lengthRes = fun () ->
+let name = "length" in
 let f = List.length in
 let tests = intList_tests () in
 let typ = [ TList ] in
@@ -16,7 +17,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("length", intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -24,6 +25,7 @@ let my_postconditions = [] in
 (*** List.hd ***)
 
 let hdRes = fun () ->
+let name = "hd" in
 let f = List.hd in
 let tests = intList_tests () in
 let typ = [ TList ] in
@@ -35,7 +37,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("hd", intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -45,6 +47,7 @@ let my_postconditions = [] in
 let lnth = fun (l,n) -> List.nth l n;;
 
 let nthRes = fun () ->
+let name = "nth" in
 let f = lnth in
 let tests = intList_int_tests () in
 let typ = [ TList ; TInt ] in
@@ -56,7 +59,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("nth", intList_int_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_int_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -66,6 +69,7 @@ let my_postconditions = [] in
 let lmem = fun (m,l) -> List.mem m l;;
 
 let memRes = fun () ->
+let name = "mem" in
 let f = lmem in
 let tests = int_intList_tests () in
 let typ = [ TInt ; TList ] in
@@ -77,7 +81,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("mem", int_intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int_intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -87,6 +91,7 @@ let my_postconditions = [] in
 (*** List.tl ***)
 
 let tlRes = fun () ->
+let name = "tl" in
 let f = List.tl in
 let tests = intList_tests () in
 let typ = [ TList ] in
@@ -98,8 +103,8 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("tl", intList_dumper) f tests features postconds trans
-;;
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+;
 
 
 
@@ -108,6 +113,7 @@ let my_postconditions = [] in
 let lappend = fun (l0, l1) -> List.append l0 l1;;
 
 let appendRes = fun () ->
+let name = "append" in
 let f = lappend in
 let tests = intList_intList_tests () in
 let typ = [ TList ; TList ] in
@@ -122,7 +128,7 @@ let my_postconditions = [
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("append", intList_intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -132,6 +138,7 @@ let my_postconditions = [
 let lcombine = fun (l1,l2) -> List.combine l1 l2;;
 
 let combineRes = fun () ->
+let name = "combine" in
 let f = lcombine in
 let tests = intList_intList_tests () in
 let typ = [ TList ; TList ] in
@@ -143,7 +150,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("combine", intList_intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -151,6 +158,7 @@ let my_postconditions = [] in
 (*** List.concat ***)
 
 let concatRes = fun () ->
+let name = "concat" in
 let f = List.concat in
 let tests = intListList_tests () in
 let typ = [ TList ] in
@@ -166,7 +174,7 @@ let my_postconditions = [
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("concat", intListList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intListList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -174,6 +182,7 @@ let my_postconditions = [
 (*** List.flatten ***)
 
 let flattenRes = fun () ->
+let name = "flatten" in
 let f = List.flatten in
 let tests = intListList_tests () in
 let typ = [ TList ] in
@@ -189,7 +198,7 @@ let my_postconditions = [
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("flatten", intListList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intListList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -203,6 +212,7 @@ let testConcatFlattenEquivalence = fun () ->
 (*** List.rev ***)
 
 let revRes = fun () ->
+let name = "rev" in
 let f = List.rev in
 let tests = intList_tests () in
 let typ = [ TList ] in
@@ -214,7 +224,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("rev", intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -224,6 +234,7 @@ let my_postconditions = [] in
 let lrev_append = fun (l0, l1) -> List.rev_append l0 l1;;
 
 let rev_appendRes = fun () ->
+let name = "rev_append" in
 let f = lrev_append in
 let tests = intList_intList_tests () in
 let typ = [ TList ; TList ] in
@@ -238,7 +249,7 @@ let my_postconditions = [
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("rev_append", intList_intList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -246,6 +257,7 @@ let my_postconditions = [
 (*** List.split ***)
 
 let splitRes = fun () ->
+let name = "split" in
 let f = List.split in
 let tests = int_int_List_tests () in
 let typ = [] in
@@ -257,5 +269,5 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("split", int_int_List_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int_int_List_dumper) ~record:name f tests features postconds trans
 ;;

@@ -7,6 +7,7 @@
 let scopy = String.copy
 
 let scopyRes = fun () ->
+let name = "scopy" in
 let f = scopy in
 let tests = string_tests () in
 let typ = [ TString ] in
@@ -18,7 +19,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("scopy", string_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -32,6 +33,7 @@ let sget = (fun (s, i) -> String.get s i)
    they are equivalent given the fact that the length of a string is never negative.
 *)
 let sgetRes = fun () ->
+let name = "sget" in
 let f = sget in
 let tests = string_int_tests () in
 let typ = [ TString ; TInt ] in
@@ -43,7 +45,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sget", string_int_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_int_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -80,6 +82,7 @@ let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
 *)
 
 let ssubRes = fun () ->
+let name = "ssub" in
 let f = ssub in
 let tests = string_int_int_tests () in
 let typ = [ TString ; TInt ; TInt ] in
@@ -92,7 +95,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("ssub", string_int_int_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_int_int_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -101,6 +104,7 @@ let my_postconditions = [] in
 let smake = (fun (i,c) -> String.make i c)
 
 let smakeRes = fun () ->
+let name = "smake" in
 let f = smake in
 let tests = int_char_tests () in
 let typ = [ TInt ; TChar ] in
@@ -112,7 +116,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("smake", int_char_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int_char_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -121,6 +125,7 @@ let my_postconditions = [] in
 let sindex = (fun (s,c) -> String.index s c)
 
 let sindexRes = fun () ->
+let name = "sindex" in
 let f = sindex in
 let tests = string_char_tests () in
 let typ = [ TString ; TChar ] in
@@ -133,7 +138,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sindex", string_char_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_char_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -142,6 +147,7 @@ let my_postconditions = [] in
 let sindexFrom = (fun (s,i,c) -> String.index_from s i c)
 
 let sindexFromRes = fun () ->
+let name = "sindexFrom" in
 let f = sindexFrom in
 let tests = string_int_char_tests () in
 let typ = [ TString ; TInt; TChar ] in
@@ -154,7 +160,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sindexFrom", string_int_char_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_int_char_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -163,6 +169,7 @@ let my_postconditions = [] in
 let sconcat = (fun (s,sl) -> String.concat s sl)
 
 let sconcatRes = fun () ->
+let name = "sconcat" in
 let f = sconcat in
 let tests = string_stringList_tests () in
 let typ = [ TString ; TList ] in
@@ -174,6 +181,6 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:("sconcat", string_stringList_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_stringList_dumper) ~record:name f tests features postconds trans
 ;;
 

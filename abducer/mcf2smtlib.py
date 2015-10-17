@@ -215,5 +215,16 @@ def run_CVC4_internal(smtdata, needModel = True):
     except:
         return 'ERROR'
 
+def increment_record(name, typ):
+    filename = '%s.%s' % (name, typ)
+    if not os.path.exists(filename):
+        with open(filename, 'a') as f:
+            f.write('0\n')
+
+    with open(filename, 'r+') as f:
+        val = int(f.read())
+        f.seek(0)
+        f.write("%d\n" % (val + 1))
+
 if __name__ == "__main__":
     print(smtlib2_string_from_file('assert', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1"))

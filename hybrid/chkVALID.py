@@ -9,7 +9,7 @@ from Queue import Empty
 
 from mcf2smtlib import vars_from_smtlib, smtlib2_string_from_file, substitute_model, \
                        run_CVC4_internal, run_Z3Str2_internal, z3str_to_cvc4, \
-                       epsilon, timeout, devnull
+                       epsilon, timeout, devnull, increment_record
 
 def runZ3Str2(sema, smtdata, queue):
     with sema:
@@ -99,9 +99,13 @@ if __name__ == '__main__':
             raise Exception
 
         final_result = vals.popitem()[1]
+        if len(sys.argv) > 3:
+            increment_record(sys.argv[3], final_result.split()[0].lower())
 
     except Exception:
         final_result = unknownAction(smtdata)
+        if len(sys.argv) > 3:
+            increment_record(sys.argv[3], 'unk')
 
     finally:
         # Stop the running verifiers

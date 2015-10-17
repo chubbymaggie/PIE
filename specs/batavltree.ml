@@ -5,6 +5,7 @@
 let avlcreate = fun (l,v,r) -> BatAvlTree.create l v r;;
 
 let createRes = fun () ->
+let name = "create" in
 let f = avlcreate in
 let tests = iavltree_int_iavltree_tests () in
 let typ = [ TInt ; TInt ; TInt ] in
@@ -28,5 +29,5 @@ let my_postconditions = [
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-  resolveAndPacLearnSpec ~dump:("avlcreate", iavltree_int_iavltree_dumper) f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, iavltree_int_iavltree_dumper) ~record:name f tests features postconds trans
 ;;

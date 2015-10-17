@@ -156,6 +156,6 @@ if __name__ == "__main__":
     print("\nlet trans = fun (%s) -> [ %s ]" % (','.join(uvars), ' ; '.join(('of_string ' if v in string_vars else 'of_int ') + v for v in uvars)))
     print("\nlet test_trans = fun (l) -> List.(%s)" % ' , '.join(('(%s (nth l %d))' % (('from_string' if v in string_vars else 'from_int'), i)) for (i,v) in enumerate(uvars)))
     if ESCHER_MODE:
-        print("\n\n\nlet () = output_string stdout (snd (escherSynthAndVerify ~dump:(\"%s\", f_dumper) ~consts:consts f tests post_cond (typo, trans) test_trans \"%s\"))" % (sys.argv[1], sys.argv[1]))
+        print("\n\n\nlet () = output_string stdout (snd (escherSynthAndVerify ~dump:(\"%s\", f_dumper) ~record:\"%s\" ~consts:consts f tests post_cond (typo, trans) test_trans \"%s\"))" % (sys.argv[1], sys.argv[2], sys.argv[1]))
     else:
-        print("\n\n\nlet () = print_cnf stdout (pacLearnSpecAndVerify ~dump:(\"%s\", f_dumper) ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % (sys.argv[1], sys.argv[1]))
+        print("\n\n\nlet () = print_cnf stdout (pacLearnSpecAndVerify ~dump:(\"%s\", f_dumper) ~record:\"%s\" ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % (sys.argv[1], sys.argv[2], sys.argv[1]))

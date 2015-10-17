@@ -22,6 +22,19 @@ exception NoSuchFunction
 exception BadCounterExample
 
 let conflict_counter = ref 0
+let record_file = ref ""
+
+let increment_record filename =
+    (if Sys.file_exists filename then () else
+        let oc = open_out filename in (
+            output_string oc "0\n";
+            close_out oc));
+    let ic = open_in filename in
+        let value = int_of_string (input_line ic) in (
+            close_in ic;
+            let oc = open_out filename in (
+                output_string oc ((string_of_int (value + 1)) ^ "\n");
+                close_out oc))
 
 let string_of_truthAssignment ta =
   "[" ^ (BatHashtbl.fold (fun i b str -> str ^ "(" ^ (string_of_int i) ^ "," ^ (string_of_bool b) ^ "); ") ta "") ^ "]"
@@ -486,12 +499,13 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
                 components = default_components
             } in
             let solutions = solve xtask consts in
-              if fname = "" then () else (
+              (if fname = "" then () else
                 let conflict_log = open_out_gen [Open_append] 0 (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
                   conflict_counter := !conflict_counter + 1;
                   output_string conflict_log "\nSolutions::\n";
                   List.iter (fun (a,_) -> output_string conflict_log a; output_string conflict_log "\n") solutions;
                   close_out conflict_log;);
+              (if !record_file = "" then () else increment_record (!record_file ^ ".escher"));
               List.map (fun (annot, func) -> (fun data -> (func (snd trans) data) = VBool true), annot) solutions)
 
 
@@ -590,10 +604,11 @@ let rec pacLearnSpecIncrK ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a
     else (try pacLearnSpecIncrK ~k:(k+1) f tests features post with ClauseEncodingError -> (Some [[Pos "~~ FAILED ~~"]], snd post))
 
 
-let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) (f: 'a -> 'b) (tests: 'a list)
+let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) (f: 'a -> 'b) (tests: 'a list)
                            (features : (('a -> bool) * 'c) list) (posts : (('a -> 'b result -> bool) * 'c) list)
                            (trans : typ list * ('a -> value list)) : ('c cnf option * 'c) list =
 
+  record_file := record;
   if fst dump = "" then () else (
     conflict_counter := 0;
     Sys.command("rm -rf " ^ (fst dump) ^ ".*.con");
@@ -605,14 +620,16 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) (f: '
     List.map (fun post -> pacLearnSpecIncrK ~k:k f tests features post) posts
 
 
-let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
-                             (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list))
-                             (trans_test: 'z -> 'a) (smtfile : string): (('a -> bool) * string) =
+let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) (f : 'a -> 'b)
+                             (tests : 'a list) (post : ('a -> 'b result -> bool) * 'c)
+                             (trans : typ list * ('a -> value list)) (trans_test: 'z -> 'a)
+                             (smtfile : string): (('a -> bool) * string) =
 
-  if fst dump = "" then () else (
+  record_file := record;
+  (if fst dump = "" then () else (
     let test_file = open_out ((fst dump) ^ ".tests") in
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
-      close_out test_file);
+      close_out test_file));
 
   let target = {
         domain = (fst trans);
@@ -631,6 +648,7 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(consts=[]) (f : 'a ->
         components = orc :: andc :: default_components
     } in
     let sol = List.hd (solve xtask consts) in
+      (if !record_file = "" then () else increment_record (!record_file ^ ".escher"));
       let our_output = open_out (smtfile ^ ".xour") in
         output_string our_output (fst sol) ;
         close_out our_output ;
@@ -638,7 +656,7 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(consts=[]) (f : 'a ->
         prerr_string ("\r    [?] Verifying --- ");
         let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
         prerr_string "                            \n" ; flush_all();
-        Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour") ;
+        Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 " ^ !record_file ^ "> " ^ smtfile ^ ".zour") ;
         let res_file = open_in (smtfile ^ ".zour") in
           if input_line res_file = "UNSAT" then (close_in res_file ; ((fun data -> ((snd sol) (snd trans) data) = VBool true), (fst sol)))
           else (close_in res_file ;
@@ -651,16 +669,18 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(consts=[]) (f : 'a ->
   ) in helper tests
 
 
-let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?(unsats=[]) (f : 'a -> 'b) (tests : 'a list)
-                               (features : (('a -> bool) * 'c) list) (post : ('a -> 'b result -> bool) * 'c)
-                               (trans : typ list * ('a -> value list)) (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
+let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(unsats=[])
+                              (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
+                              (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list))
+                              (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
 
-  if fst dump = "" then () else (
+  record_file := record;
+  (if fst dump = "" then () else (
     conflict_counter := 0;
     Sys.command("rm -rf " ^ (fst dump) ^ ".*.con");
     let test_file = open_out ((fst dump) ^ ".tests") in
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
-      close_out test_file);
+      close_out test_file));
 
   let rec helper k unsats tests features = (
     prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
@@ -701,7 +721,7 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(consts=[]) ?(
           prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
           let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
           prerr_string "                            \n" ; flush_all();
-          Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 > " ^ smtfile ^ ".zour") ;
+          Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 " ^ !record_file ^ " > " ^ smtfile ^ ".zour") ;
           let res_file = open_in (smtfile ^ ".zour") in
             if input_line res_file = "UNSAT" then (close_in res_file ; res)
             else (close_in res_file ;

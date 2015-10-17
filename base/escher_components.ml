@@ -21,7 +21,7 @@ let apply_component (c : component) (args : Vector.t list) =
   || (c.name = "subone" && (match (snd (fst (List.hd args)))
                             with Node ("addone", _) -> true | _ -> false))
   || (c.name = "mod" && (match (snd (fst List.(hd (tl args))))
-                         with Node _ -> true | Leaf x -> (try ((int_of_string x); false) with _ -> true)))
+                         with Node _ -> true | Leaf x -> not (BatString.starts_with x "const_")))
   || (c.name = "mult" && (match ((snd (fst List.(hd args))), (snd (fst List.(hd (tl args)))))
                           with (Node _, Node _) -> true
                              | (Node _, Leaf a) -> not (BatString.starts_with a "const_")
@@ -150,12 +150,12 @@ let equal = {
 
 let modulo = {
     domain = [TInt;TInt];
-    codomain = TBool;
+    codomain = TInt;
     apply = (function
-             | [VInt x;VInt y] -> if y < 2 then VError else VBool (x mod y = 0)
+             | [VInt x;VInt y] -> if y < 2 then VError else VInt (((x mod y) + y) mod y)
              | _ -> VError);
     name = "mod";
-    dump = (fun l -> "(" ^ (List.hd l) ^ " % " ^ List.(hd (tl l)) ^ " = 0)")
+    dump = (fun l -> "(" ^ (List.hd l) ^ " % " ^ List.(hd (tl l)) ^ ")")
 }
 
 
