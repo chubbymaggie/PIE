@@ -54,4 +54,13 @@ rm -rf header tests
 # Call the monster
 cd "$ROOT"
 echo -ne "\n(*) Checking loop invariant:\n"
-bin/pinvgen --extra-arg=--std=c++11 "$1" --
+time bin/pinvgen --extra-arg=--std=c++11 "$1" --
+
+COUNTER_PREFIX="count"
+cd "$WORKING_PATH"
+echoi -ne "\n\n--- Processed $FILE ---\n"
+echo -n "SAT: " ; cat $COUNTER_PREFIX.sat
+echo -n "UNSAT: " ; cat $COUNTER_PREFIX.unsat
+echo -n "UNKNOWN: " ; cat $COUNTER_PREFIX.unk
+echo -n "ESCHER: " ; cat $COUNTER_PREFIX.escher
+cd -

@@ -219,7 +219,7 @@ let solve_impl ?ast:(ast=false) task consts =
 
   let default_int = [plus;mult;minus;geq;leq;lt;gt;equal;modulo ; addone;subone (*; iabs *)]
   let default_list = [empty;tail;head;cat;cons;length;reverse;listEq]
-  let default_bool = [notc;orc]
+  let default_bool = [notc;orc;andc]
   let default_char = [cequal]
 
   let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]

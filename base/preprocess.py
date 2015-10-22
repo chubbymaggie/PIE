@@ -133,8 +133,8 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                          [('(fun %s %s-> %s > %s)', '"(%s > %s)"'),
                           ('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
                          + ifHuge([('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
-        if var2 is None and mode == 'F':
-            preds.extend(ifHuge([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"(%s %% 2 = 0)"' % nvar1[1])]))
+#        if var2 is None and mode == 'F':
+#            preds.extend(ifHuge([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"(%s %% 2 = 0)"' % nvar1[1])]))
 
     elif typ1[0][0] == CT and typ2[0][0] == CT and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),

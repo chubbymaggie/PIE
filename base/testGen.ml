@@ -59,11 +59,11 @@ let quint_dumper d1 d2 d3 d4 d5 (a, b, c, d, e) = "(" ^ (d1 a) ^ ", " ^ (d2 b) ^
  * Constants
  ***********)
 
-let test_size = 10000
+let test_size = 6400
 
-let sint = (-3) -- 4
-let sposInt = 0 -- 6
-let string = string_len (0 -- 12)
+let sint = (-4) -- 5
+let sposInt = 0 -- 4
+let string = string_len (0 -- 13)
 
 
 
@@ -144,8 +144,6 @@ let distinct_string_int_int_int_int_tests () = generate ~n:test_size distinct_st
 (**********
  * AVL Tree
  **********)
-
-let test_size = 2048
 
 let iavltree = tree (odds 4 5 (return true) (return false)) BatAvlTree.make_tree BatAvlTree.empty sint
 let iavltree_int_iavltree = triple iavltree sint iavltree

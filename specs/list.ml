@@ -104,7 +104,7 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
-;
+;;
 
 
 

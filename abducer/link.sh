@@ -22,26 +22,16 @@ ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
 # Solvers:
 #
-#  Mistral        : (mistral)
 #  Z3             : (z3)
 #  CVC4           : (cvc4)
 #  Z3-Str2 + CVC4 : (hybrid)
 
 SOLVER="hybrid"
 
-EXT=""
-if [ "$SOLVER" != "mistral" ]; then
-  EXT=".py"
-else
-  cd "$ROOT/../mistral"
-  make
-  cd "$TARGET"
-fi
-
-ln -fs "$ROOT/../$SOLVER/chkSAT$EXT"      chkSAT
-ln -fs "$ROOT/../$SOLVER/chkVALID$EXT"    chkVALID
-ln -fs "$ROOT/../$SOLVER/simplify$EXT"    simplify
-ln -fs "$ROOT/../$SOLVER/verify$EXT"      verify
+ln -fs "$ROOT/../$SOLVER/chkSAT.py"      chkSAT
+ln -fs "$ROOT/../$SOLVER/chkVALID.py"    chkVALID
+ln -fs "$ROOT/../$SOLVER/simplify.py"    simplify
+ln -fs "$ROOT/../$SOLVER/verify.py"      verify
 
 ln -fs "$ROOT/mcf2ml.py"        mcf2ml
 ln -fs "$ROOT/mcf2xml.py"       mcf2xml
