@@ -3,13 +3,17 @@
 ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
-if [[ ! -f "$1" ]]; then
-  echo "--- File $1 doesn't exist. ABORT ---"
+USE_TOOL="$1"
+SOURCE_FILE="$2"
+RECORD_PREFIX="$3"
+
+if [[ ! -f "$SOURCE_FILE" ]]; then
+  echo "--- File $SOURCE_FILE doesn't exist. ABORT ---"
   exit 1
 fi
 
-TARGET="`dirname \"$1\"`"
-FILE="`basename \"$1\"`"
+TARGET="`dirname \"$SOURCE_FILE\"`"
+FILE="`basename \"$SOURCE_FILE\"`"
 
 "$ROOT/link.sh" "$TARGET"
 cd "$TARGET"
@@ -27,7 +31,7 @@ mv f "$FILE"
 echo -ne "   [#] Simplified query: $SIM_QUERY\n" >&2
 
 # MCF Query to OCaml code
-./mcf2ml "$FILE" "$2" > "$FILE.tml"
+./mcf2ml "$FILE" "$RECORD_PREFIX" "$USE_TOOL" > "$FILE.tml"
 if [[ $? != 0 ]]; then
   echo "false" > "$FILE.sinf"
   exit 1

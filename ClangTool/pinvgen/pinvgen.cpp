@@ -14,15 +14,15 @@
 #include "wp_computation.h"
 
 using namespace llvm;
+
 using namespace clang::ast_matchers;
 using namespace clang::tooling;
 using namespace clang::ento;
 using namespace clang;
+
 using namespace std;
 
 string MAIN_FILENAME;
-string ABDUCER_PATH = "__ABDUCER_PATH_FROM_SETUP_SCRIPT__";
-string WORKING_PATH = "__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__";
 
 long COUNT = 0, ABDUCTION_COUNT = 0, VERIFICATION_COUNT = 0;
 
@@ -49,7 +49,6 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
 
           StringRef main_path = Result.SourceManager->getFilename(fd->getLocation());
           MAIN_FILENAME = main_path.drop_front(main_path.rfind('/') + 1).str();
-          WORKING_PATH += "/" + MAIN_FILENAME;
 
           CFG *cfg = mgr.getCFG(fd);
           CFGReverseBlockReachabilityAnalysis *reachables =
@@ -108,12 +107,28 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
     }
 };
 
-static llvm::cl::OptionCategory PInvGenCategory("pinvgen options");
+string ABDUCER_PATH, WORKING_PATH;
+static cl::opt<string> opt_ABDUCER_PATH("abducer", cl::desc("Location of abducer script"), cl::value_desc("path/to/abduce.sh"), cl::Required);
+static cl::opt<string> opt_WORKING_PATH("wpath", cl::desc("Working path (where logs are generated)"), cl::value_desc("directory"), cl::Required);
+
+enum ToolType { escher, pie };
+static cl::opt<ToolType> opt_USE_TOOL("tool", cl::desc("Inference engine to use:"),
+        cl::values(
+            clEnumVal(escher, "Escher"),
+            clEnumVal(pie, "PIE"),
+            clEnumValEnd
+        ), cl::init(pie));
+
+static cl::OptionCategory PInvGenCategory("pinvgen options");
 static cl::extrahelp CommonHelp(CommonOptionsParser::HelpMessage);
 
 int main(int argc, const char **argv) {
   CommonOptionsParser op(argc, argv, PInvGenCategory);
   ClangTool Tool(op.getCompilations(), op.getSourcePathList());
+
+  WORKING_PATH = opt_WORKING_PATH;
+  if(opt_USE_TOOL == escher)    ABDUCER_PATH = opt_ABDUCER_PATH + " escher ";
+  else if(opt_USE_TOOL == pie)  ABDUCER_PATH = opt_ABDUCER_PATH + " pie ";
 
   MatchFinder Finder;
   InvariantGenerator InvGen;

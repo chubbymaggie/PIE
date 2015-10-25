@@ -100,7 +100,7 @@ pred = operatorPrecedence(stmt, [
 RAND_TEST_COUNT = 8192
 NO_DEF_FEATURES = True
 INITIAL_CHK_SAT = False
-ESCHER_MODE = False
+ESCHER_MODE = True
 
 def genTests():
     if os.path.isfile('final_tests'):
@@ -112,7 +112,13 @@ def genTests():
     else:
         return '(f_tests ())'
 
+# argv[1] = filename
+# argv[2] = record filename
+# argv[3] = Escher mode?
+
 if __name__ == "__main__":
+    ESCHER_MODE = True if len(sys.argv) > 3 and sys.argv[3] == 'escher' else False
+
     with open(sys.argv[1]) as f:
         smt = (f.readlines()[2]).strip()
     print('(* SMT --- %s --- END *)' % smt)

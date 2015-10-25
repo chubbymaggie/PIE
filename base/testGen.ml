@@ -146,9 +146,11 @@ let distinct_string_int_int_int_int_tests () = generate ~n:test_size distinct_st
  **********)
 
 let iavltree = tree (odds 4 5 (return true) (return false)) BatAvlTree.make_tree BatAvlTree.empty sint
+let iavltree_iavltree = pair iavltree iavltree
 let iavltree_int_iavltree = triple iavltree sint iavltree
 
 let iavltree_tests () = generate ~n:test_size iavltree
+let iavltree_iavltree_tests () = generate ~n:test_size iavltree_iavltree
 let iavltree_int_iavltree_tests () = generate ~n:test_size iavltree_int_iavltree
 
 let rec avltree_dumper d avl =
@@ -156,4 +158,5 @@ let rec avltree_dumper d avl =
   else "{" ^ (d (BatAvlTree.root avl)) ^ " " ^ (avltree_dumper d (BatAvlTree.left_branch avl)) ^ " " ^ (avltree_dumper d (BatAvlTree.right_branch avl)) ^ "}"
 
 let iavltree_dumper = avltree_dumper int_dumper
+let iavltree_iavltree_dumper = pair_dumper iavltree_dumper iavltree_dumper
 let iavltree_int_iavltree_dumper = triple_dumper iavltree_dumper int_dumper iavltree_dumper

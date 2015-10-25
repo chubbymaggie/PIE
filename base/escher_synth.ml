@@ -202,7 +202,7 @@ let solve_impl ?ast:(ast=false) task consts =
     begin match final_goal.status with
       | Closed p -> final_goal.status <- Open
       | Open -> () end;
-    if !quiet then () else print_endline ("At " ^ (string_of_int i));
+    (if !quiet then prerr_string else print_endline) (" @" ^ (string_of_int i)); flush_all();
     if !noisy then begin
       let print_goal k _ = print_endline (" * " ^ (varray_string k)) in
         print_endline ("Goals: ");

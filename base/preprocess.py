@@ -8,7 +8,8 @@ import types
 
 ''' Parser for type annotations
 
-type = B | I | C | S | L(type) | T(name0:type, name1:type, ...)
+type = [B]ool | [I]nt | [C]har | [S]tring | [L]ist(type)
+     | t[R]ee(type) | [T]uple(name0:type, name1:type, ...)
 
 '''
 
@@ -17,8 +18,8 @@ from pyparsing import alphanums, delimitedList, Forward, Group, Keyword, nums, S
 any_type = Forward()
 
 LPAR, RPAR = map(Suppress, '()')
-BT, IT, CT, ST, LT, TT = TYPES = 'BICSLT'
-BKW, IKW, CKW, SKW, LKW, TKW = map(Keyword, TYPES)
+BT, IT, CT, ST, LT, RT, TT = TYPES = 'BICSLRT'
+BKW, IKW, CKW, SKW, LKW, RKW, TKW = map(Keyword, TYPES)
 
 bool_type = Group(BKW)
 int_type = Group(IKW)
@@ -30,11 +31,12 @@ atom_types = comp_type | bool_type | int_type | char_type | str_type
 ATOM_TYPES = [BT, IT, CT, ST]
 
 list_type = Group(LKW + LPAR + Group(any_type) + RPAR)
+tree_type = Group(RKW + LPAR + Group(any_type) + RPAR)
 tuple_type = Group(TKW + LPAR + Group(delimitedList(Group(Word(alphanums) + ':' + any_type))) + RPAR)
 
 COMPLEX_TYPES = [LT, TT]
 
-any_type << (atom_types | list_type | tuple_type)
+any_type << (atom_types | list_type | tree_type | tuple_type)
 
 ### End of pyparsing parser for type annotations ###
 
@@ -69,7 +71,8 @@ def getProperties(fromTyp, toTyp):
     try:
         return {
             ST: {IT: [("String.length", "#len")]},
-            LT: {IT: [("List.length", "len")]}
+            LT: {IT: [("List.length", "len")]},
+            RT: {IT: [("BatAvlTree.height", "height")]}
         }[fromTyp][toTyp]
     except KeyError:
         return []

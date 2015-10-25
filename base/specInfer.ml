@@ -647,6 +647,7 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[
            Array.of_list (List.map (fun k -> (List.nth ((snd trans) k) i)) tests))) (fst trans);
         components = orc :: andc :: default_components
     } in
+    prerr_string ("\r    [*] Synthesizing --- "); flush_all();
     let sol = List.hd (solve xtask consts) in
       (if !record_file = "" then () else increment_record (!record_file ^ ".escher"));
       let our_output = open_out (smtfile ^ ".xour") in

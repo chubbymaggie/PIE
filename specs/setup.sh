@@ -3,7 +3,7 @@
 ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
-TARGET="`cd \"$1\" && pwd`"
+TARGET="`[[ -d \"$1\" ]] || mkdir -p \"$1\" && cd \"$1\" && pwd`"
 
 FILE="`realpath \"$2\"`"
 FILENAME="`basename \"$FILE\"`"
@@ -23,7 +23,8 @@ ln -fs "$ROOT/../base/makefile"       makefile
 
 ln -fs "$ROOT/../base/testGen.ml"     testGen.ml
 ln -fs "$ROOT/../base/postGen.ml"     postGen.ml
-ln -fs "$ROOT/../base/preprocess.py"  preprocess
+#ln -fs "$ROOT/../base/preprocess.py"  preprocess
+ln -fs "$ROOT/preprocess.py"  preprocess
 
 ./preprocess "$FILENAME" ALL > "T$FILENAME"
 

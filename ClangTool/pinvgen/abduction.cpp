@@ -18,8 +18,7 @@ PredicateNode getAbductionResultFor(const PredicateNode pred) {
     mcf_file << ("-\n-\n" + PredicateNode2MCF(pred));
   }
 
-  string command = ABDUCER_PATH + "/abduce.sh ";
-  command += target;
+  string command = ABDUCER_PATH + target;
   command += " count > /dev/null";
   system(command.c_str());
 

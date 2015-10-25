@@ -13,7 +13,131 @@
 ```
 precondition: ((x0g > (x2g + 1)) || (x2g > (x0g + 1)))
 postcondition: exception thrown
+
+precondition: (!(x0g > (x2g + 1)) && !(x2g > (x0g + 1)))
+postcondition: terminates normally
+
+precondition: true
+postcondition: (height(res) > 0)
+
+precondition: false
+postcondition: (height(res) = 0)
 ```
+
+#### BatAvlTree.make_tree (l,v,r)
+
+```
+precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: true
+postcondition: (height(res) > 0)
+
+precondition: false
+postcondition: (height(res) = 0)
+```
+
+#### BatAvlTree.concat (l,r)
+
+```
+precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (!(height(r) = 0) || !(height(l) = height(r)))
+postcondition: (height(res) > 0)
+
+precondition: (height(r) = 0) && (l = r)
+postcondition: (height(res) = 0)
+```
+
+#### BatAvlTree.left_branch (t)
+
+```
+precondition: (height(t) = 0)
+postcondition: exception thrown
+
+precondition: !((height(t) = 0))
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (height(res) > 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (height(res) = 0)
+
+precondition: false
+postcondition: (t = res)
+
+precondition: true
+postcondition: (height(t) > height(res))
+
+precondition: false
+postcondition: (height(t) = height(res))
+```
+
+#### BatAvlTree.right_branch (t)
+
+```
+precondition: (height(t) = 0)
+postcondition: exception thrown
+
+precondition: !((height(t) = 0))
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (height(res) > 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (height(res) = 0)
+
+precondition: false
+postcondition: (t = res)
+
+precondition: true
+postcondition: (height(t) > height(res))
+
+precondition: false
+postcondition: (height(t) = height(res))
+```
+
+#### BatAvlTree.split_leftmost (t)
+
+```
+precondition: (height(t) = 0)
+postcondition: exception thrown
+
+precondition: !((height(t) = 0))
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (height(r) > 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (height(r) = 0)
+```
+
+#### BatAvlTree.split_rightmost (t)
+
+```
+precondition: (height(t) = 0)
+postcondition: exception thrown
+
+precondition: !((height(t) = 0))
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (height(r) > 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (height(r) = 0)
+```
+
 
 
 ## String
