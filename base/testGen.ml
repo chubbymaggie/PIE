@@ -71,6 +71,8 @@ let string = string_len (0 -- 13)
  * Integer combinations
  **********************)
 
+let int_tests () = generate ~n:test_size sint
+
 let intList = list ~len:sposInt sint
 let intList_dumper = list_dumper int_dumper
 let intList_tests () = generate ~n:test_size intList
@@ -95,6 +97,11 @@ let int_int_List = list ~len:sposInt (pair sint sint)
 let int_int_List_dumper = list_dumper (pair_dumper int_dumper int_dumper)
 let int_int_List_tests () = generate ~n:test_size int_int_List
 
+let int__int_int_List = pair sint int_int_List
+let int__int_int_List_dumper = pair_dumper int_dumper int_int_List_dumper
+let int__int_int_List_tests () = generate ~n:test_size int__int_int_List
+
+
 
 
 (*********************
@@ -116,6 +123,10 @@ let string_char = pair string char
 let string_char_dumper = pair_dumper string_dumper char_dumper
 let string_char_tests () = generate ~n:test_size string_char
 
+let string_string = pair string string
+let string_string_dumper = pair_dumper string_dumper string_dumper
+let string_string_tests () = generate ~n:test_size string_string
+
 let string_int_int = triple string sint sint
 let string_int_int_dumper = triple_dumper string_dumper int_dumper int_dumper
 let string_int_int_tests () = generate ~n:test_size string_int_int
@@ -134,6 +145,14 @@ let string_stringList_tests () = generate ~n:test_size string_stringList
 
 let string_int_int_int_dumper = quad_dumper string_dumper int_dumper int_dumper int_dumper
 let string_int_int_int_int_dumper = quint_dumper string_dumper int_dumper int_dumper int_dumper int_dumper
+
+let string_int_string_int_int = quint string sint string sint sint
+let string_int_string_int_int_dumper = quint_dumper string_dumper int_dumper string_dumper int_dumper int_dumper
+let string_int_string_int_int_tests () = generate ~n:test_size string_int_string_int_int
+
+let string_int_int_char = quad string sint sint char
+let string_int_int_char_dumper = quad_dumper string_dumper int_dumper int_dumper char_dumper
+let string_int_int_char_tests () = generate ~n:test_size string_int_int_char
 
 let distinct_string_int_int_int = quad distinct_string sint sint sint
 let distinct_string_int_int_int_tests () = generate ~n:test_size distinct_string_int_int_int

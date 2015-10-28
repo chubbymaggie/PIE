@@ -23,8 +23,7 @@ ln -fs "$ROOT/../base/makefile"       makefile
 
 ln -fs "$ROOT/../base/testGen.ml"     testGen.ml
 ln -fs "$ROOT/../base/postGen.ml"     postGen.ml
-#ln -fs "$ROOT/../base/preprocess.py"  preprocess
-ln -fs "$ROOT/preprocess.py"  preprocess
+ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
 ./preprocess "$FILENAME" ALL > "T$FILENAME"
 

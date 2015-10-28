@@ -1,5 +1,67 @@
 #use "top_helper.ml"
 
+
+
+(*** BatAvlTree.check ***)
+
+let checkRes = fun () ->
+let name = "check" in
+let f = BatAvlTree.check in
+let tests = iavltree_tests () in
+let typ = [ ] in
+let tfun = fun i -> [ ] in
+let def_features = (*PYF:t|R(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|R(1)|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, iavltree_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
+(*** BatAvlTree.is_empty ***)
+
+let is_emptyRes = fun () ->
+let name = "is_empty" in
+let f = BatAvlTree.is_empty in
+let tests = iavltree_tests () in
+let typ = [ ] in
+let tfun = fun i -> [ ] in
+let def_features = (*PYF:t|R(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|R(1)|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, iavltree_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
+(*** BatAvlTree.singleton_tree ***)
+
+let singleton_treeRes = fun () ->
+let name = "singleton_tree" in
+let f = BatAvlTree.singleton_tree in
+let tests = int_tests () in
+let typ = [ TInt ] in
+let tfun = fun i -> [ of_int i ] in
+let def_features = (*PYF:v|1*) in
+let my_features = [] in
+let def_postconditions = (*PYP:v|1|R(1)*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, int_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
 (*** BatAvlTree.create ***)
 
 let avlcreate = fun (l,v,r) -> BatAvlTree.create l v r;;

@@ -615,9 +615,13 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
     let test_file = open_out ((fst dump) ^ ".tests") in
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
       close_out test_file);
-  prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
-  let features = if fst trans = [] then features else convergeAllFeatures ~fname:(fst dump) ~consts:consts f tests features posts trans in
-    List.map (fun post -> pacLearnSpecIncrK ~k:k f tests features post) posts
+  List.map (fun post ->
+    prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
+    let res = pacLearnSpecIncrK ~k:k f tests (if fst trans = [] then features
+                else convergePCondFeatures ~fname:(fst dump) ~consts:consts f tests features post trans)
+              post in
+      (output_string stderr "\n" ; print_spec stderr res ; res)
+  ) posts
 
 
 let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) (f : 'a -> 'b)
@@ -684,7 +688,7 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
       close_out test_file));
 
   let rec helper k unsats tests features = (
-    prerr_string "\r    [%] Removing conflicts ...                                     "; flush_all();
+    prerr_string "\r    [%] Removing conflicts ... "; flush_all();
     let features = if fst trans = [] then features
                    else convergeAllFeatures ~fname:(fst dump) ~consts:consts f tests features [post] trans in
 

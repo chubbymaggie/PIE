@@ -12,6 +12,7 @@ let sget = (fun (s, i) -> String.get s i)
    [Neg "i > 0"; Neg "len(s) > i"]; [Neg "i = 0"; Pos "len(s) = i"]
    they are equivalent given the fact that the length of a string is never negative.
 *)
+
 let sgetRes = fun () ->
 let name = "sget" in
 let f = sget in
@@ -26,6 +27,86 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, string_int_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.set ***)
+
+let sset = (fun (s, i, c) -> let sc = String.copy s in String.set sc i c ; sc)
+
+let ssetRes = fun () ->
+let name = "sset" in
+let f = sset in
+let tests = string_int_char_tests () in
+let typ = [ TString ; TInt ; TChar ] in
+let tfun = fun (s, i, c) -> [ of_string s ; of_int i ; of_char c ] in
+let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,i:I,c:C)|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.create ***)
+
+let screateRes = fun () ->
+let name = "screate" in
+let f = String.create in
+let tests = int_tests () in
+let typ = [ TInt ] in
+let tfun = fun i -> [ of_int i ] in
+let def_features = (*PYF:i|I*) in
+let my_features = [] in
+let def_postconditions = (*PYP:i|I|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, int_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.make ***)
+
+let smake = fun (i,c) -> String.make i c;;
+
+let smakeRes = fun () ->
+let name = "smake" in
+let f = smake in
+let tests = int_char_tests () in
+let typ = [ TInt ; TChar ] in
+let tfun = fun (i,c) -> [ of_int i ; of_char c ] in
+let def_features = (*PYF:a|T(i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:a|T(i:I,c:C)|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.copy ***)
+
+let scopyRes = fun () ->
+let name = "scopy" in
+let f = String.copy in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -69,8 +150,7 @@ let typ = [ TString ; TInt ; TInt ] in
 let tfun = fun (s, i1, i2) -> [ of_string s ; of_int i1 ; of_int i2 ] in
 let def_features = (*PYF:t|T(s:S,i1:I,i2:I)*) in
 let my_features = [] in
-(* let def_postconditions =  (\*PYP:t|T(s:S,i1:I,i2:I)|S*\) in *)
-let def_postconditions = [((fun z r -> match r with Bad _ -> true | _ -> false), "exception thrown")] in
+let def_postconditions =  (*PYP:t|T(s:S,i1:I,i2:I)|S*) in
 let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
@@ -79,24 +159,45 @@ let my_postconditions = [] in
 ;;
 
 
-(*** String.make ***)
+(*** String.fill ***)
 
-let smake = (fun (i,c) -> String.make i c)
+let sfill = (fun (s0,i0,i1,c) -> let sc = String.copy s0 in String.fill s0 i0 i1 c ; sc)
 
-let smakeRes = fun () ->
-let name = "smake" in
-let f = smake in
-let tests = int_char_tests () in
-let typ = [ TInt ; TChar ] in
-let tfun = fun (i, c) -> [ of_int i ; of_char c ] in
-let def_features = (*PYF:t|T(i:I,c:C)*) in
+let sfillRes = fun () ->
+let name = "sfill" in
+let f = sfill in
+let tests = string_int_int_char_tests () in
+let typ = [ TString ; TInt ; TInt ; TChar ] in
+let tfun = fun (s0,i0,i1,c) -> [ of_string s0 ; of_int i0 ; of_int i1 ; of_char c ] in
+let def_features = (*PYF:a|T(s0:S,i0:I,i1:I,c:C)*) in
 let my_features = [] in
-let def_postconditions = (*PYP:t|T(i:I,c:C)|S*) in
+let def_postconditions = (*PYP:t|T(s0:S,i0:I,i1:I,c:C)|S*) in
 let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, int_char_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, string_int_int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.blit ***)
+
+let sblit = (fun (s0,i0,s1,i1,il) -> let sc = String.copy s0 in String.blit s0 i0 s1 i1 il ; sc)
+
+let sblitRes = fun () ->
+let name = "sblit" in
+let f = sblit in
+let tests = string_int_string_int_int_tests () in
+let typ = [ TString ; TInt ; TString ; TInt ; TInt ] in
+let tfun = fun (s0,i0,s1,i1,il) -> [ of_string s0 ; of_int i0 ; of_string s1 ; of_int i1 ; of_int il ] in
+let def_features = (*PYF:a|T(s0:S,i0:I,s1:S,i1:I,il:I)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s0:S,i0:I,s1:S,i1:I,il:I)|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_int_string_int_int_dumper) ~record:name f tests features postconds trans
 ;;
 
 
@@ -120,3 +221,285 @@ let my_postconditions = [] in
     resolveAndPacLearnSpec ~dump:(name, string_stringList_dumper) ~record:name f tests features postconds trans
 ;;
 
+
+(*** String.trim ***)
+
+let strimRes = fun () ->
+let name = "strim" in
+let f = String.trim in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.escaped ***)
+
+let sescapedRes = fun () ->
+let name = "sescaped" in
+let f = String.escaped in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.index ***)
+
+let sindex = (fun (s,c) -> String.index s c)
+
+let sindexRes = fun () ->
+let name = "sindex" in
+let f = sindex in
+let tests = string_char_tests () in
+let typ = [ TString ; TChar ] in
+let tfun = fun (s, c) -> [ of_string s ; of_char c ] in
+let def_features = (*PYF:t|T(s:S,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,c:C)|I*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.rindex ***)
+
+let srindex = (fun (s,c) -> String.rindex s c)
+
+let srindexRes = fun () ->
+let name = "srindex" in
+let f = srindex in
+let tests = string_char_tests () in
+let typ = [ TString ; TChar ] in
+let tfun = fun (s, c) -> [ of_string s ; of_char c ] in
+let def_features = (*PYF:t|T(s:S,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,c:C)|I*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.index_from ***)
+
+let sindex_from = (fun (s,i,c) -> String.index_from s i c)
+
+let sindex_fromRes = fun () ->
+let name = "sindex_from" in
+let f = sindex_from in
+let tests = string_int_char_tests () in
+let typ = [ TString ; TInt; TChar ] in
+let tfun = fun (s, i, c) -> [ of_string s ; of_int i; of_char c ] in
+let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,i:I,c:C)|I*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.rindex_from ***)
+
+let srindex_from = (fun (s,i,c) -> String.rindex_from s i c)
+
+let srindex_fromRes = fun () ->
+let name = "srindex_from" in
+let f = srindex_from in
+let tests = string_int_char_tests () in
+let typ = [ TString ; TInt; TChar ] in
+let tfun = fun (s, i, c) -> [ of_string s ; of_int i; of_char c ] in
+let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,i:I,c:C)|I*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.contains ***)
+
+let scontains = (fun (s,c) -> String.contains s c)
+
+let scontainsRes = fun () ->
+let name = "scontains" in
+let f = scontains in
+let tests = string_char_tests () in
+let typ = [ TString ; TChar ] in
+let tfun = fun (s, c) -> [ of_string s ; of_char c ] in
+let def_features = (*PYF:t|T(s:S,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,c:C)|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.contains_from ***)
+
+let scontains_from = (fun (s,i,c) -> String.contains_from s i c)
+
+let scontains_fromRes = fun () ->
+let name = "scontains_from" in
+let f = scontains_from in
+let tests = string_int_char_tests () in
+let typ = [ TString ; TInt; TChar ] in
+let tfun = fun (s, i, c) -> [ of_string s ; of_int i; of_char c ] in
+let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,i:I,c:C)|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.rcontains_from ***)
+
+let srcontains_from = (fun (s,i,c) -> String.rcontains_from s i c)
+
+let srcontains_fromRes = fun () ->
+let name = "srcontains_from" in
+let f = srcontains_from in
+let tests = string_int_char_tests () in
+let typ = [ TString ; TInt; TChar ] in
+let tfun = fun (s, i, c) -> [ of_string s ; of_int i; of_char c ] in
+let def_features = (*PYF:t|T(s:S,i:I,c:C)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|T(s:S,i:I,c:C)|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_int_char_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
+(*** String.uppercase ***)
+
+let suppercaseRes = fun () ->
+let name = "suppercase" in
+let f = String.uppercase in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.lowercase ***)
+
+let slowercaseRes = fun () ->
+let name = "slowercase" in
+let f = String.lowercase in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.capitalize ***)
+
+let scapitalizeRes = fun () ->
+let name = "scapitalize" in
+let f = String.capitalize in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.uncapitalize ***)
+
+let suncapitalizeRes = fun () ->
+let name = "suncapitalize" in
+let f = String.uncapitalize in
+let tests = string_tests () in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|S*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_dumper) ~record:name f tests features postconds trans
+;;
+
+
+(*** String.compare ***)
+
+let scompare = fun (s0,s1) -> String.compare s0 s1;;
+
+let scompareRes = fun () ->
+let name = "scompare" in
+let f = scompare in
+let tests = string_string_tests () in
+let typ = [ TString ; TString ] in
+let tfun = fun (s0, s1) -> [ of_string s0 ; of_string s1 ] in
+let def_features = (*PYF:a|T(s0:S,s1:S)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:a|T(s0:S,s1:S)|I*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, string_string_dumper) ~record:name f tests features postconds trans
+;;

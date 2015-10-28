@@ -43,6 +43,9 @@ any_type << (atom_types | list_type | tree_type | tuple_type)
 huge = False
 mode = ''
 
+quant_enabled = False
+props_enabled = True
+
 RAND_MIN = -2
 RAND_MAX = 3
 LIST_MAX = 5
@@ -81,6 +84,9 @@ def getProperties(fromTyp, toTyp):
 def getConvergedPreds(typ1, var1, prop1, typ2, var2, prop2):
     # At least one of the variables should not have any property
     # so that we know the exact type of at least one variable
+    if not props_enabled:
+        return []
+
     if prop1 is not None and prop2 is not None:
         return []
 
@@ -169,7 +175,7 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
                             in getBinaryPreds(typ1, var1, None, t, v, None)] for (t,v)
                             in tps), []))
 
-        if mode == 'F':
+        if mode == 'F' and quant_enabled:
             if typ1[0][0] == LT and typ1[0][1][0][0] not in COMPLEX_TYPES:
                 preds.extend(('(fun %s %s -> List.for_all (fun %se -> %s %se %s) %s)' % (var1, var2, var1, f[0], var1, var2, var1),
                             '"for all %se in %s -> %s"' % (var1, var1, f[1][1:-1])) for f
@@ -225,7 +231,7 @@ def getFeatures(typ, var):
     features = []
 
     # Quantifiers on features of the list's type
-    if typ[0][0] == LT and mode == 'F':
+    if typ[0][0] == LT and mode == 'F' and quant_enabled:
         features.extend(('(fun %s -> List.for_all %s %s)' % (var, f[0], var),
                          '"for all %se in %s -> %s"' % (var, var, f[1][1:-1])) for f
                         in getFeatures(typ[0][1], '%se' % var))

@@ -88,6 +88,28 @@ let my_postconditions = [] in
 
 (* #################### MUTATORS  #################### *)
 
+
+
+(*** List.rev ***)
+
+let revRes = fun () ->
+let name = "rev" in
+let f = List.rev in
+let tests = intList_tests () in
+let typ = [ TList ] in
+let tfun = fun l -> [ of_list of_int l ] in
+let def_features = (*PYF:l|L(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|L(1)|L(1)*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
 (*** List.tl ***)
 
 let tlRes = fun () ->
@@ -121,10 +143,7 @@ let tfun = fun (l0, l1) -> [ of_list of_int l0 ; of_list of_int l1 ] in
 let def_features = (*PYF:l|T(l0:L(1),l1:L(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:l|T(l0:L(1),l1:L(1))|L(1)*) in
-let my_postconditions = [
-    ((fun (l0,l1) r -> match r with Bad _ -> false | Ok lr -> List.length(lr) = List.length(l0) + List.length(l1)), "len(res) = len(l0)+len(l1)");
-    ((fun (l0,l1) r -> match r with Bad _ -> false | Ok lr -> List.length(lr) != List.length(l0) + List.length(l1)), "len(res) != len(l0)+len(l1)")
-] in
+let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
@@ -166,11 +185,7 @@ let tfun = fun l -> [ of_list (of_list of_int) l ] in
 let def_features = (*PYF:l|L(L(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:l|L(L(1))|L(1)*) in
-let my_postconditions = [
-    ((fun ls r -> match r with Bad _ -> false | Ok lr -> List.length(lr) > List.fold_left (+) 0 (List.map List.length ls)), "len(res) > sum(len(l0:lN))");
-    ((fun ls r -> match r with Bad _ -> false | Ok lr -> List.length(lr) = List.fold_left (+) 0 (List.map List.length ls)), "len(res) = sum(len(l0:lN))");
-    ((fun ls r -> match r with Bad _ -> false | Ok lr -> List.length(lr) < List.fold_left (+) 0 (List.map List.length ls)), "len(res) < sum(len(l0:lN))")
-] in
+let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
@@ -190,11 +205,7 @@ let tfun = fun l -> [ of_list (of_list of_int) l ] in
 let def_features = (*PYF:l|L(L(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:l|L(L(1))|L(1)*) in
-let my_postconditions = [
-    ((fun ls r -> match r with Bad _ -> false | Ok lr -> List.length(lr) > List.fold_left (+) 0 (List.map List.length ls)), "len(res) > sum(len(l0:lN))");
-    ((fun ls r -> match r with Bad _ -> false | Ok lr -> List.length(lr) = List.fold_left (+) 0 (List.map List.length ls)), "len(res) = sum(len(l0:lN))");
-    ((fun ls r -> match r with Bad _ -> false | Ok lr -> List.length(lr) < List.fold_left (+) 0 (List.map List.length ls)), "len(res) < sum(len(l0:lN))")
-] in
+let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
@@ -242,10 +253,7 @@ let tfun = fun (l0, l1) -> [ of_list of_int l0 ; of_list of_int l1 ] in
 let def_features = (*PYF:l|T(l0:L(1),l1:L(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:l|T(l0:L(1),l1:L(1))|L(1)*) in
-let my_postconditions = [
-    ((fun (l0,l1) r -> match r with Bad _ -> false | Ok lr -> List.length(lr) = List.length(l0) + List.length(l1)), "len(res) = len(l0)+len(l1)");
-    ((fun (l0,l1) r -> match r with Bad _ -> false | Ok lr -> List.length(lr) != List.length(l0) + List.length(l1)), "len(res) != len(l0)+len(l1)")
-] in
+let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
@@ -271,3 +279,68 @@ let my_postconditions = [] in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, int_int_List_dumper) ~record:name f tests features postconds trans
 ;;
+
+
+
+(*** List.assoc ***)
+
+let lassoc = fun (a,l) -> List.assoc a l;;
+
+let assocRes = fun () ->
+let name = "assoc" in
+let f = lassoc in
+let tests = int__int_int_List_tests () in
+let typ = [ TInt ; TList ] in
+let tfun = fun (a,l) -> [ of_int a ; of_list (fun (x,y) -> VList [ of_int x ; of_int y ]) l ] in
+let def_features = (*PYF:l|T(a:1,l:L(T(x:1,y:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(a:1,l:L(T(x:1,y:2)))|2*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
+let lmem_assoc = fun (a,l) -> List.mem_assoc a l;;
+
+let mem_assocRes = fun () ->
+let name = "mem_assoc" in
+let f = lmem_assoc in
+let tests = int__int_int_List_tests () in
+let typ = [ TInt ; TList ] in
+let tfun = fun (a,l) -> [ of_int a ; of_list (fun (x,y) -> VList [ of_int x ; of_int y ]) l ] in
+let def_features = (*PYF:l|T(a:1,l:L(T(x:1,y:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(a:1,l:L(T(x:1,y:2)))|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name f tests features postconds trans
+;;
+
+
+
+let lremove_assoc = fun (a,l) -> List.remove_assoc a l;;
+
+let remove_assocRes = fun () ->
+let name = "remove_assoc" in
+let f = lremove_assoc in
+let tests = int__int_int_List_tests () in
+let typ = [ TInt ; TList ] in
+let tfun = fun (a,l) -> [ of_int a ; of_list (fun (x,y) -> VList [ of_int x ; of_int y ]) l ] in
+let def_features = (*PYF:l|T(a:1,l:L(T(x:1,y:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(a:1,l:L(T(x:1,y:2)))|L(T(p:1,q:2))*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name f tests features postconds trans
+;;
+
+
+

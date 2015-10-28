@@ -33,7 +33,7 @@ let rec divide_depth f arity target acc =
 
 
 (* Upper bound on the heuristic value a solution may take *)
-let max_h = 16
+let max_h = ref 16
 
 let expand_ = ref "size"
 let goal_graph = ref false
@@ -104,12 +104,12 @@ let solve_impl ?ast:(ast=false) task consts =
     match final_goal.status with Closed cls -> (all_solutions := cls::all_solutions.contents; if not ast then raise Success else ()) | _ -> ()
   in
 
-  let int_array = Array.make max_h VSet.empty in
-  let bool_array = Array.make max_h VSet.empty in
-  let char_array = Array.make max_h VSet.empty in
-  let list_array = Array.make max_h VSet.empty in
-  let tree_array = Array.make max_h VSet.empty in
-  let string_array = Array.make max_h VSet.empty in
+  let int_array = Array.make !max_h VSet.empty in
+  let bool_array = Array.make !max_h VSet.empty in
+  let char_array = Array.make !max_h VSet.empty in
+  let list_array = Array.make !max_h VSet.empty in
+  let tree_array = Array.make !max_h VSet.empty in
+  let string_array = Array.make !max_h VSet.empty in
 
   let check_vector v =
     (* Close all matching goals *)
@@ -148,7 +148,7 @@ let solve_impl ?ast:(ast=false) task consts =
       let vector = apply_component c x in
       let h_value = hvalue vector in
       let has_err = Array.fold_left (fun p x -> match x with VError -> true | _ -> p) false (snd vector) in
-      if (h_value < max_h && (not has_err))
+      if (h_value < !max_h && (not has_err))
       then ((if not (!noisy) then ()
             else print_endline (string_of_int h_value ^ ">>" ^ (Vector.string vector)));
             array.(h_value) <- VSet.add vector (array.(h_value)))
@@ -192,7 +192,7 @@ let solve_impl ?ast:(ast=false) task consts =
       | VDontCare -> failwith "Underspecified input"
     in array.(1) <- VSet.add input array.(1))
   task.inputs;
-  for i = 2 to max_h-1; do
+  for i = 2 to !max_h-1; do
     list_array.(i-1) <- VSet.filter check_vector list_array.(i-1);
     int_array.(i-1) <- VSet.filter check_vector int_array.(i-1);
     bool_array.(i-1) <- VSet.filter check_vector bool_array.(i-1);
