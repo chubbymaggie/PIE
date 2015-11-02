@@ -462,7 +462,7 @@ let missingFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features 
   filtered
 
 
-let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) (f : 'a -> 'b) (tests : 'a list)
+let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -> 'b) (tests : 'a list)
                   (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                   : (('a -> bool) * 'c) list =
@@ -493,9 +493,12 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) (f : 'a -> 'b) (tests : '
                     dump = _unsupported_
                 };
                 inputs = BatList.mapi (fun i _ ->
-                  (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
-                    Leaf ("x" ^ (string_of_int i) ^ "g")),
-                   Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
+                    ((if arg_names = []
+                      then ((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
+                            Leaf ("x" ^ (string_of_int i) ^ "g"))
+                      else (((List.nth arg_names i), (fun ars -> List.nth ars i)),
+                            Leaf (List.nth arg_names i))),
+                    Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
                 components = default_int @ default_string @ default_bool @ comps
             } in
             let solutions = solve xtask consts in
@@ -510,27 +513,27 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) (f : 'a -> 'b) (tests : '
 
 
 (* try to resolve the first group of conflicting tests that can be resolved *)
-let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) (f: 'a -> 'b) (tests: 'a list)
+let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f: 'a -> 'b) (tests: 'a list)
                                   (missing_features: ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list list)
                                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                                   : (('a -> bool) * 'c) list =
 
     if missing_features = [] then []
-    else let new_features = synthFeatures ~fname:fname ~consts:consts ~comps:comps f tests (List.hd missing_features) postcond trans
+    else let new_features = synthFeatures ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (List.hd missing_features) postcond trans
             in if not (new_features = []) then new_features
-            else convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps f tests (List.tl missing_features) postcond trans
+            else convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (List.tl missing_features) postcond trans
 
 
 (* try to resolve all groups of conflicting tests for one post condition*)
-  let rec convergePCondFeatures ?(fname="") ?(consts=[]) ?(comps=[]) (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
-                                (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
-                                :(('a -> bool) * 'c) list =
+  let rec convergePCondFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f: 'a -> 'b) (tests : 'a list)
+                                (features: (('a -> bool) * 'c) list) (postcond: ('a -> 'b result -> bool) * 'c)
+                                (trans: typ list * ('a -> value list)) :(('a -> bool) * 'c) list =
 
     let all_missing_features = missingFeatures f tests features postcond in
         if all_missing_features = []
         then features
-        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps f tests all_missing_features postcond trans
-             in if mf = [] then features else convergePCondFeatures ~fname:fname ~consts:consts ~comps:comps f tests (features @ mf) postcond trans
+        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests all_missing_features postcond trans
+             in if mf = [] then features else convergePCondFeatures ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (features @ mf) postcond trans
 
 
 (* a postcondition should raise this exception to indicate that the given test input should be ignored *)
@@ -596,10 +599,10 @@ let rec pacLearnSpecIncrK ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a
     else (try pacLearnSpecIncrK ~k:(k+1) f tests features post with ClauseEncodingError -> (Some [[Pos "~~ FAILED ~~"]], snd post))
 
 
-let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(comps=[]) (f: 'a -> 'b)
-                           (tests: 'a list) (features : (('a -> bool) * 'c) list)
-                           (posts : (('a -> 'b result -> bool) * 'c) list) (trans : typ list * ('a -> value list))
-                           : ('c cnf option * 'c) list =
+let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(comps=[])
+                           ?(arg_names=[]) (f: 'a -> 'b) (tests: 'a list)
+                           (features : (('a -> bool) * 'c) list) (posts : (('a -> 'b result -> bool) * 'c) list)
+                           (trans : typ list * ('a -> value list)) : ('c cnf option * 'c) list =
 
   record_file := record;
   if fst dump = "" then () else (
@@ -611,7 +614,7 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
   List.map (fun post ->
     prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
     let res = pacLearnSpecIncrK ~k:k f tests (if fst trans = [] then features
-                else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps f tests features post trans)
+                else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps ~arg_names:arg_names f tests features post trans)
               post in
       (output_string stderr "\n" ; print_spec stderr res ; res)
   ) posts
