@@ -21,6 +21,7 @@ type truthAssignment = (int, bool) BatHashtbl.t
 exception NoSuchFunction
 exception BadCounterExample
 
+let max_conflict_set_size = 16
 let conflict_counter = ref 0
 let record_file = ref ""
 
@@ -467,11 +468,6 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -
                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                   : (('a -> bool) * 'c) list =
 
-    (* TODO-maybe:
-        - Only take a pair of conflicts not whole group
-        - Ensure that the synthed features now satisfy the whole group
-    *)
-
     if missing_features = [] then []
     else (
         let tab = BatHashtbl.create (List.length missing_features) in
@@ -512,6 +508,23 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -
               List.map (fun (annot, func) -> (fun data -> (func (snd trans) data) = VBool true), annot) solutions)
 
 
+let resolveConflict ?(fname="") ?(consts=[]) ?(comps=[]) (f : 'a -> 'b) (tests : 'a list)
+                    (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
+                    (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
+                    : (('a -> bool) * 'c) list =
+
+    (* TODO: Explain Magic numbers *)
+
+    let final_mfs = if List.length missing_features < max_conflict_set_size then missing_features else
+        (let (good_mfs, bad_mfs) =
+            List.fold_left (fun (g,b) mf -> match mf with (_,_,_,p) -> if p then ((mf::g),b) else (g,(mf::b)))
+                           ([],[]) missing_features in
+            let final_good_mfs = BatList.take (max_conflict_set_size / 2) good_mfs in
+            let final_bad_mfs = BatList.take (max_conflict_set_size / 2) bad_mfs in
+                final_good_mfs @ final_bad_mfs) in
+        synthFeatures ~fname:fname ~consts:consts ~comps:comps f tests final_mfs postcond trans
+
+
 (* try to resolve the first group of conflicting tests that can be resolved *)
 let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f: 'a -> 'b) (tests: 'a list)
                                   (missing_features: ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list list)
@@ -519,7 +532,7 @@ let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_nam
                                   : (('a -> bool) * 'c) list =
 
     if missing_features = [] then []
-    else let new_features = synthFeatures ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (List.hd missing_features) postcond trans
+    else let new_features = resolveConflict ~fname:fname ~consts:consts ~comps:comps f tests (List.hd missing_features) postcond trans
             in if not (new_features = []) then new_features
             else convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (List.tl missing_features) postcond trans
 

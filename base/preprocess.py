@@ -325,7 +325,7 @@ if __name__ == "__main__":
     for (i,l) in enumerate(open(sys.argv[1]).readlines()):
         sys.stderr.write("\rScanning line %d ..." % (i+1))
         Fres = Fmat.search(l)
-        Frep = l if Fres is None else Fmat.sub(Fanalyze(Fres.group(1)), l)
+        Frep = l if Fres is None else Fmat.sub("[]", l) # Fmat.sub(Fanalyze(Fres.group(1)), l)
         Pres = Pmat.search(Frep)
         Prep = Frep if Pres is None else Pmat.sub(Panalyze(Pres.group(1)), Frep)
         Tres = Tmat.search(Prep)
