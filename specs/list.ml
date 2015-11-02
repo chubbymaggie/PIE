@@ -17,7 +17,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -37,7 +37,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -59,7 +59,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_int_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_int_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -81,7 +81,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, int_intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int_intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -105,7 +105,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -125,7 +125,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -147,7 +147,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -169,7 +169,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -189,7 +189,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intListList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intListList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -209,7 +209,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intListList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intListList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -235,7 +235,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -257,7 +257,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, intList_intList_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -277,7 +277,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, int_int_List_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int_int_List_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -299,7 +299,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -319,7 +319,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 
@@ -339,7 +339,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name f tests features postconds trans
+    resolveAndPacLearnSpec ~dump:(name, int__int_int_List_dumper) ~record:name ~comps:default_list f tests features postconds trans
 ;;
 
 

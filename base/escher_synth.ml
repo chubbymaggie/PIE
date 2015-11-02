@@ -218,14 +218,14 @@ let solve_impl ?ast:(ast=false) task consts =
   List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
 
   let default_int = [plus;mult;minus;geq;leq;lt;gt;equal;modulo ; addone;subone (*; iabs *)]
-  let default_list = [empty;tail;head;cat;cons;length;reverse;listEq]
+  let default_list = [empty;tail;head;cat;cons;length;reverse;listHas;listEq]
   let default_bool = [notc;orc;andc]
   let default_char = [cequal]
 
   let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
   let default_string = [str_eq; str_sub; str_get; str_concat; str_contains; (* str_index_of; *) str_len; str_replace]
 
-  let default_components = default_int @ default_bool @ default_string
+  let default_components = default_int @ default_bool @ default_string @ default_list
   (* default_int @ default_bool @ default_list @ default_string @ default_char *)
 
   let int_list xs = VList (List.map (fun x -> VInt x) xs)

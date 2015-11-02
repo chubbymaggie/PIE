@@ -462,7 +462,7 @@ let missingFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features 
   filtered
 
 
-let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
+let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) (f : 'a -> 'b) (tests : 'a list)
                   (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                   : (('a -> bool) * 'c) list =
@@ -496,7 +496,7 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
                   (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
                     Leaf ("x" ^ (string_of_int i) ^ "g")),
                    Array.of_list (BatHashtbl.fold (fun k _ acc -> (List.nth k i)::acc) tab []))) (fst trans);
-                components = default_components
+                components = default_int @ default_string @ default_bool @ comps
             } in
             let solutions = solve xtask consts in
               (if fname = "" then () else
@@ -510,35 +510,27 @@ let synthFeatures ?(fname="") ?(consts=[]) (f : 'a -> 'b) (tests : 'a list)
 
 
 (* try to resolve the first group of conflicting tests that can be resolved *)
-let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) (f: 'a -> 'b) (tests: 'a list)
+let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) (f: 'a -> 'b) (tests: 'a list)
                                   (missing_features: ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list list)
                                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                                   : (('a -> bool) * 'c) list =
 
     if missing_features = [] then []
-    else let new_features = synthFeatures ~fname:fname ~consts:consts f tests (List.hd missing_features) postcond trans
+    else let new_features = synthFeatures ~fname:fname ~consts:consts ~comps:comps f tests (List.hd missing_features) postcond trans
             in if not (new_features = []) then new_features
-            else convergeOneMissingFeature ~fname:fname ~consts:consts f tests (List.tl missing_features) postcond trans
+            else convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps f tests (List.tl missing_features) postcond trans
 
 
 (* try to resolve all groups of conflicting tests for one post condition*)
-  let rec convergePCondFeatures ?(fname="") ?(consts=[]) (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
+  let rec convergePCondFeatures ?(fname="") ?(consts=[]) ?(comps=[]) (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
                                 (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                                 :(('a -> bool) * 'c) list =
 
     let all_missing_features = missingFeatures f tests features postcond in
         if all_missing_features = []
         then features
-        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts f tests all_missing_features postcond trans
-             in if mf = [] then features else convergePCondFeatures ~fname:fname ~consts:consts f tests (features @ mf) postcond trans
-
-
-let rec convergeAllFeatures ?(fname="") ?(consts=[]) (f: 'a -> 'b) (tests : 'a list) (features: (('a -> bool) * 'c) list)
-                            (postconds: (('a -> 'b result -> bool) * 'c) list) (trans: typ list * ('a -> value list))
-                            :(('a -> bool) * 'c) list =
-
-    if postconds = [] then features
-    else convergeAllFeatures ~fname:fname ~consts:consts f tests (convergePCondFeatures ~fname:fname ~consts:consts f tests features (List.hd postconds) trans) (List.tl postconds) trans
+        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps f tests all_missing_features postcond trans
+             in if mf = [] then features else convergePCondFeatures ~fname:fname ~consts:consts ~comps:comps f tests (features @ mf) postcond trans
 
 
 (* a postcondition should raise this exception to indicate that the given test input should be ignored *)
@@ -604,9 +596,10 @@ let rec pacLearnSpecIncrK ?(k=1) (f: 'a -> 'b) (tests: 'a list) (features : (('a
     else (try pacLearnSpecIncrK ~k:(k+1) f tests features post with ClauseEncodingError -> (Some [[Pos "~~ FAILED ~~"]], snd post))
 
 
-let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) (f: 'a -> 'b) (tests: 'a list)
-                           (features : (('a -> bool) * 'c) list) (posts : (('a -> 'b result -> bool) * 'c) list)
-                           (trans : typ list * ('a -> value list)) : ('c cnf option * 'c) list =
+let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(comps=[]) (f: 'a -> 'b)
+                           (tests: 'a list) (features : (('a -> bool) * 'c) list)
+                           (posts : (('a -> 'b result -> bool) * 'c) list) (trans : typ list * ('a -> value list))
+                           : ('c cnf option * 'c) list =
 
   record_file := record;
   if fst dump = "" then () else (
@@ -618,14 +611,14 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
   List.map (fun post ->
     prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
     let res = pacLearnSpecIncrK ~k:k f tests (if fst trans = [] then features
-                else convergePCondFeatures ~fname:(fst dump) ~consts:consts f tests features post trans)
+                else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps f tests features post trans)
               post in
       (output_string stderr "\n" ; print_spec stderr res ; res)
   ) posts
 
 
-let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) (f : 'a -> 'b)
-                             (tests : 'a list) (post : ('a -> 'b result -> bool) * 'c)
+let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(comps=[])
+                             (f : 'a -> 'b) (tests : 'a list) (post : ('a -> 'b result -> bool) * 'c)
                              (trans : typ list * ('a -> value list)) (trans_test: 'z -> 'a)
                              (smtfile : string): (('a -> bool) * string) =
 
@@ -649,7 +642,7 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[
           (((("x" ^ (string_of_int i) ^ "g"), (fun ars -> List.nth ars i)),
             Leaf ("x" ^ (string_of_int i) ^ "g")),
            Array.of_list (List.map (fun k -> (List.nth ((snd trans) k) i)) tests))) (fst trans);
-        components = orc :: andc :: default_components
+        components = default_int @ default_string @ default_bool @ comps
     } in
     prerr_string ("\r    [*] Synthesizing --- "); flush_all();
     let sol = List.hd (solve xtask consts) in
@@ -675,7 +668,7 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[
 
 
 let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(unsats=[])
-                              (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
+                              ?(comps=[]) (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
                               (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list))
                               (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
 
@@ -690,7 +683,7 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
   let rec helper k unsats tests features = (
     prerr_string "\r    [%] Removing conflicts ... "; flush_all();
     let features = if fst trans = [] then features
-                   else convergeAllFeatures ~fname:(fst dump) ~consts:consts f tests features [post] trans in
+                   else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps f tests features post trans in
 
     if missingFeatures f tests features post <> [] then None else (
       let res = fst (pacLearnSpec ~k:k f ~tests:tests ~features:features post) in

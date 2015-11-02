@@ -273,6 +273,15 @@ let cat = {
     dump = (fun l -> "(" ^ (List.hd l) ^ " @ " ^ (List.hd (List.tl l)) ^ ")")
 }
 
+let listHas = {
+    domain = [TInt; TList];
+    codomain = TBool;
+    apply = (function [x ; VList xs] -> VBool (List.mem x xs)
+             | _ -> VError);
+    name = "cat";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " in " ^ (List.hd (List.tl l)) ^ ")")
+}
+
 let listEq = {
     domain = [TList;TList];
     codomain = TBool;

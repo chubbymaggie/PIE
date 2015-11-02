@@ -659,10 +659,10 @@ postcondition: exception thrown
 precondition: !(len(l) = 0)
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: ! ((tl x0g) = [])
 postcondition: (len(res) > 0)
 
-precondition: ~~ FAILED ~~
+precondition: ((tl x0g) = [])
 postcondition: (len(res) = 0)
 
 precondition: false
@@ -795,7 +795,7 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (x0g in x1g)
 postcondition: res = true
 ```
 
