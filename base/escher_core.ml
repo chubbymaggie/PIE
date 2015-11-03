@@ -1,3 +1,5 @@
+open Batteries
+
 open Escher_types
 
 type program =
@@ -41,6 +43,9 @@ let rec value_string = function
   | VList x -> "[" ^ (String.concat "," (List.map value_string x)) ^ "]"
   | VTree x -> bt_string x
   | VString x -> "\"" ^ x ^ "\""
+  | VAVLTree x -> "{" ^ (value_string (VAVLTree (BatAvlTree.left_branch x)))
+                      ^ " (" ^ (value_string (BatAvlTree.root x)) ^ ") "
+                      ^ (value_string (VAVLTree (BatAvlTree.right_branch x))) ^ "}"
   | VError -> "_|_"
   | VDontCare -> "???"
 
@@ -53,6 +58,7 @@ let value_lt x y = match x,y with
   | (VList x, VList y) -> (List.length x) < (List.length y)
   | (VTree x, VTree y) -> (bt_height x) < (bt_height y)
   | (VString x, VString y) -> (String.length x) < (String.length y)
+  | (VAVLTree x, VAVLTree y) -> (BatAvlTree.height x) < (BatAvlTree.height y)
   | (_, _) -> false
 
 let value_leq x y = match x,y with
@@ -61,6 +67,7 @@ let value_leq x y = match x,y with
   | (VList x, VList y) -> (List.length x) <= (List.length y)
   | (VTree x, VTree y) -> (bt_height x) <= (bt_height y)
   | (VString x, VString y) -> (String.length x) <= (String.length y)
+  | (VAVLTree x, VAVLTree y) -> (BatAvlTree.height x) <= (BatAvlTree.height y)
   | (_, _) -> false
 
 (* lexicographic ordering *)
@@ -230,6 +237,7 @@ let type_of_varray varray =
       | VList _ -> TList
       | VTree _ -> TTree
       | VString _ -> TString
+      | VAVLTree _ -> TAVLTree
       | _ -> failwith "impossible"
     end with Not_found -> failwith "No type for varray!"
 

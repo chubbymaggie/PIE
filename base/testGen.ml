@@ -31,6 +31,13 @@ let pred g p =
      if (p cand) then cand else loopUntil() in
        loopUntil ())
 
+let char = (fun rand -> Char.chr (List.hd (generate ~n:1 ~rand:rand (32 -- 126))))
+
+let string_len rng =
+    (fun rand ->
+        let len = List.hd (generate ~n:1 ~rand:rand rng) in
+            BatString.of_list (generate ~n:len char))
+
 (* check if all characters in a string are distinct *)
 let distinct s =
   let l = BatString.to_list s in

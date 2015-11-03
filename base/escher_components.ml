@@ -211,7 +211,7 @@ let length = {
              | [VList xs] -> VInt (List.length xs)
              | _ -> VError);
     name = "length";
-    dump = (fun l -> "(len " ^ (List.hd l) ^ ")")
+    dump = (fun l -> "len(" ^ (List.hd l) ^ ")")
 }
 
 let empty = {
@@ -221,7 +221,7 @@ let empty = {
              | [VList x] -> VBool (List.length x = 0)
              | _ -> VError);
     name = "empty?";
-    dump = (fun l -> "(" ^ (List.hd l) ^ " = [])")
+    dump = (fun l -> "empty(" ^ (List.hd l) ^ ")")
 }
 
 let reverse = {
@@ -231,27 +231,47 @@ let reverse = {
              | [VList x] -> VList (List.rev x)
              | _ -> VError);
     name = "reverse";
-    dump = (fun l -> "(rev " ^ (List.hd l) ^ ")")
+    dump = (fun l -> "rev(" ^ (List.hd l) ^ ")")
 }
 
-let cons = {
+let cons_int = {
     domain = [TInt; TList];
     codomain = TList;
     apply = (function
              | [VInt x; VList xs] -> VList (VInt x::xs)
              | _ -> VError);
-    name = "cons";
+    name = "cons_int";
     dump = (fun l -> "(" ^ (List.hd l) ^ " :: " ^ (List.hd (List.tl l)) ^ ")")
 }
 
-let head = {
+let cons_str = {
+    domain = [TString; TList];
+    codomain = TList;
+    apply = (function
+             | [VString x; VList xs] -> VList (VString x::xs)
+             | _ -> VError);
+    name = "cons_str";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " :: " ^ (List.hd (List.tl l)) ^ ")")
+}
+
+let head_int = {
     domain = [TList];
     codomain = TInt;
     apply = (function
              | [VList (x::_)] -> x
              | _ -> VError);
-    name = "head";
-    dump = (fun l -> "(hd " ^ (List.hd l) ^ ")")
+    name = "head_int";
+    dump = (fun l -> "hd(" ^ (List.hd l) ^ ")")
+}
+
+let head_str = {
+    domain = [TList];
+    codomain = TString;
+    apply = (function
+             | [VList (x::_)] -> x
+             | _ -> VError);
+    name = "head_str";
+    dump = (fun l -> "hd(" ^ (List.hd l) ^ ")")
 }
 
 let tail = {
@@ -261,7 +281,7 @@ let tail = {
              | [VList (_::xs)] -> VList xs
              | _ -> VError);
     name = "tail";
-    dump = (fun l -> "(tl " ^ (List.hd l) ^ ")")
+    dump = (fun l -> "tl(" ^ (List.hd l) ^ ")")
 }
 
 let cat = {
@@ -273,12 +293,21 @@ let cat = {
     dump = (fun l -> "(" ^ (List.hd l) ^ " @ " ^ (List.hd (List.tl l)) ^ ")")
 }
 
-let listHas = {
+let listHas_int = {
     domain = [TInt; TList];
     codomain = TBool;
     apply = (function [x ; VList xs] -> VBool (List.mem x xs)
              | _ -> VError);
-    name = "cat";
+    name = "has_int";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " in " ^ (List.hd (List.tl l)) ^ ")")
+}
+
+let listHas_str = {
+    domain = [TString; TList];
+    codomain = TBool;
+    apply = (function [x ; VList xs] -> VBool (List.mem x xs)
+             | _ -> VError);
+    name = "has_str";
     dump = (fun l -> "(" ^ (List.hd l) ^ " in " ^ (List.hd (List.tl l)) ^ ")")
 }
 
@@ -355,9 +384,81 @@ let tree_leaf = {
     dump = _unsupported_
 }
 
+
+(* AVL Tree components *)
+
+let avl_is_empty = {
+    domain = [TAVLTree];
+    codomain = TBool;
+    apply = (function
+             | [VAVLTree t] -> VBool (BatAvlTree.is_empty t)
+             | _ -> VError);
+    name = "avl_is_empty";
+    dump = (fun l -> "empty(" ^ (List.hd l) ^ ")")
+}
+
+let avl_root_int = {
+    domain = [TAVLTree];
+    codomain = TInt;
+    apply = (function
+             | [VAVLTree t] ->
+                  begin try BatAvlTree.root t
+                  with Not_found -> VError end
+             | _ -> VError);
+    name = "avl_root_int";
+    dump = (fun l -> "root(" ^ (List.hd l) ^ ")")
+}
+
+let avl_height = {
+    domain = [TAVLTree];
+    codomain = TInt;
+    apply = (function
+             | [VAVLTree t] -> VInt (BatAvlTree.height t)
+             | _ -> VError);
+    name = "avl_height";
+    dump = (fun l -> "height(" ^ (List.hd l) ^ ")")
+}
+
+let avl_left = {
+    domain = [TAVLTree];
+    codomain = TAVLTree;
+    apply = (function
+             | [VAVLTree t] ->
+                  begin try VAVLTree (BatAvlTree.left_branch t)
+                  with Not_found -> VError end
+             | _ -> VError);
+    name = "avl_left";
+    dump = (fun l -> "left(" ^ (List.hd l) ^ ")")
+}
+
+let avl_right = {
+    domain = [TAVLTree];
+    codomain = TAVLTree;
+    apply = (function
+             | [VAVLTree t] ->
+                  begin try VAVLTree (BatAvlTree.right_branch t)
+                  with Not_found -> VError end
+             | _ -> VError);
+    name = "avl_right";
+    dump = (fun l -> "right(" ^ (List.hd l) ^ ")")
+}
+
+
 (* String components *)
 
 let str_get = {
+    domain = [TString;TInt];
+    codomain = TString;
+    apply = (function
+             | [VString str; VInt i] ->
+                   begin try VString (Char.escaped (String.get str i))
+                   with Invalid_argument _ -> VError end
+             | _ -> VError);
+    name = "str_get";
+    dump = (fun l -> "(#get(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+}
+
+let str_getc = {
     domain = [TString;TInt];
     codomain = TChar;
     apply = (function
@@ -365,8 +466,8 @@ let str_get = {
                    begin try VChar (String.get str i)
                    with Invalid_argument _ -> VError end
              | _ -> VError);
-    name = "str_get";
-    dump = (fun l -> "(#get(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+    name = "str_getc";
+    dump = (fun l -> "(get(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_concat = {
@@ -378,7 +479,6 @@ let str_concat = {
     name = "str_concat";
     dump = (fun l -> "(#cat(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
-
 
 let str_eq = {
     domain = [TString;TString];
@@ -398,6 +498,16 @@ let str_contains = {
              | _ -> VError);
     name = "str_contains";
     dump = (fun l -> "(#has(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+}
+
+let str_containsc = {
+    domain = [TString;TChar];
+    codomain = TBool;
+    apply = (function
+             | [VString s; VChar t] -> VBool (String.contains s t)
+             | _ -> VError);
+    name = "str_containsc";
+    dump = (fun l -> "(contains(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_index_of = {

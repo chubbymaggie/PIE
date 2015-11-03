@@ -613,9 +613,11 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
       close_out test_file);
   List.map (fun post ->
     prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
-    let res = pacLearnSpecIncrK ~k:k f tests (if fst trans = [] then features
-                else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps ~arg_names:arg_names f tests features post trans)
-              post in
+    let res = pacLearnSpecIncrK ~k:k f tests
+                                (if fst trans = [] then features
+                                 else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps
+                                                            ~arg_names:arg_names f tests features post trans)
+                                post in
       (output_string stderr "\n" ; print_spec stderr res ; res)
   ) posts
 

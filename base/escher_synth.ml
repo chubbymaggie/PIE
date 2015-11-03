@@ -104,6 +104,7 @@ let solve_impl ?ast:(ast=false) task consts =
     match final_goal.status with Closed cls -> (all_solutions := cls::all_solutions.contents; if not ast then raise Success else ()) | _ -> ()
   in
 
+  let avl_array = Array.make !max_h VSet.empty in
   let int_array = Array.make !max_h VSet.empty in
   let bool_array = Array.make !max_h VSet.empty in
   let char_array = Array.make !max_h VSet.empty in
@@ -121,6 +122,7 @@ let solve_impl ?ast:(ast=false) task consts =
        List.iter (close_goal v) v_closes; true
   in
 
+  let avl_components = List.filter (fun c -> c.codomain = TAVLTree) components in
   let int_components = List.filter (fun c -> c.codomain = TInt) components in
   let bool_components = List.filter (fun c -> c.codomain = TBool) components in
   let char_components = List.filter (fun c -> c.codomain = TChar) components in
@@ -138,6 +140,7 @@ let solve_impl ?ast:(ast=false) task consts =
             | TList -> list_array.(i)
             | TTree -> tree_array.(i)
             | TString -> string_array.(i)
+            | TAVLTree -> avl_array.(i)
           end
       | ([], []) -> f (List.rev acc)
       | _ -> failwith "Impossible!"
@@ -160,6 +163,7 @@ let solve_impl ?ast:(ast=false) task consts =
   let expand i =
     List.iter (fun x -> expand_type x i)
               [(int_array, int_components);
+               (avl_array, avl_components);
                (bool_array, bool_components);
                (char_array, char_components);
                (list_array, list_components);
@@ -174,6 +178,7 @@ let solve_impl ?ast:(ast=false) task consts =
     print_endline ("Inputs: ");
     List.iter (fun v -> print_endline ("   " ^ (Vector.string v))) task.inputs;
     print_endline ("Goal: " ^ (varray_string final_goal.varray)));
+    (*TODO: Only handling string and int constants, extend for others*)
   list_array.(1)   <- VSet.singleton nil;
   int_array.(1)    <- List.fold_left (fun p i -> VSet.add ((((string_of_int i), (fun ars -> VInt i)), Leaf ("const_" ^ (string_of_int i))), Array.make vector_size (VInt i)) p)
                       (VSet.singleton zero) (BatList.sort_unique compare (1::(BatList.filter_map (fun v -> match v with VInt x -> Some x | _ -> None) consts)));
@@ -188,6 +193,7 @@ let solve_impl ?ast:(ast=false) task consts =
       | VChar _ -> char_array
       | VTree _ -> tree_array
       | VString _ -> string_array
+      | VAVLTree _ -> avl_array
       | VError -> failwith "Error in input"
       | VDontCare -> failwith "Underspecified input"
     in array.(1) <- VSet.add input array.(1))
@@ -195,6 +201,7 @@ let solve_impl ?ast:(ast=false) task consts =
   for i = 2 to !max_h-1; do
     list_array.(i-1) <- VSet.filter check_vector list_array.(i-1);
     int_array.(i-1) <- VSet.filter check_vector int_array.(i-1);
+    avl_array.(i-1) <- VSet.filter check_vector avl_array.(i-1);
     bool_array.(i-1) <- VSet.filter check_vector bool_array.(i-1);
     char_array.(i-1) <- VSet.filter check_vector char_array.(i-1);
     tree_array.(i-1) <- VSet.filter check_vector tree_array.(i-1);
@@ -218,10 +225,10 @@ let solve_impl ?ast:(ast=false) task consts =
   List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
 
   let default_int = [plus;mult;minus;geq;leq;lt;gt;equal;modulo ; addone;subone (*; iabs *)]
-  let default_list = [empty;tail;head;cat;cons;length;reverse;listHas;listEq]
+  let default_list = [empty;tail;head_int;cat;cons_int;cons_str;head_str;length;reverse;listHas_int;listHas_str;listEq]
   let default_bool = [notc;orc;andc]
   let default_char = [cequal]
-
+  let default_avl = [avl_left;avl_right;avl_height;avl_is_empty;avl_root_int]
   let default_tree = [tree_val;is_leaf;tree_left;tree_right;tree_node;tree_leaf]
   let default_string = [str_eq; str_sub; str_get; str_concat; str_contains; (* str_index_of; *) str_len; str_replace]
 

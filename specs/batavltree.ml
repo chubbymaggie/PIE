@@ -10,8 +10,8 @@ let f = BatAvlTree.check in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun i -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|B*) in
@@ -19,7 +19,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -33,8 +33,8 @@ let f = BatAvlTree.is_empty in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun i -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|B*) in
@@ -42,7 +42,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -65,7 +65,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -81,8 +81,8 @@ let f = avlcreate in
 let arguments = [ "l" ; "v" ; "r" ] in
 let tests = iavltree_int_iavltree_tests () in
 let dumper = iavltree_int_iavltree_dumper in
-let typ = [ TInt ; TInt ; TInt ] in
-let tfun = fun (l,v,r) -> [ of_int (BatAvlTree.height l) ; of_int v ; of_int (BatAvlTree.height r) ] in
+let typ = [ TAVLTree ; TInt ; TAVLTree ] in
+let tfun = fun (l,v,r) -> [ of_avltree of_int l ; of_int v ; of_avltree of_int r ] in
 let def_features = (*PYF:t|T(l:R(1),v:1,r:R(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|T(l:R(1),v:1,r:R(1))|R(1)*) in
@@ -90,7 +90,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -106,8 +106,8 @@ let f = avlmake_tree in
 let arguments = [ "l" ; "v" ; "r" ] in
 let tests = iavltree_int_iavltree_tests () in
 let dumper = iavltree_int_iavltree_dumper in
-let typ = [ TInt ; TInt ; TInt ] in
-let tfun = fun (l,v,r) -> [ of_int (BatAvlTree.height l) ; of_int v ; of_int (BatAvlTree.height r) ] in
+let typ = [ TAVLTree ; TInt ; TAVLTree ] in
+let tfun = fun (l,v,r) -> [ of_avltree of_int l ; of_int v ; of_avltree of_int r ] in
 let def_features = (*PYF:t|T(l:R(1),v:1,r:R(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|T(l:R(1),v:1,r:R(1))|R(1)*) in
@@ -115,7 +115,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -129,8 +129,8 @@ let f = BatAvlTree.left_branch in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun t -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|R(1)*) in
@@ -138,7 +138,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -152,8 +152,8 @@ let f = BatAvlTree.right_branch in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun t -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|R(1)*) in
@@ -161,7 +161,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -175,8 +175,8 @@ let f = BatAvlTree.split_leftmost in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun t -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|T(v:1,l:R(1))*) in
@@ -184,7 +184,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -198,8 +198,8 @@ let f = BatAvlTree.split_rightmost in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun t -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|T(v:1,r:R(1))*) in
@@ -207,7 +207,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -221,8 +221,8 @@ let f = BatAvlTree.root in
 let arguments = [ "t" ] in
 let tests = iavltree_tests () in
 let dumper = iavltree_dumper in
-let typ = [ ] in
-let tfun = fun t -> [ ] in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
 let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|R(1)|1*) in
@@ -230,7 +230,7 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
 
@@ -246,8 +246,8 @@ let f = avlconcat in
 let arguments = [ "l" ; "r" ] in
 let tests = iavltree_iavltree_tests () in
 let dumper = iavltree_iavltree_dumper in
-let typ = [ ] in
-let tfun = fun (l,r) -> [ ] in
+let typ = [ TAVLTree ; TAVLTree ] in
+let tfun = fun (l,r) -> [ of_avltree of_int l ; of_avltree of_int r ] in
 let def_features = (*PYF:t|T(l:R(1),r:R(1))*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|T(l:R(1),r:R(1))|R(1)*) in
@@ -255,6 +255,6 @@ let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
                            ~arg_names:arguments f tests features postconds trans
 ;;
