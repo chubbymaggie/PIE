@@ -1,9 +1,5 @@
 # Specifications for OCaml modules
 
-## Notes
-- The synthesized features have input variables names as `x0g`, `x1g` and so on ...
-
-
 ## BatAvlTree
 
 #### BatAvlTree.check (t)
@@ -51,10 +47,10 @@ postcondition: (height(res) = 0)
 #### BatAvlTree.create (l,v,r)
 
 ```
-precondition: ((x0g > (x2g + 1)) || (x2g > (x0g + 1)))
+precondition: ((height(r) > (height(l) + 1)) | (height(l) > (height(r) + 1)))
 postcondition: exception thrown
 
-precondition: (!(x0g > (x2g + 1)) && !(x2g > (x0g + 1)))
+precondition: ((height(l) <= (height(r) + 1)) & (height(r) <= (height(l) + 1)))
 postcondition: terminates normally
 
 precondition: true
@@ -83,16 +79,16 @@ postcondition: (height(res) = 0)
 #### BatAvlTree.left_branch (t)
 
 ```
-precondition: (height(t) = 0)
+precondition: empty(t)
 postcondition: exception thrown
 
-precondition: !((height(t) = 0))
+precondition: (! empty(t))
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (! empty(left(t)))
 postcondition: (height(res) > 0)
 
-precondition: ~~ FAILED ~~
+precondition: empty(left(t))
 postcondition: (height(res) = 0)
 
 precondition: false
@@ -108,16 +104,16 @@ postcondition: (height(t) = height(res))
 #### BatAvlTree.right_branch (t)
 
 ```
-precondition: (height(t) = 0)
+precondition: empty(t)
 postcondition: exception thrown
 
-precondition: !((height(t) = 0))
+precondition: (! empty(t))
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (! empty(right(t)))
 postcondition: (height(res) > 0)
 
-precondition: ~~ FAILED ~~
+precondition: empty(right(t))
 postcondition: (height(res) = 0)
 
 precondition: false
@@ -133,42 +129,42 @@ postcondition: (height(t) = height(res))
 #### BatAvlTree.split_leftmost (t)
 
 ```
-precondition: (height(t) = 0)
+precondition: empty(t)
 postcondition: exception thrown
 
-precondition: !((height(t) = 0))
+precondition: (! empty(t))
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (height(t) > 1)
 postcondition: (height(l) > 0)
 
-precondition: ~~ FAILED ~~
+precondition: (1 = height(t))
 postcondition: (height(l) = 0)
 ```
 
 #### BatAvlTree.split_rightmost (t)
 
 ```
-precondition: (height(t) = 0)
+precondition: empty(t)
 postcondition: exception thrown
 
-precondition: !((height(t) = 0))
+precondition: (! empty(t))
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (height(t) > 1)
 postcondition: (height(r) > 0)
 
-precondition: ~~ FAILED ~~
+precondition: (1 = height(t))
 postcondition: (height(r) = 0)
 ```
 
 #### BatAvlTree.root (t)
 
 ```
-precondition: (height(t) = 0)
+precondition: empty(t)
 postcondition: exception thrown
 
-precondition: !((height(t) = 0))
+precondition: (! empty(t))
 postcondition: terminates normally
 ```
 
@@ -181,10 +177,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: (!(height(r) = 0) || !(height(l) = height(r)))
+precondition: (! (empty(r) & empty(l)))
 postcondition: (height(res) > 0)
 
-precondition: (height(r) = 0) && (l = r)
+precondition: (empty(r) & empty(l))
 postcondition: (height(res) = 0)
 ```
 
@@ -195,20 +191,20 @@ postcondition: (height(res) = 0)
 #### String.get (s,i)
 
 ```
-precondition: ((i < 0) || !((#len(s) > i)))
+precondition: ((0 > i) | ((#len(s)) <= i))
 postcondition: exception thrown
 
-precondition: !((i < 0)) && (#len(s) > i)
+precondition: ((0 <= i) & ((#len(s)) > i))
 postcondition: terminates normally
 ```
 
 #### String.set (s, i, c)
 
 ```
-precondition: ((i < 0) || !((#len(s) > i)))
+precondition: (((0 > i) | (0 = (#len(s)))) || ((#len(s)) <= i))
 postcondition: exception thrown
 
-precondition: !((i < 0)) && (#len(s) > i)
+precondition: ((0 <= i) & ((#len(s)) > i))
 postcondition: terminates normally
 
 precondition: true
@@ -221,13 +217,13 @@ postcondition: (#len(res) = 0)
 #### String.create (i)
 
 ```
-precondition: (i < 0)
+precondition: (0 > i)
 postcondition: exception thrown
 
-precondition: !((i < 0))
+precondition: (0 <= i)
 postcondition: terminates normally
 
-precondition: !((i = 0))
+precondition: (i > 0)
 postcondition: (#len(res) > 0)
 
 precondition: (i = 0)
@@ -243,13 +239,13 @@ postcondition: (i = #len(res))
 #### String.make (i, c)
 
 ```
-precondition: (i < 0)
+precondition: (0 > i)
 postcondition: exception thrown
 
-precondition: !((i < 0))
+precondition: (0 <= i)
 postcondition: terminates normally
 
-precondition: !((i = 0))
+precondition: (i > 0)
 postcondition: (#len(res) > 0)
 
 precondition: (i = 0)
@@ -265,10 +261,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: (((#len(s)) > 1) || (1 = (#len(s))))
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: (0 = (#len(s)))
 postcondition: (#len(res) = 0)
 
 precondition: true
@@ -284,13 +280,13 @@ postcondition: (#len(s) = #len(res))
 #### String.sub (s,i1,i2)
 
 ```
-precondition: ((i1 < 0) || (i2 < 0) || (x2g > ((#len(x0g)) - x1g)))
+precondition: (((0 > i1) | (0 > i2)) || (i2 > ((#len(s)) - i1)))
 postcondition: exception thrown
 
-precondition: !((i1 < 0)) && !((i2 < 0)) && (x2g <= ((#len(x0g)) - x1g))
+precondition: ((0 <= i2) & (0 <= i1)) && (i2 <= ((#len(s)) - i1))
 postcondition: terminates normally
 
-precondition: !((i2 = 0))
+precondition: ((i2 > 0) & (0 <= i1))
 postcondition: (#len(res) > 0)
 
 precondition: (i2 = 0)
@@ -300,32 +296,32 @@ postcondition: (#len(res) = 0)
 #### String.fill (s0, i0, i1, c)
 
 ```
-precondition: ((i0 < 0) || (i1 < 0) || (x2g > ((#len(x0g)) - x1g)))
+precondition: ~~ FAILED ~~
 postcondition: exception thrown
 
-precondition: !((i0 < 0)) && !((i1 < 0)) && (x2g <= ((#len(x0g)) - x1g))
+precondition: ~~ FAILED ~~
 postcondition: terminates normally
 
-precondition: !((#len(s0) = 0))
+precondition: ~~ FAILED ~~
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s0) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#len(res) = 0)
 ```
 
 #### String.blit (s0, i0, s1, i1, il)
 
 ```
-precondition: exception thrown
-postcondition: O O M
+precondition: ~~ FAILED ~~
+postcondition: exception thrown
 
-precondition: terminates normally
-postcondition: O O M
+precondition: ~~ FAILED ~~
+postcondition: terminates normally
 
-precondition: !((#len(s0) = 0))
+precondition: ~~ FAILED ~~
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s0) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#len(res) = 0)
 ```
 
@@ -354,19 +350,19 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: ~~ FAILED ~~
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#len(res) = 0)
 
-precondition: true
+precondition: ~~ FAILED ~~
 postcondition: (#eql(s, res))
 
-precondition: false
+precondition: ~~ FAILED ~~
 postcondition: (#len(s) > #len(res))
 
-precondition: true
+precondition: ~~ FAILED ~~
 postcondition: (#len(s) = #len(res))
 ```
 
@@ -379,51 +375,51 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: (((#len(s)) > 1) || (1 = (#len(s))))
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: (0 = (#len(s)))
 postcondition: (#len(res) = 0)
 
-precondition: true
+precondition: ~~ FAILED ~~
 postcondition: (#eql(s, res))
 
 precondition: false
 postcondition: (#len(s) > #len(res))
 
-precondition: true
+precondition: ~~ FAILED ~~
 postcondition: (#len(s) = #len(res))
 ```
 
 #### String.index (s, c)
 
 ```
-precondition: ~~ FAILED ~~
+precondition: (! (contains(s, c)))
 postcondition: exception thrown
 
-precondition: ~~ FAILED ~~
+precondition: (contains(s, c))
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (! (contains((#get(s, 0)), c)))
 postcondition: (res > 0)
 
-precondition: ~~ FAILED ~~
+precondition: (contains((#get(s, 0)), c))
 postcondition: (res = 0)
 ```
 
 #### String.rindex (s, c)
 
 ```
-precondition: ~~ FAILED ~~
+precondition: (! (contains(s, c)))
 postcondition: exception thrown
 
-precondition: ~~ FAILED ~~
+precondition: (contains(s, c))
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: (contains((#sub(s, 1, ((#len(s)) - 1))), c))
 postcondition: (res > 0)
 
-precondition: ~~ FAILED ~~
+precondition: (! (contains((#sub(s, 1, ((#len(s)) - 1))), c)))
 postcondition: (res = 0)
 ```
 
@@ -468,17 +464,17 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: ~~ FAILED ~~
+precondition: contains(s,c)
 postcondition: (res = true)
 ```
 
 #### String.contains_from (s, i, c)
 
 ```
-precondition: ((i < 0) || (#len(s) < i))
+precondition: ((i > (#len(s))) || (0 > i))
 postcondition: exception thrown
 
-precondition: !((i < 0)) && !((#len(s) < i))
+precondition: (((0 <= i) & ((#len(s)) > i)) || (i = (#len(s))))
 postcondition: terminates normally
 
 precondition: ~~ FAILED ~~
@@ -488,10 +484,10 @@ postcondition: (res = true)
 #### String.rcontains_from (s, i, c)
 
 ```
-precondition: ((i < 0) || !((#len(s) > i)))
+precondition: (((#len(s)) <= i) || (0 > i))
 postcondition: exception thrown
 
-precondition: !((i < 0)) && (#len(s) > i)
+precondition: (((0 <= i) & ((#len(s)) > 1)) || (0 = i)) && ((#len(s)) > i)
 postcondition: terminates normally
 
 precondition: ~~ FAILED ~~
@@ -507,13 +503,13 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: ((#len(s)) > 0)
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: (0 = (#len(s)))
 postcondition: (#len(res) = 0)
 
-precondition: (#len(s) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#eql(s, res))
 
 precondition: false
@@ -532,13 +528,13 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: ((#len(s)) > 0)
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: (0 = (#len(s)))
 postcondition: (#len(res) = 0)
 
-precondition: (#len(s) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#eql(s, res))
 
 precondition: false
@@ -557,13 +553,13 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: (((#len(s)) > 1) || (1 = (#len(s))))
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: (0 = (#len(s)))
 postcondition: (#len(res) = 0)
 
-precondition: (#len(s) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#eql(s, res))
 
 precondition: false
@@ -582,13 +578,13 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !((#len(s) = 0))
+precondition: (((#len(s)) > 1) || (1 = (#len(s))))
 postcondition: (#len(res) > 0)
 
-precondition: (#len(s) = 0)
+precondition: (0 = (#len(s)))
 postcondition: (#len(res) = 0)
 
-precondition: (#len(s) = 0)
+precondition: ~~ FAILED ~~
 postcondition: (#eql(s, res))
 
 precondition: false
@@ -627,11 +623,11 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !(len(l) = 0)
-postcondition: res > 0
+precondition: (! empty(l))
+postcondition: (res > 0)
 
-precondition: len(l) = 0
-postcondition: res = 0
+precondition: empty(l)
+postcondition: (res = 0)
 
 precondition: false
 postcondition: len(l) > res
@@ -643,45 +639,45 @@ postcondition: len(l) = res
 #### List.hd (l)
 
 ```
-precondition: len(l) = 0
+precondition: empty(l)
 postcondition: exception thrown
 
-precondition: !(len(l) = 0)
+precondition: (! empty(l))
 postcondition: terminates normally
 ```
 
 #### List.tl (l)
 
 ```
-precondition: len(l) = 0
+precondition: empty(l)
 postcondition: exception thrown
 
-precondition: !(len(l) = 0)
+precondition: (! empty(l))
 postcondition: terminates normally
 
-precondition: ! ((tl x0g) = [])
+precondition: (len(l) > 1)
 postcondition: (len(res) > 0)
 
-precondition: ((tl x0g) = [])
+precondition: (1 = len(l))
 postcondition: (len(res) = 0)
 
 precondition: false
-postcondition: l = res
+postcondition: (l = res)
 
 precondition: true
-postcondition: len(l) > len(res)
+postcondition: (len(l) > len(res))
 
 precondition: false
-postcondition: len(l) = len(res)
+postcondition: (len(l) = len(res))
 ```
 
 #### List.nth (l, n)
 
 ```
-precondition: (n < 0 || !(len(l) > n))
+precondition: (((0 > n) | (n > len(l))) || (n = len(l)))
 postcondition: exception thrown
 
-precondition: len(l) > n && !(n < 0)
+precondition: ((0 <= n) & (len(l) > n))
 postcondition: terminates normally
 ```
 
@@ -694,20 +690,20 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !(len(a) = 0)
-postcondition: len(res) > 0
+precondition: (! empty(l))
+postcondition: (len(res) > 0)
 
-precondition: len(a) = 0
-postcondition: len(res) = 0
+precondition: empty(l)
+postcondition: (len(res) = 0)
 
-precondition: (x0g = (rev x0g))
-postcondition: a = res
+precondition: (l = rev(l))
+postcondition: (l = res)
 
 precondition: false
-postcondition: len(a) > len(res)
+postcondition: (len(l) > len(res))
 
 precondition: true
-postcondition: len(a) = len(res)
+postcondition: (len(l) = len(res))
 ```
 
 #### List.append (l0, l1)
@@ -719,11 +715,11 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: (!((len(l1) = 0)) || !((len(l0) = len(l1))))
-postcondition: len(res) > 0
+precondition: ((! empty(l0)) || (! empty(l1)))
+postcondition: (len(res) > 0)
 
-precondition: len(l1) = 0 && len(l0) = len(l1)
-postcondition: len(res) = 0
+precondition: empty(l0) && empty(l1)
+postcondition: (len(res) = 0)
 ```
 
 #### List.rev_append (l0, l1)
@@ -735,10 +731,10 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: (!((len(l1) = 0)) || !((len(l0) = len(l1))))
+precondition: ((! empty(l1)) || (! empty(l0)))
 postcondition: (len(res) > 0)
 
-precondition: (len(l1) = 0) && (l0 = l1)
+precondition: empty(l1) && empty(l0)
 postcondition: (len(res) = 0)
 ```
 
@@ -795,7 +791,7 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: (x0g in x1g)
+precondition: (m in l)
 postcondition: res = true
 ```
 
@@ -847,17 +843,17 @@ postcondition: exception thrown
 precondition: true
 postcondition: terminates normally
 
-precondition: !(len(l) = 0)
-postcondition: len(r0) > 0
+precondition: (! empty(l))
+postcondition: (len(r0) > 0)
 
-precondition: len(l) = 0
-postcondition: len(r0) = 0
+precondition: empty(l)
+postcondition: (len(r0) = 0)
 
-precondition: !(len(l) = 0)
-postcondition: len(r1) > 0
+precondition: (! empty(l))
+postcondition: (len(r1) > 0)
 
-precondition: len(l) = 0
-postcondition: len(r1) = 0
+precondition: empty(l)
+postcondition: (len(r1) = 0)
 
 precondition: false
 postcondition: len(r0) > len(r1)
@@ -869,15 +865,15 @@ postcondition: len(r0) = len(r1)
 #### List.combine (l0, l1)
 
 ```
-precondition: !(len(l0) = len(l1))
+precondition: (! (len(l0) = len(l1)))
 postcondition: exception thrown
 
-precondition: len(l0) = len(l1)
+precondition: (len(l0) = len(l1))
 postcondition: terminates normally
 
-precondition: !(len(l1) = 0)
-postcondition: len(res) > 0
+precondition: (! empty(l0))
+postcondition: (len(res) > 0)
 
-precondition: len(l1) = 0
-postcondition: len(res) = 0
+precondition: empty(l1)
+postcondition: (len(res) = 0)
 ```
