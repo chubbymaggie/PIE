@@ -1,10 +1,16 @@
-#use "top_helper.ml"
+open Batteries
+open QCheck.Arbitrary
+open TestGen
+open Escher_types
+open Escher_core
+open Escher_components
+open Escher_synth
+open SpecInfer
 
-(* #################### PROPERTIES  #################### *)
 
 (*** List.length ***)
 
-let lengthRes = fun () ->
+let lengthRes = fun ?(pind=(-1)) () ->
 let name = "length" in
 let f = List.length in
 let arguments = [ "l" ] in
@@ -20,14 +26,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 (*** List.hd ***)
 
-let hdRes = fun () ->
+let hdRes = fun ?(pind=(-1)) () ->
 let name = "hd" in
 let f = List.hd in
 let arguments = [ "l" ] in
@@ -43,7 +50,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -52,7 +60,7 @@ let my_postconditions = [] in
 
 let lnth = fun (l,n) -> List.nth l n;;
 
-let nthRes = fun () ->
+let nthRes = fun ?(pind=(-1)) () ->
 let name = "nth" in
 let f = lnth in
 let arguments = [ "l" ; "n" ] in
@@ -68,7 +76,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -77,7 +86,7 @@ let my_postconditions = [] in
 
 let lmem = fun (m,l) -> List.mem m l;;
 
-let memRes = fun () ->
+let memRes = fun ?(pind=(-1)) () ->
 let name = "mem" in
 let f = lmem in
 let arguments = [ "m" ; "l" ] in
@@ -93,18 +102,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
-
-
-
-(* #################### MUTATORS  #################### *)
 
 
 
 (*** List.rev ***)
 
-let revRes = fun () ->
+let revRes = fun ?(pind=(-1)) () ->
 let name = "rev" in
 let f = List.rev in
 let arguments = [ "l" ] in
@@ -120,14 +126,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 (*** List.tl ***)
 
-let tlRes = fun () ->
+let tlRes = fun ?(pind=(-1)) () ->
 let name = "tl" in
 let f = List.tl in
 let arguments = [ "l" ] in
@@ -143,7 +150,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -152,7 +160,7 @@ let my_postconditions = [] in
 
 let lappend = fun (l0, l1) -> List.append l0 l1;;
 
-let appendRes = fun () ->
+let appendRes = fun ?(pind=(-1)) () ->
 let name = "append" in
 let f = lappend in
 let arguments = [ "l0" ; "l1" ] in
@@ -168,7 +176,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -177,7 +186,7 @@ let my_postconditions = [] in
 
 let lcombine = fun (l1,l2) -> List.combine l1 l2;;
 
-let combineRes = fun () ->
+let combineRes = fun ?(pind=(-1)) () ->
 let name = "combine" in
 let f = lcombine in
 let arguments = [ "l0" ; "l1" ] in
@@ -193,14 +202,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 (*** List.concat ***)
 
-let concatRes = fun () ->
+let concatRes = fun ?(pind=(-1)) () ->
 let name = "concat" in
 let f = List.concat in
 let arguments = [ "l" ] in
@@ -216,14 +226,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 (*** List.flatten ***)
 
-let flattenRes = fun () ->
+let flattenRes = fun ?(pind=(-1)) () ->
 let name = "flatten" in
 let f = List.flatten in
 let arguments = [ "l" ] in
@@ -239,12 +250,13 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
-let testConcatFlattenEquivalence = fun () ->
+let testConcatFlattenEquivalence = fun ?(pind=(-1)) () ->
     concatRes() = flattenRes()
 ;;
 
@@ -254,7 +266,7 @@ let testConcatFlattenEquivalence = fun () ->
 
 let lrev_append = fun (l0, l1) -> List.rev_append l0 l1;;
 
-let rev_appendRes = fun () ->
+let rev_appendRes = fun ?(pind=(-1)) () ->
 let name = "rev_append" in
 let f = lrev_append in
 let arguments = [ "l0" ; "l1" ] in
@@ -270,14 +282,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 (*** List.split ***)
 
-let splitRes = fun () ->
+let splitRes = fun ?(pind=(-1)) () ->
 let name = "split" in
 let f = List.split in
 let arguments = [ "l" ] in
@@ -293,7 +306,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -302,7 +316,7 @@ let my_postconditions = [] in
 
 let lassoc = fun (a,l) -> List.assoc a l;;
 
-let assocRes = fun () ->
+let assocRes = fun ?(pind=(-1)) () ->
 let name = "assoc" in
 let f = lassoc in
 let arguments = [ "a" ; "l" ] in
@@ -318,14 +332,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 let lmem_assoc = fun (a,l) -> List.mem_assoc a l;;
 
-let mem_assocRes = fun () ->
+let mem_assocRes = fun ?(pind=(-1)) () ->
 let name = "mem_assoc" in
 let f = lmem_assoc in
 let arguments = [ "a" ; "l" ] in
@@ -341,14 +356,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 let lremove_assoc = fun (a,l) -> List.remove_assoc a l;;
 
-let remove_assocRes = fun () ->
+let remove_assocRes = fun ?(pind=(-1)) () ->
 let name = "remove_assoc" in
 let f = lremove_assoc in
 let arguments = [ "a" ; "l" ] in
@@ -364,5 +380,21 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
+
+
+let () =
+    test_size := __TEST_SIZE__ ;
+    max_conflict_set_size := __MAX_CONFLICT_SET_SIZE__ ;
+    let run = (fun ((s, f) : (string * (?pind:int -> unit -> 'a))) ->
+                  output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
+                  print_specs stderr (f ~pind:__POST_INDEX__ ())) in
+        run (List.nth [ ("List.length(l)", lengthRes) ; ("List.hd(l)", hdRes) ; ("List.nth(l, n)", nthRes) ;
+                        ("List.mem(m, l)", memRes) ; ("List.rev(l)", revRes) ; ("List.tl(l)", tlRes) ;
+                        ("List.append(l0, l1)", appendRes) ; ("List.combine(l0, l1)", combineRes);
+                        ("List.concat(l)", concatRes) ; ("List.flatten(l)", flattenRes) ;
+                        ("List.rev_append(l0, l1)", rev_appendRes) ; ("List.split(l)", splitRes) ;
+                        ("List.assoc(a, l)", assocRes) ; ("List.mem_assoc(a, l)", mem_assocRes) ;
+                        ("List.remove_assoc(a, l)", remove_assocRes) ] __FUNCTION_INDEX__)

@@ -1,8 +1,7 @@
 #!/usr/bin/python
 
+import os
 import sys
-
-from random import randint
 
 def fix(string):
     if string[0] == '(' and string[-1] == ')':
@@ -12,17 +11,18 @@ def fix(string):
     return string
 
 if __name__ == "__main__":
-    with open(sys.argv[1]) as f:
+    [EXE, TST, RES] = sys.argv[1:]
+
+    with open(TST) as f:
         header = f.readline()
-    with open(sys.argv[2]) as f:
+    with open(RES) as f:
         data = f.readlines()[1:]
 
     header = header.split('\t')
     data = {line.split(' : ')[0].strip():line.split(' : ')[1].strip() for line in data}
 
-    model = {var.strip():fix(data[var.strip()]) if var.strip() in data else str(randint(-16,16)) for var in header}
-    sys.stderr.write("    [+] Counter example added ... %s\n" % str(model))
+    model = {var.strip():fix(data[var.strip()]) if var.strip() in data else '-' for var in header}
+    sys.stderr.write("    [+] Counter examples added from root state : %s\n" % str(model))
 
-    model = [model[var.strip()] for var in header]
-    with open(sys.argv[1], 'a') as f:
-        f.write('\n%s' % '\t'.join(model))
+    model = ' '.join([model[var.strip()] for var in header])
+    os.system("%s %s | tail -n +2 >> %s" % (EXE, model, TST))

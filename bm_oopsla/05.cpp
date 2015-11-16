@@ -1,8 +1,9 @@
 #include "bm_oopsla.h"
 
-int main() {
-  int w = 1, z = 0, x = 0, y = 0;
-  INITIALIZE(4, w, x, y, z);
+int main(int argc, char* argv[]) {
+  RECORD(4, w, x, y, z);
+
+  w = 1; z = 0; x = 0; y = 0;
 
   while(unknown2()){
     PRINT_VARS();

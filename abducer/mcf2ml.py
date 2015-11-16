@@ -115,6 +115,7 @@ def genTests():
 # argv[1] = filename
 # argv[2] = record filename
 # argv[3] = Escher mode?
+# argv[4] = conflict group size
 
 if __name__ == "__main__":
     ESCHER_MODE = True if len(sys.argv) > 3 and sys.argv[3] == 'escher' else False
@@ -141,7 +142,7 @@ if __name__ == "__main__":
     print("\nopen Escher_types")
     print("open SpecInfer")
     print("open TestGen")
-    print("\nlet index_of = fun s0 s1 -> try (BatString.find s0 s1) with Not_found -> (-1)")
+    print("\n\nlet index_of = fun s0 s1 -> try (BatString.find s0 s1) with Not_found -> (-1)")
     print("\n\nlet n_arg_gen %s = (fun rand -> (%s))" % (' '.join('g%d' % i for i in range(len(uvars))), ', '.join('g%d rand' % i for i in range(len(uvars)))))
     print("\n\nlet n_arg_dumper %s (%s) = \"(\" ^ %s ^ \")\"" % (' '.join('d%d' % i for i in range(len(uvars))), ', '.join('v%d' % i for i in range(len(uvars))), ' ^ ", " ^ '.join('(d%d v%d)' % (i, i) for i in range(len(uvars)))))
     print("\n\nlet f = fun (%s) -> %s" % (','.join(uvars), ml))
@@ -164,4 +165,4 @@ if __name__ == "__main__":
     if ESCHER_MODE:
         print("\n\n\nlet () = output_string stdout (snd (escherSynthAndVerify ~dump:(\"%s\", f_dumper) ~record:\"%s\" ~consts:consts f tests post_cond (typo, trans) test_trans \"%s\"))" % (sys.argv[1], sys.argv[2], sys.argv[1]))
     else:
-        print("\n\n\nlet () = print_cnf stdout (pacLearnSpecAndVerify ~dump:(\"%s\", f_dumper) ~record:\"%s\" ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % (sys.argv[1], sys.argv[2], sys.argv[1]))
+        print("\n\n\nlet () = max_conflict_set_size := %s ; print_cnf stdout (pacLearnSpecAndVerify ~dump:(\"%s\", f_dumper) ~record:\"%s\" ~consts:consts f tests (def_features @ my_features) post_cond (typo, trans) test_trans \"%s\")" % ("1000000000" if sys.argv[4] == "all" else sys.argv[4], sys.argv[1], sys.argv[2], sys.argv[1]))

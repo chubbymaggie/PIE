@@ -66,7 +66,7 @@ let quint_dumper d1 d2 d3 d4 d5 (a, b, c, d, e) = "(" ^ (d1 a) ^ ", " ^ (d2 b) ^
  * Constants
  ***********)
 
-let test_size = 6400
+let test_size = ref 6400
 
 let sint = (-4) -- 5
 let sposInt = 0 -- 4
@@ -78,35 +78,35 @@ let string = string_len (0 -- 13)
  * Integer combinations
  **********************)
 
-let int_tests () = generate ~n:test_size sint
+let int_tests () = generate ~n:(!test_size) sint
 
 let intList = list ~len:sposInt sint
 let intList_dumper = list_dumper int_dumper
-let intList_tests () = generate ~n:test_size intList
+let intList_tests () = generate ~n:(!test_size) intList
 
 let intListList = list ~len:sposInt intList
 let intListList_dumper = list_dumper intList_dumper
-let intListList_tests () = generate ~n:test_size intListList
+let intListList_tests () = generate ~n:(!test_size) intListList
 
 let intList_int = pair intList sint
 let intList_int_dumper = pair_dumper intList_dumper int_dumper
-let intList_int_tests () = generate ~n:test_size intList_int
+let intList_int_tests () = generate ~n:(!test_size) intList_int
 
 let int_intList = pair sint intList
 let int_intList_dumper = pair_dumper int_dumper intList_dumper
-let int_intList_tests () = generate ~n:test_size int_intList
+let int_intList_tests () = generate ~n:(!test_size) int_intList
 
 let intList_intList = pair intList intList
 let intList_intList_dumper = pair_dumper intList_dumper intList_dumper
-let intList_intList_tests () = generate ~n:test_size intList_intList
+let intList_intList_tests () = generate ~n:(!test_size) intList_intList
 
 let int_int_List = list ~len:sposInt (pair sint sint)
 let int_int_List_dumper = list_dumper (pair_dumper int_dumper int_dumper)
-let int_int_List_tests () = generate ~n:test_size int_int_List
+let int_int_List_tests () = generate ~n:(!test_size) int_int_List
 
 let int__int_int_List = pair sint int_int_List
 let int__int_int_List_dumper = pair_dumper int_dumper int_int_List_dumper
-let int__int_int_List_tests () = generate ~n:test_size int__int_int_List
+let int__int_int_List_tests () = generate ~n:(!test_size) int__int_int_List
 
 
 
@@ -117,55 +117,55 @@ let int__int_int_List_tests () = generate ~n:test_size int__int_int_List
 
 let distinct_string = pred string distinct
 
-let string_tests () = generate ~n:test_size string
+let string_tests () = generate ~n:(!test_size) string
 
 let stringList = list ~len:sposInt string
 let stringList_dumper = list_dumper string_dumper
 
 let string_int = pair string sint
 let string_int_dumper = pair_dumper string_dumper int_dumper
-let string_int_tests () = generate ~n:test_size string_int
+let string_int_tests () = generate ~n:(!test_size) string_int
 
 let string_char = pair string char
 let string_char_dumper = pair_dumper string_dumper char_dumper
-let string_char_tests () = generate ~n:test_size string_char
+let string_char_tests () = generate ~n:(!test_size) string_char
 
 let string_string = pair string string
 let string_string_dumper = pair_dumper string_dumper string_dumper
-let string_string_tests () = generate ~n:test_size string_string
+let string_string_tests () = generate ~n:(!test_size) string_string
 
 let string_int_int = triple string sint sint
 let string_int_int_dumper = triple_dumper string_dumper int_dumper int_dumper
-let string_int_int_tests () = generate ~n:test_size string_int_int
+let string_int_int_tests () = generate ~n:(!test_size) string_int_int
 
 let int_char = pair sint char
 let int_char_dumper = pair_dumper int_dumper char_dumper
-let int_char_tests () = generate ~n:test_size int_char
+let int_char_tests () = generate ~n:(!test_size) int_char
 
 let string_int_char = triple string sint char
 let string_int_char_dumper = triple_dumper string_dumper int_dumper char_dumper
-let string_int_char_tests () = generate ~n:test_size string_int_char
+let string_int_char_tests () = generate ~n:(!test_size) string_int_char
 
 let string_stringList = pair string stringList
 let string_stringList_dumper = pair_dumper string_dumper stringList_dumper
-let string_stringList_tests () = generate ~n:test_size string_stringList
+let string_stringList_tests () = generate ~n:(!test_size) string_stringList
 
 let string_int_int_int_dumper = quad_dumper string_dumper int_dumper int_dumper int_dumper
 let string_int_int_int_int_dumper = quint_dumper string_dumper int_dumper int_dumper int_dumper int_dumper
 
 let string_int_string_int_int = quint string sint string sint sint
 let string_int_string_int_int_dumper = quint_dumper string_dumper int_dumper string_dumper int_dumper int_dumper
-let string_int_string_int_int_tests () = generate ~n:test_size string_int_string_int_int
+let string_int_string_int_int_tests () = generate ~n:(!test_size) string_int_string_int_int
 
 let string_int_int_char = quad string sint sint char
 let string_int_int_char_dumper = quad_dumper string_dumper int_dumper int_dumper char_dumper
-let string_int_int_char_tests () = generate ~n:test_size string_int_int_char
+let string_int_int_char_tests () = generate ~n:(!test_size) string_int_int_char
 
 let distinct_string_int_int_int = quad distinct_string sint sint sint
-let distinct_string_int_int_int_tests () = generate ~n:test_size distinct_string_int_int_int
+let distinct_string_int_int_int_tests () = generate ~n:(!test_size) distinct_string_int_int_int
 
 let distinct_string_int_int_int_int = quint distinct_string sint sint sint sint
-let distinct_string_int_int_int_int_tests () = generate ~n:test_size distinct_string_int_int_int_int
+let distinct_string_int_int_int_int_tests () = generate ~n:(!test_size) distinct_string_int_int_int_int
 
 (**********
  * AVL Tree
@@ -175,9 +175,9 @@ let iavltree = tree (odds 4 5 (return true) (return false)) BatAvlTree.make_tree
 let iavltree_iavltree = pair iavltree iavltree
 let iavltree_int_iavltree = triple iavltree sint iavltree
 
-let iavltree_tests () = generate ~n:test_size iavltree
-let iavltree_iavltree_tests () = generate ~n:test_size iavltree_iavltree
-let iavltree_int_iavltree_tests () = generate ~n:test_size iavltree_int_iavltree
+let iavltree_tests () = generate ~n:(!test_size) iavltree
+let iavltree_iavltree_tests () = generate ~n:(!test_size) iavltree_iavltree
+let iavltree_int_iavltree_tests () = generate ~n:(!test_size) iavltree_int_iavltree
 
 let rec avltree_dumper d avl =
   if (BatAvlTree.is_empty avl) then "{}"

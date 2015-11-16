@@ -10,7 +10,7 @@ bounds = set()
 string_vars = set()
 
 epsilon = 0.03
-timeout = 256.00
+timeout = 128.00
 
 devnull = open(os.devnull, 'w')
 

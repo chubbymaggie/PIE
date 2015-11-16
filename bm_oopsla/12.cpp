@@ -1,10 +1,10 @@
 #include "bm_oopsla.h"
 
-int main() {
-  int n, x = 0, m = 0;
-  INITIALIZE(3, m, n, x);
+int main(int argc, char* argv[]) {
+  RECORD(3, m, n, x);
 
-  n = unknown();
+  INIT_n(unknown);
+  m = 0; x = 0;
 
   while(x < n) {
     PRINT_VARS();

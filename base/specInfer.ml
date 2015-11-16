@@ -21,7 +21,6 @@ type truthAssignment = (int, bool) BatHashtbl.t
 exception NoSuchFunction
 exception BadCounterExample
 
-let max_conflict_set_size = 16
 let conflict_counter = ref 0
 let record_file = ref ""
 
@@ -463,7 +462,7 @@ let missingFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features 
   filtered
 
 
-let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -> 'b) (tests : 'a list)
+let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -> 'b)
                   (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                   : (('a -> bool) * 'c) list =
@@ -508,33 +507,33 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -
               List.map (fun (annot, func) -> (fun data -> (func (snd trans) data) = VBool true), annot) solutions)
 
 
-let resolveConflict ?(fname="") ?(consts=[]) ?(comps=[]) (f : 'a -> 'b) (tests : 'a list)
+(* default conflict group size *)
+let max_conflict_set_size = ref 16
+let resolveConflict ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -> 'b)
                     (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
                     (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                     : (('a -> bool) * 'c) list =
 
-    (* TODO: Explain Magic numbers *)
-
-    let final_mfs = if List.length missing_features < max_conflict_set_size then missing_features else
+    let final_mfs = if List.length missing_features < !max_conflict_set_size then missing_features else
         (let (good_mfs, bad_mfs) =
             List.fold_left (fun (g,b) mf -> match mf with (_,_,_,p) -> if p then ((mf::g),b) else (g,(mf::b)))
                            ([],[]) missing_features in
-            let final_good_mfs = BatList.take (max_conflict_set_size / 2) good_mfs in
-            let final_bad_mfs = BatList.take (max_conflict_set_size / 2) bad_mfs in
+            let final_good_mfs = BatList.take (!max_conflict_set_size / 2) good_mfs in
+            let final_bad_mfs = BatList.take (!max_conflict_set_size / 2) bad_mfs in
                 final_good_mfs @ final_bad_mfs) in
-        synthFeatures ~fname:fname ~consts:consts ~comps:comps f tests final_mfs postcond trans
+        synthFeatures ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f final_mfs postcond trans
 
 
 (* try to resolve the first group of conflicting tests that can be resolved *)
-let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f: 'a -> 'b) (tests: 'a list)
+let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f: 'a -> 'b)
                                   (missing_features: ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list list)
                                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
                                   : (('a -> bool) * 'c) list =
 
     if missing_features = [] then []
-    else let new_features = resolveConflict ~fname:fname ~consts:consts ~comps:comps f tests (List.hd missing_features) postcond trans
+    else let new_features = resolveConflict ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f (List.hd missing_features) postcond trans
             in if not (new_features = []) then new_features
-            else convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (List.tl missing_features) postcond trans
+            else convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f (List.tl missing_features) postcond trans
 
 
 (* try to resolve all groups of conflicting tests for one post condition*)
@@ -545,7 +544,7 @@ let rec convergeOneMissingFeature ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_nam
     let all_missing_features = missingFeatures f tests features postcond in
         if all_missing_features = []
         then features
-        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests all_missing_features postcond trans
+        else let mf = convergeOneMissingFeature ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f all_missing_features postcond trans
              in if mf = [] then features else convergePCondFeatures ~fname:fname ~consts:consts ~comps:comps ~arg_names:arg_names f tests (features @ mf) postcond trans
 
 
@@ -624,21 +623,26 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
     let test_file = open_out ((fst dump) ^ ".tests") in
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
       close_out test_file);
+
   List.map (fun post ->
-    prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
-    let res = pacLearnSpecIncrK ~k:k f tests
-                                (if fst trans = [] then features
-                                 else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps
-                                                            ~arg_names:arg_names f tests features post trans)
-                                post in
-      (output_string stderr "\n" ; print_spec stderr res ; res)
-  ) posts
+    (* remove all tests which throw IgnoreTest *)
+    let tests = (List.fold_left (fun p t -> try (fst post) t (BatResult.catch f t) ; (t::p) with IgnoreTest -> p) [] tests) in (
+      prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
+      let res = pacLearnSpecIncrK ~k:k f tests
+                                  (if fst trans = [] then features
+                                   else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps
+                                                              ~arg_names:arg_names f tests features post trans)
+                                  post in
+        (output_string stderr "\n" ; print_spec stderr res ; res)
+    )) posts
 
 
 let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[]) ?(comps=[])
                              (f : 'a -> 'b) (tests : 'a list) (post : ('a -> 'b result -> bool) * 'c)
                              (trans : typ list * ('a -> value list)) (trans_test: 'z -> 'a)
                              (smtfile : string): (('a -> bool) * string) =
+
+    (* We would never have IgnoreTest exception in this case *)
 
   record_file := record;
   (if fst dump = "" then () else (
@@ -649,7 +653,7 @@ let rec escherSynthAndVerify ?(dump=("", (fun a -> ""))) ?(record="") ?(consts=[
   let target = {
         domain = (fst trans);
         codomain = TBool;
-        apply = (fun t -> try VBool(f (trans_test t)) with _ -> VDontCare);
+        apply = (fun t -> VBool(f (trans_test t)));
         name = "synth";
         dump = _unsupported_
       } in
@@ -689,6 +693,8 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
                               ?(comps=[]) (f : 'a -> 'b) (tests : 'a list) (features : (('a -> bool) * 'c) list)
                               (post : ('a -> 'b result -> bool) * 'c) (trans : typ list * ('a -> value list))
                               (trans_test: 'z -> 'a) (smtfile : string): 'c cnf option =
+
+    (* We would never have IgnoreTest exception in this case *)
 
   record_file := record;
   (if fst dump = "" then () else (
@@ -746,5 +752,5 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
                   let args = (List.map (fun vtyp -> let data = input_line res_file in match vtyp with TInt -> VInt(int_of_string data) | TString -> VString(data)) (fst trans)) in
                   prerr_string "      [+] Added test ... "; print_data stderr (VList(args)); prerr_string "\n";
                   close_in res_file;
-                  if (try f (trans_test args) with _ -> false) then raise BadCounterExample else (helper 1 unsats ((trans_test args) :: tests) features)))))
+                  if f (trans_test args) then raise BadCounterExample else (helper 1 unsats ((trans_test args) :: tests) features)))))
   in helper k unsats tests features

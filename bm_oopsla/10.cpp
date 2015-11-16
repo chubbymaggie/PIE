@@ -1,10 +1,10 @@
 #include "bm_oopsla.h"
 
-int main() {
-  int x = -50, y;
-  INITIALIZE(2, x, y);
+int main(int argc, char* argv[]) {
+  RECORD(2, x, y);
 
-  y = unknown();
+  INIT_y(unknown);
+  x = -50;
 
   while(x < 0) {
     PRINT_VARS();

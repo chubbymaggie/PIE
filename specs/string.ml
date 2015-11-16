@@ -1,6 +1,36 @@
-#use "top_helper.ml"
+open Batteries
+open QCheck.Arbitrary
+open TestGen
+open Escher_types
+open Escher_core
+open Escher_components
+open Escher_synth
+open SpecInfer
 
 let extra_comps = default_list @ default_char @ [ str_getc ; str_containsc ]
+
+(*** String.length ***)
+
+let slengthRes = fun ?(pind=(-1)) () ->
+let name = "slength" in
+let f = String.length in
+let arguments = [ "s" ] in
+let tests = string_tests () in
+let dumper = string_dumper in
+let typ = [ TString ] in
+let tfun = fun s -> [ of_string s ] in
+let def_features = (*PYF:s|S*) in
+let my_features = [] in
+let def_postconditions = (*PYP:s|S|I*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
 
 (*** String.get ***)
 
@@ -12,7 +42,7 @@ let sget = (fun (s, i) -> String.get s i)
    they are equivalent given the fact that the length of a string is never negative.
 *)
 
-let sgetRes = fun () ->
+let sgetRes = fun ?(pind=(-1)) () ->
 let name = "sget" in
 let f = sget in
 let arguments = [ "s" ; "i" ] in
@@ -28,7 +58,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -36,7 +67,7 @@ let my_postconditions = [] in
 
 let sset = (fun (s, i, c) -> let sc = String.copy s in String.set sc i c ; sc)
 
-let ssetRes = fun () ->
+let ssetRes = fun ?(pind=(-1)) () ->
 let name = "sset" in
 let f = sset in
 let arguments = [ "s" ; "i" ; "c" ] in
@@ -52,13 +83,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.create ***)
 
-let screateRes = fun () ->
+let screateRes = fun ?(pind=(-1)) () ->
 let name = "screate" in
 let f = String.create in
 let arguments = [ "i" ] in
@@ -74,7 +106,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -82,7 +115,7 @@ let my_postconditions = [] in
 
 let smake = fun (i,c) -> String.make i c;;
 
-let smakeRes = fun () ->
+let smakeRes = fun ?(pind=(-1)) () ->
 let name = "smake" in
 let f = smake in
 let arguments = [ "i" ; "c" ] in
@@ -98,13 +131,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.copy ***)
 
-let scopyRes = fun () ->
+let scopyRes = fun ?(pind=(-1)) () ->
 let name = "scopy" in
 let f = String.copy in
 let arguments = [ "s" ] in
@@ -120,7 +154,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -156,7 +191,7 @@ let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
    - remove some features to try to get conflicts?
 *)
 
-let ssubRes = fun () ->
+let ssubRes = fun ?(pind=(-1)) () ->
 let name = "ssub" in
 let f = ssub in
 let arguments = [ "s" ; "i1" ; "i2" ] in
@@ -172,22 +207,23 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.fill ***)
 
-let sfill = (fun (s0,i0,i1,c) -> let sc = String.copy s0 in String.fill s0 i0 i1 c ; sc)
+let sfill = (fun (s,i0,i1,c) -> let sc = String.copy s in String.fill s i0 i1 c ; sc)
 
-let sfillRes = fun () ->
+let sfillRes = fun ?(pind=(-1)) () ->
 let name = "sfill" in
 let f = sfill in
-let arguments = [ "s0" ; "i0" ; "i1" ; "c" ] in
+let arguments = [ "s" ; "i0" ; "i1" ; "c" ] in
 let tests = string_int_int_char_tests () in
 let dumper = string_int_int_char_dumper in
 let typ = [ TString ; TInt ; TInt ; TChar ] in
-let tfun = fun (s0,i0,i1,c) -> [ of_string s0 ; of_int i0 ; of_int i1 ; of_char c ] in
+let tfun = fun (s,i0,i1,c) -> [ of_string s ; of_int i0 ; of_int i1 ; of_char c ] in
 let def_features = (*PYF:a|T(s0:S,i0:I,i1:I,c:C)*) in
 let my_features = [] in
 let def_postconditions = (*PYP:t|T(s0:S,i0:I,i1:I,c:C)|S*) in
@@ -196,7 +232,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -204,7 +241,7 @@ let my_postconditions = [] in
 
 let sblit = (fun (s0,i0,s1,i1,il) -> let sc = String.copy s0 in String.blit s0 i0 s1 i1 il ; sc)
 
-let sblitRes = fun () ->
+let sblitRes = fun ?(pind=(-1)) () ->
 let name = "sblit" in
 let f = sblit in
 let arguments = [ "s0" ; "i0" ; "s1" ; "i1" ; "il" ] in
@@ -220,7 +257,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -228,7 +266,7 @@ let my_postconditions = [] in
 
 let sconcat = (fun (s,sl) -> String.concat s sl)
 
-let sconcatRes = fun () ->
+let sconcatRes = fun ?(pind=(-1)) () ->
 let name = "sconcat" in
 let f = sconcat in
 let arguments = [ "s" ; "sl" ] in
@@ -244,13 +282,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.trim ***)
 
-let strimRes = fun () ->
+let strimRes = fun ?(pind=(-1)) () ->
 let name = "strim" in
 let f = String.trim in
 let arguments = [ "s" ] in
@@ -266,13 +305,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.escaped ***)
 
-let sescapedRes = fun () ->
+let sescapedRes = fun ?(pind=(-1)) () ->
 let name = "sescaped" in
 let f = String.escaped in
 let arguments = [ "s" ] in
@@ -288,7 +328,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -296,7 +337,7 @@ let my_postconditions = [] in
 
 let sindex = (fun (s,c) -> String.index s c)
 
-let sindexRes = fun () ->
+let sindexRes = fun ?(pind=(-1)) () ->
 let name = "sindex" in
 let f = sindex in
 let arguments = [ "s" ; "c" ] in
@@ -312,7 +353,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -320,7 +362,7 @@ let my_postconditions = [] in
 
 let srindex = (fun (s,c) -> String.rindex s c)
 
-let srindexRes = fun () ->
+let srindexRes = fun ?(pind=(-1)) () ->
 let name = "srindex" in
 let f = srindex in
 let arguments = [ "s" ; "c" ] in
@@ -336,7 +378,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -344,7 +387,7 @@ let my_postconditions = [] in
 
 let sindex_from = (fun (s,i,c) -> String.index_from s i c)
 
-let sindex_fromRes = fun () ->
+let sindex_fromRes = fun ?(pind=(-1)) () ->
 let name = "sindex_from" in
 let f = sindex_from in
 let arguments = [ "s" ; "i" ; "c" ] in
@@ -360,7 +403,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -368,7 +412,7 @@ let my_postconditions = [] in
 
 let srindex_from = (fun (s,i,c) -> String.rindex_from s i c)
 
-let srindex_fromRes = fun () ->
+let srindex_fromRes = fun ?(pind=(-1)) () ->
 let name = "srindex_from" in
 let f = srindex_from in
 let arguments = [ "s" ; "i" ; "c" ] in
@@ -384,7 +428,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -392,7 +437,7 @@ let my_postconditions = [] in
 
 let scontains = (fun (s,c) -> String.contains s c)
 
-let scontainsRes = fun () ->
+let scontainsRes = fun ?(pind=(-1)) () ->
 let name = "scontains" in
 let f = scontains in
 let arguments = [ "s" ; "c" ] in
@@ -408,7 +453,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -416,7 +462,7 @@ let my_postconditions = [] in
 
 let scontains_from = (fun (s,i,c) -> String.contains_from s i c)
 
-let scontains_fromRes = fun () ->
+let scontains_fromRes = fun ?(pind=(-1)) () ->
 let name = "scontains_from" in
 let f = scontains_from in
 let arguments = [ "s" ; "i" ; "c" ] in
@@ -432,7 +478,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -440,7 +487,7 @@ let my_postconditions = [] in
 
 let srcontains_from = (fun (s,i,c) -> String.rcontains_from s i c)
 
-let srcontains_fromRes = fun () ->
+let srcontains_fromRes = fun ?(pind=(-1)) () ->
 let name = "srcontains_from" in
 let f = srcontains_from in
 let arguments = [ "s" ; "i" ; "c" ] in
@@ -456,14 +503,15 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 
 (*** String.uppercase ***)
 
-let suppercaseRes = fun () ->
+let suppercaseRes = fun ?(pind=(-1)) () ->
 let name = "suppercase" in
 let f = String.uppercase in
 let arguments = [ "s" ] in
@@ -479,13 +527,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.lowercase ***)
 
-let slowercaseRes = fun () ->
+let slowercaseRes = fun ?(pind=(-1)) () ->
 let name = "slowercase" in
 let f = String.lowercase in
 let arguments = [ "s" ] in
@@ -501,13 +550,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.capitalize ***)
 
-let scapitalizeRes = fun () ->
+let scapitalizeRes = fun ?(pind=(-1)) () ->
 let name = "scapitalize" in
 let f = String.capitalize in
 let arguments = [ "s" ] in
@@ -523,13 +573,14 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
 (*** String.uncapitalize ***)
 
-let suncapitalizeRes = fun () ->
+let suncapitalizeRes = fun ?(pind=(-1)) () ->
 let name = "suncapitalize" in
 let f = String.uncapitalize in
 let arguments = [ "s" ] in
@@ -545,7 +596,8 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 
 
@@ -553,7 +605,7 @@ let my_postconditions = [] in
 
 let scompare = fun (s0,s1) -> String.compare s0 s1;;
 
-let scompareRes = fun () ->
+let scompareRes = fun ?(pind=(-1)) () ->
 let name = "scompare" in
 let f = scompare in
 let arguments = [ "s0" ; "s1" ] in
@@ -569,5 +621,23 @@ let my_postconditions = [] in
   let features = def_features @ my_features in
   let postconds = def_postconditions @ my_postconditions in
     resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:extra_comps
-                           ~arg_names:arguments f tests features postconds trans
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
+
+
+let () =
+    test_size := __TEST_SIZE__ ;
+    max_conflict_set_size := __MAX_CONFLICT_SET_SIZE__ ;
+    let run = (fun ((s, f) : (string * (?pind:int -> unit -> 'a))) ->
+                  output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
+                  print_specs stderr (f ~pind:__POST_INDEX__ ())) in
+    run (List.nth [ ("String.length", slengthRes) ; ("String.get(s, i)", sgetRes) ; ("String.set(s, i, c)", ssetRes) ;
+                    ("String.create(i)", screateRes) ; ("String.make(i,c)", smakeRes) ; ("String.copy(s)", scopyRes) ;
+                    ("String.sub(s,i1,i2)", ssubRes) ; ("String.fill(s, i0, i1, c)", sfillRes) ; ("String.blit(s0, i0, s1, i1, il)", sblitRes) ;
+                    ("String.concat(s, sl)", sconcatRes) ; ("String.trim(s)", strimRes) ; ("String.escaped(s)", sescapedRes) ;
+                    ("String.index(s, c)", sindexRes) ; ("String.index_from(s, i, c)", sindex_fromRes);
+                    ("String.contains(s, c)", scontainsRes) ; ("String.contains_from(s, i, c)", scontains_fromRes);
+                    ("String.rcontains_from(s, i, c)", srcontains_fromRes) ; ("String.uppercase(s)", suppercaseRes);
+                    ("String.lowercase(s)", slowercaseRes) ; ("String.capitalize(s)", scapitalizeRes) ;
+                    ("String.uncapitalize(s)", suncapitalizeRes) ; ("String.compare(s0, s1)", scompareRes) ] __FUNCTION_INDEX__)

@@ -5,7 +5,8 @@ ROOT="`cd \"$ROOT\" && pwd`"
 
 USE_TOOL="$1"
 SOURCE_FILE="$2"
-RECORD_PREFIX="$3"
+CONFLICT_SIZE="$3"
+RECORD_PREFIX="$4"
 
 if [[ ! -f "$SOURCE_FILE" ]]; then
   echo "--- File $SOURCE_FILE doesn't exist. ABORT ---"
@@ -18,7 +19,7 @@ FILE="`basename \"$SOURCE_FILE\"`"
 "$ROOT/link.sh" "$TARGET"
 cd "$TARGET"
 
-make clean ; make
+make -s clean ; make -s
 
 echo -ne "\n... $FILE ... \n"
 
@@ -31,7 +32,7 @@ mv f "$FILE"
 echo -ne "   [#] Simplified query: $SIM_QUERY\n" >&2
 
 # MCF Query to OCaml code
-./mcf2ml "$FILE" "$RECORD_PREFIX" "$USE_TOOL" > "$FILE.tml"
+./mcf2ml "$FILE" "$RECORD_PREFIX" "$USE_TOOL" "$CONFLICT_SIZE" > "$FILE.tml"
 if [[ $? != 0 ]]; then
   echo "false" > "$FILE.sinf"
   exit 1

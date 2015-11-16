@@ -1,14 +1,15 @@
 #!/bin/bash
 
 MAX_RUNS=256
-MAX_TESTS=6400
 
 ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
 SOURCE_FILE="$1"
-USE_TOOL="$2"
-CGROUP="$3"
+MAX_TESTS="$2"
+USE_TOOL="$3"
+CGROUP="$4"
+CONFLICT_SIZE="$5"
 
 if [[ ! -f "$SOURCE_FILE" ]]; then
   echo "--- File $SOURCE_FILE doesn't exist. ABORT ---"
@@ -23,10 +24,14 @@ FILE="`basename \"$SOURCE_FILE\"`"
 CG_LOCATION="/sys/fs/cgroup/memory/$CGROUP"
 ABDUCER_PATH="__ABDUCER_PATH_FROM_SETUP_SCRIPT__"
 
+if [[ "$CONFLICT_SIZE" == "" || "$USE_TOOL" != "pie" ]]; then
+    CONFLICT_SIZE="all"
+fi
+
 if [[ "$CGROUP" != "" ]]; then
-    WORKING_PATH="__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/$CGROUP/$USE_TOOL/$FILE"
+    WORKING_PATH="__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/$CGROUP/$MAX_TESTS/$USE_TOOL/$CONFLICT_SIZE/$FILE"
 else
-    WORKING_PATH="__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/$USE_TOOL/$FILE"
+    WORKING_PATH="__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__/$MAX_TESTS/$USE_TOOL/$CONFLICT_SIZE/$FILE"
 fi
 
 TOTAL_LOG="$WORKING_PATH/TOTAL.LOG"
@@ -74,7 +79,7 @@ cd "$ROOT"
 aterrcho -ne "\n(*) Checking loop invariant:\n"
 
 EXEC_CMD="time bin/pinvgen -wpath $WORKING_PATH -abducer $ABDUCER_PATH/abduce.sh    \
-                           -tool=$USE_TOOL --extra-arg=--std=c++11 $SOURCE_FILE --"
+                           -tool=$USE_TOOL -csize $CONFLICT_SIZE --extra-arg=--std=c++11 $SOURCE_FILE --"
 echo "$EXEC_CMD" > checker_exec.sh
 
 if [[ "$CGROUP" != "" ]]; then
@@ -97,7 +102,7 @@ done
 
 if [[ "$CGROUP" != "" ]]; then
     aterrcho -ne "\n[$] OOM Count = " ; aterrcat "$CG_LOCATION/memory.memsw.failcnt"
-    aterrcho -ne "[$] MAX Usage = " ; aterrcat "$CG_LOCATION/memory.memsw.max_usage_in_bytes"
+    aterrcho -ne "[$] MAX Usage = " ; aterrcho $(( $(cat "$CG_LOCATION/memory.memsw.max_usage_in_bytes") / ( 1024 * 1024 ) ))
 fi
 
 sed -i s//\\\n/g "$TOTAL_LOG"

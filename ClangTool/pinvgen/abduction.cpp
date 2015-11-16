@@ -19,7 +19,7 @@ PredicateNode getAbductionResultFor(const PredicateNode pred) {
   }
 
   string command = ABDUCER_PATH + target;
-  command += " count > /dev/null";
+  command += " " + CONFLICT_SIZE + " count > /dev/null";
   system(command.c_str());
 
   command = WORKING_PATH + "/mcf2xml ";
@@ -53,7 +53,9 @@ bool chkVALID(const PredicateNode pred, bool add_counter = false) {
   if(result.substr(0,5) == "VALID") return true;
 
   if(add_counter) {
-    string command = WORKING_PATH + "/add_counter " + WORKING_PATH + "/final_tests " + target + ".res";
+    string command = WORKING_PATH + "/add_counter " + WORKING_PATH + "/" + MAIN_FILENAME + ".x "
+                                                    + WORKING_PATH + "/final_tests "
+                                                    + target + ".res";
     system(command.c_str());
   }
 

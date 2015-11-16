@@ -1,13 +1,13 @@
 #include "bm_oopsla.h"
 
-int main() {
-  int n, i, k, j = 0;
-  INITIALIZE(4, i, j, k, n);
+int main(int argc, char* argv[]) {
+  RECORD(4, i, j, k, n);
 
-  n = unknown();
+  INIT_n(unknown);
   assume(n > 0);
-  k = unknown();
+  INIT_k(unknown);
   assume(k > n);
+  j = 0;
 
   while(j < n) {
     PRINT_VARS();

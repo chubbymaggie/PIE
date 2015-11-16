@@ -1,16 +1,16 @@
 #include "bm_oopsla.h"
 
-int main() {
-  int x, y, k, i, n, j = 0, m = 0;
-  INITIALIZE(7, i, j, k, m, n, x, y);
+int main(int argc, char* argv[]) {
+  RECORD(7, i, j, k, m, n, x, y);
 
-  x = unknown();
-  y = unknown();
-  k = unknown();
+  INIT_x(unknown);
+  INIT_y(unknown);
+  INIT_k(unknown);
   assume((x+y) == k);
 
-  i = unknown();
-  n = unknown();
+  j = 0; m = 0;
+  INIT_i(unknown);
+  INIT_n(unknown);
 
   while(j < n) {
     PRINT_VARS();

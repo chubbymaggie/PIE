@@ -32,7 +32,7 @@ perl -pe 's#__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__#'"$WORKING_ROOT"'#g' < "$OWN
 perl -pi -e 's#__ABDUCER_PATH_FROM_SETUP_SCRIPT__#'"$ABDUCER_ROOT"'#g' checker
 chmod +x checker
 
-perl -pe 's#__ABDUCER_PATH_FROM_SETUP_SCRIPT__#'"$ABDUCER_ROOT"'#g' < "$OWN_ROOT/test_all.template.sh" > test_all
-chmod +x test_all
+perl -pe 's#__ABDUCER_PATH_FROM_SETUP_SCRIPT__#'"$ABDUCER_ROOT"'#g' < "$OWN_ROOT/check_all.template.sh" > check_all
+chmod +x check_all
 
 cmake .. && make -j4 pinvgen

@@ -22,7 +22,7 @@ using namespace clang;
 
 using namespace std;
 
-string MAIN_FILENAME;
+string MAIN_FILENAME, CONFLICT_SIZE;
 
 long COUNT = 0, ABDUCTION_COUNT = 0, VERIFICATION_COUNT = 0;
 
@@ -119,6 +119,8 @@ static cl::opt<ToolType> opt_USE_TOOL("tool", cl::desc("Inference engine to use:
             clEnumValEnd
         ), cl::init(pie));
 
+static cl::opt<string> opt_CONFLICT_SIZE("csize", cl::desc("Maximum size of conflict group"), cl::value_desc("<n> or all"), cl::Required);
+
 static cl::OptionCategory PInvGenCategory("pinvgen options");
 static cl::extrahelp CommonHelp(CommonOptionsParser::HelpMessage);
 
@@ -126,7 +128,14 @@ int main(int argc, const char **argv) {
   CommonOptionsParser op(argc, argv, PInvGenCategory);
   ClangTool Tool(op.getCompilations(), op.getSourcePathList());
 
+  if(opt_USE_TOOL == escher && opt_CONFLICT_SIZE != "all") {
+    errs() << "[!] For `escher` mode, csize MUST BE all.";
+    return 1;
+  }
+
+  CONFLICT_SIZE = opt_CONFLICT_SIZE;
   WORKING_PATH = opt_WORKING_PATH;
+
   if(opt_USE_TOOL == escher)    ABDUCER_PATH = opt_ABDUCER_PATH + " escher ";
   else if(opt_USE_TOOL == pie)  ABDUCER_PATH = opt_ABDUCER_PATH + " pie ";
 

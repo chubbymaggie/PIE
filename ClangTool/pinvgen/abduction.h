@@ -19,6 +19,8 @@ extern long VERIFICATION_COUNT;
 
 extern std::string ABDUCER_PATH;
 extern std::string WORKING_PATH;
+extern std::string MAIN_FILENAME;
+extern std::string CONFLICT_SIZE;
 
 PredicateNode abduce(PredicateNode);
 PredicateNode simplify(PredicateNode);
