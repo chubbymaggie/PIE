@@ -10,12 +10,6 @@
 
 using std::string;
 
-/*
- * Random integer generation
- */
-
-int rand_interval(int min, int max) { return min + (rand() % (max - min)); }
-
 // Uniform distribution (from: http://stackoverflow.com/a/17554531/554436)
 int uni_rand_interval(int min, int max) {
     int r;

@@ -8,30 +8,6 @@ open Escher_synth
 open SpecInfer
 
 
-(*** BatAvlTree.check ***)
-
-let checkRes = fun ?(pind=(-1)) () ->
-let name = "check" in
-let f = BatAvlTree.check in
-let arguments = [ "t" ] in
-let tests = iavltree_tests () in
-let dumper = iavltree_dumper in
-let typ = [ TAVLTree ] in
-let tfun = fun t -> [ of_avltree of_int t ] in
-let def_features = (*PYF:t|R(1)*) in
-let my_features = [] in
-let def_postconditions = (*PYP:t|R(1)|B*) in
-let my_postconditions = [] in
-  let trans = (typ, tfun) in
-  let features = def_features @ my_features in
-  let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
-                           ~arg_names:arguments f tests features
-                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
-;;
-
-
-
 (*** BatAvlTree.is_empty ***)
 
 let is_emptyRes = fun ?(pind=(-1)) () ->
@@ -56,19 +32,21 @@ let my_postconditions = [] in
 
 
 
-(*** BatAvlTree.singleton_tree ***)
+(*** BatAvlTree.make_tree ***)
 
-let singleton_treeRes = fun ?(pind=(-1)) () ->
-let name = "singleton_tree" in
-let f = BatAvlTree.singleton_tree in
-let arguments = [ "v" ] in
-let tests = int_tests () in
-let dumper = int_dumper in
-let typ = [ TInt ] in
-let tfun = fun i -> [ of_int i ] in
-let def_features = (*PYF:v|1*) in
+let avlmake_tree = fun (l,v,r) -> BatAvlTree.make_tree l v r;;
+
+let make_treeRes = fun ?(pind=(-1)) () ->
+let name = "make_tree" in
+let f = avlmake_tree in
+let arguments = [ "l" ; "v" ; "r" ] in
+let tests = iavltree_int_iavltree_tests () in
+let dumper = iavltree_int_iavltree_dumper in
+let typ = [ TAVLTree ; TInt ; TAVLTree ] in
+let tfun = fun (l,v,r) -> [ of_avltree of_int l ; of_int v ; of_avltree of_int r ] in
+let def_features = (*PYF:t|T(l:R(1),v:1,r:R(1))*) in
 let my_features = [] in
-let def_postconditions = (*PYP:v|1|R(1)*) in
+let def_postconditions = (*PYP:t|T(l:R(1),v:1,r:R(1))|R(1)*) in
 let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
@@ -106,21 +84,19 @@ let my_postconditions = [] in
 
 
 
-(*** BatAvlTree.make_tree ***)
+(*** BatAvlTree.height ***)
 
-let avlmake_tree = fun (l,v,r) -> BatAvlTree.make_tree l v r;;
-
-let make_treeRes = fun ?(pind=(-1)) () ->
-let name = "make_tree" in
-let f = avlmake_tree in
-let arguments = [ "l" ; "v" ; "r" ] in
-let tests = iavltree_int_iavltree_tests () in
-let dumper = iavltree_int_iavltree_dumper in
-let typ = [ TAVLTree ; TInt ; TAVLTree ] in
-let tfun = fun (l,v,r) -> [ of_avltree of_int l ; of_int v ; of_avltree of_int r ] in
-let def_features = (*PYF:t|T(l:R(1),v:1,r:R(1))*) in
+let heightRes = fun ?(pind=(-1)) () ->
+let name = "is_empty" in
+let f = BatAvlTree.height in
+let arguments = [ "t" ] in
+let tests = iavltree_tests () in
+let dumper = iavltree_dumper in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
+let def_features = (*PYF:t|R(1)*) in
 let my_features = [] in
-let def_postconditions = (*PYP:t|T(l:R(1),v:1,r:R(1))|R(1)*) in
+let def_postconditions = (*PYP:t|R(1)|I*) in
 let my_postconditions = [] in
   let trans = (typ, tfun) in
   let features = def_features @ my_features in
@@ -180,6 +156,54 @@ let my_postconditions = [] in
 
 
 
+(*** BatAvlTree.root ***)
+
+let rootRes = fun ?(pind=(-1)) () ->
+let name = "root" in
+let f = BatAvlTree.root in
+let arguments = [ "t" ] in
+let tests = iavltree_tests () in
+let dumper = iavltree_dumper in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
+let def_features = (*PYF:t|R(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|R(1)|1*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
+(*** BatAvlTree.singleton_tree ***)
+
+let singleton_treeRes = fun ?(pind=(-1)) () ->
+let name = "singleton_tree" in
+let f = BatAvlTree.singleton_tree in
+let arguments = [ "v" ] in
+let tests = int_tests () in
+let dumper = int_dumper in
+let typ = [ TInt ] in
+let tfun = fun i -> [ of_int i ] in
+let def_features = (*PYF:v|1*) in
+let my_features = [] in
+let def_postconditions = (*PYP:v|1|R(1)*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
 (*** BatAvlTree.split_leftmost ***)
 
 let split_leftmostRes = fun ?(pind=(-1)) () ->
@@ -228,30 +252,6 @@ let my_postconditions = [] in
 
 
 
-(*** BatAvlTree.root ***)
-
-let rootRes = fun ?(pind=(-1)) () ->
-let name = "root" in
-let f = BatAvlTree.root in
-let arguments = [ "t" ] in
-let tests = iavltree_tests () in
-let dumper = iavltree_dumper in
-let typ = [ TAVLTree ] in
-let tfun = fun t -> [ of_avltree of_int t ] in
-let def_features = (*PYF:t|R(1)*) in
-let my_features = [] in
-let def_postconditions = (*PYP:t|R(1)|1*) in
-let my_postconditions = [] in
-  let trans = (typ, tfun) in
-  let features = def_features @ my_features in
-  let postconds = def_postconditions @ my_postconditions in
-    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
-                           ~arg_names:arguments f tests features
-                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
-;;
-
-
-
 (*** BatAvlTree.concat ***)
 
 let avlconcat = fun (l,r) -> BatAvlTree.concat l r;;
@@ -278,15 +278,46 @@ let my_postconditions = [] in
 
 
 
+(*** BatAvlTree.check ***)
+
+let checkRes = fun ?(pind=(-1)) () ->
+let name = "check" in
+let f = BatAvlTree.check in
+let arguments = [ "t" ] in
+let tests = iavltree_tests () in
+let dumper = iavltree_dumper in
+let typ = [ TAVLTree ] in
+let tfun = fun t -> [ of_avltree of_int t ] in
+let def_features = (*PYF:t|R(1)*) in
+let my_features = [] in
+let def_postconditions = (*PYP:t|R(1)|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
+
 let () =
     test_size := __TEST_SIZE__ ;
     max_conflict_set_size := __MAX_CONFLICT_SET_SIZE__ ;
     let run = (fun ((s, f) : (string * (?pind:int -> unit -> 'a))) ->
                   output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
                   print_specs stderr (f ~pind:__POST_INDEX__ ())) in
-        run (List.nth [ ("BatAvlTree.check(t)", checkRes) ; ("BatAvlTree.is_empty(t)", is_emptyRes) ;
-                        ("BatAvlTree.singleton_tree(v)", singleton_treeRes) ; ("BatAvlTree.create(l, v, r)", createRes) ;
-                        ("BatAvlTree.make_tree(l, v, r)", make_treeRes) ; ("BatAvlTree.left_branch(t)", left_branchRes) ;
-                        ("BatAvlTree.right_branch(t)", right_branchRes) ; ("BatAvlTree.split_leftmost(t)", split_leftmostRes) ;
-                        ("BatAvlTree.split_rightmost(t)", split_rightmostRes) ; ("BatAvlTree.root(t)", rootRes) ;
-                        ("BatAvlTree.concat(t0, t1)", concatRes) ] __FUNCTION_INDEX__)
+        run (List.nth [ ("BatAvlTree.is_empty(t)", is_emptyRes) ;
+                        ("BatAvlTree.make_tree(l, v, r)", make_treeRes) ;
+                        ("BatAvlTree.create(l, v, r)", createRes) ;
+                        ("BatAvlTree.height(t)", heightRes) ;
+                        ("BatAvlTree.left_branch(t)", left_branchRes) ;
+                        ("BatAvlTree.right_branch(t)", right_branchRes) ;
+                        ("BatAvlTree.root(t)", rootRes) ;
+                        ("BatAvlTree.singleton_tree(v)", singleton_treeRes) ;
+                        ("BatAvlTree.split_leftmost(t)", split_leftmostRes) ;
+                        ("BatAvlTree.split_rightmost(t)", split_rightmostRes) ;
+                        ("BatAvlTree.concat(t0, t1)", concatRes) ;
+                        ("BatAvlTree.check(t)", checkRes) ] __FUNCTION_INDEX__)

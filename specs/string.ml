@@ -632,12 +632,27 @@ let () =
     let run = (fun ((s, f) : (string * (?pind:int -> unit -> 'a))) ->
                   output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
                   print_specs stderr (f ~pind:__POST_INDEX__ ())) in
-    run (List.nth [ ("String.length", slengthRes) ; ("String.get(s, i)", sgetRes) ; ("String.set(s, i, c)", ssetRes) ;
-                    ("String.create(i)", screateRes) ; ("String.make(i,c)", smakeRes) ; ("String.copy(s)", scopyRes) ;
-                    ("String.sub(s,i1,i2)", ssubRes) ; ("String.fill(s, i0, i1, c)", sfillRes) ; ("String.blit(s0, i0, s1, i1, il)", sblitRes) ;
-                    ("String.concat(s, sl)", sconcatRes) ; ("String.trim(s)", strimRes) ; ("String.escaped(s)", sescapedRes) ;
-                    ("String.index(s, c)", sindexRes) ; ("String.index_from(s, i, c)", sindex_fromRes);
-                    ("String.contains(s, c)", scontainsRes) ; ("String.contains_from(s, i, c)", scontains_fromRes);
-                    ("String.rcontains_from(s, i, c)", srcontains_fromRes) ; ("String.uppercase(s)", suppercaseRes);
-                    ("String.lowercase(s)", slowercaseRes) ; ("String.capitalize(s)", scapitalizeRes) ;
-                    ("String.uncapitalize(s)", suncapitalizeRes) ; ("String.compare(s0, s1)", scompareRes) ] __FUNCTION_INDEX__)
+    run (List.nth [ ("String.length(s)", slengthRes) ;
+                    ("String.get(s, i)", sgetRes) ;
+                    ("String.set(s, i, c)", ssetRes) ;
+                    ("String.create(i)", screateRes) ;
+                    ("String.make(i,c)", smakeRes) ;
+                    ("String.copy(s)", scopyRes) ;
+                    ("String.sub(s,i1,i2)", ssubRes) ;
+                    ("String.fill(s, i0, i1, c)", sfillRes) ;
+                    ("String.blit(s0, i0, s1, i1, il)", sblitRes) ;
+                    ("String.concat(s, sl)", sconcatRes) ;
+                    ("String.trim(s)", strimRes) ;
+                    ("String.escaped(s)", sescapedRes) ;
+                    ("String.index(s, c)", sindexRes) ;
+                    ("String.rindex(s, c)", srindexRes) ;
+                    ("String.index_from(s, i, c)", sindex_fromRes);
+                    ("String.rindex_from(s, i, c)", srindex_fromRes);
+                    ("String.contains(s, c)", scontainsRes) ;
+                    ("String.contains_from(s, i, c)", scontains_fromRes);
+                    ("String.rcontains_from(s, i, c)", srcontains_fromRes) ;
+                    ("String.uppercase(s)", suppercaseRes);
+                    ("String.lowercase(s)", slowercaseRes) ;
+                    ("String.capitalize(s)", scapitalizeRes) ;
+                    ("String.uncapitalize(s)", suncapitalizeRes) ;
+                    ("String.compare(s0, s1)", scompareRes) ] __FUNCTION_INDEX__)

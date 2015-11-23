@@ -71,6 +71,7 @@ def stringify(obj, top = True):
         raise TypeError('Bad argument type to stringify: ' + type(obj))
 
 def getProperties(fromTyp, toTyp):
+    return []
     try:
         return {
             ST: {IT: [("String.length", "#len")]},
@@ -132,29 +133,38 @@ def getBinaryPreds(typ1, var1, prop1, typ2, var2, prop2):
 
     preds = []
     if typ1[0][0] == BT and typ2[0][0] == BT:
-        preds.extend(map(lambda (f,n): (f % (var1, '', nvar1[0], ''), n % (nvar1[1], 'true')) if var2 is None else (
+        preds.extend(map(lambda (f,n): (f % (var1, '', 'not ' + nvar1[0], ''), n % (nvar1[1], 'false')) if var2 is None else (
                                         f % (var1, var2+' ', nvar1[0], ' = ' + nvar2[0]), n % (nvar1[1], nvar2[1])),
                          [('(fun %s %s-> %s%s)', '"(%s = %s)"')]))
 
     elif typ1[0][0] == IT and typ2[0][0] == IT:
         preds.extend(map(lambda (f,n): (f % (var1, '', nvar1[0], '0'), n % (nvar1[1], '0')) if var2 is None else (
                                         f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
-                         [('(fun %s %s-> %s > %s)', '"(%s > %s)"'),
-                          ('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
-                         + ifHuge([('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
+                         [('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
+                         + ifHuge([('(fun %s %s-> %s > %s)', '"(%s > %s)"'),('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
 #        if var2 is None and mode == 'F':
 #            preds.extend(ifHuge([('(fun %s -> %s mod 2 = 0)' % (var1, nvar1[0]), '"(%s %% 2 = 0)"' % nvar1[1])]))
 
     elif typ1[0][0] == CT and typ2[0][0] == CT and var2 is not None:
         preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
-                         [('(fun %s %s-> %s > %s)', '"(%s > %s)"'),
-                          ('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
-                         + ifHuge([('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
+                         [('(fun %s %s-> %s = %s)', '"(%s = %s)"')]
+                         + ifHuge([ ('(fun %s %s-> %s < %s)', '"(%s < %s)"')])))
 
-    elif typ1[0][0] == ST and typ2[0][0] == ST and var2 is not None:
-        preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
+    elif typ1[0][0] == ST and typ2[0][0] == ST and var2 is None:
+        preds.extend(map(lambda (f,n): (f % (var1, ' ', nvar1[0], '""'), n % (nvar1[1], '\\"\\"')),
                          [('(fun %s %s-> %s = %s)', '"(#eql(%s, %s))"')]))
 
+    elif typ1[0][0] == RT and typ2[0][0] == RT and var2 is None:
+        preds.extend(map(lambda (f,n): (f % (var1, nvar1[0]), n % (nvar1[1])),
+                         [('(fun %s -> BatAvlTree.is_empty %s)', '"empty(%s)"')]))
+
+    elif typ1[0][0] == LT and typ2[0][0] == LT and var2 is None:
+        preds.extend(map(lambda (f,n): (f % (var1, nvar1[0]), n % (nvar1[1])),
+                         [('(fun %s -> %s = [])', '"%s = []"')]))
+
+    return preds
+
+#### Not used
     if var2 is not None:
         if typ1 == typ2 and typ1[0][0] not in ATOM_TYPES:
             preds.extend(map(lambda (f,n): (f % (var1, var2+' ', nvar1[0], nvar2[0]), n % (nvar1[1], nvar2[1])),
@@ -240,7 +250,7 @@ def getFeatures(typ, var):
                         in getFeatures(typ[0][1], '%se' % var))
 
     # Unary and binary predicates on tuple elements
-    elif typ[0][0] == TT:
+    elif typ[0][0] == TT and mode == 'F':
         tps = [(tp[2],tp[0]) for tp in typ[0][1]]
         features.extend(explodeUnaryPredsInTuple(tps))
         features.extend(explodeBinaryPredsInTuple(tps))
@@ -302,10 +312,11 @@ def Panalyze(pat):
 
     ofeatures = [('(fun z r -> match r with Bad _ -> raise IgnoreTest | Ok ' + f[5:], a)
                  for (f,a) in getFeatures(otyp, 'res')]
-    iofeatures = [('(fun ' + f[5:].replace(' ', ' r -> match r with Bad _ -> raise IgnoreTest | Ok ', 1), a)
-                  for (f,a) in getBinaryPreds(ityp, var, None, otyp, 'res', None)]
+#    iofeatures = [('(fun ' + f[5:].replace(' ', ' r -> match r with Bad _ -> raise IgnoreTest | Ok ', 1), a)
+#                  for (f,a) in getBinaryPreds(ityp, var, None, otyp, 'res', None)]
     return stringify([('(fun z r -> match r with Bad _ -> true | _ -> false)', '"exception thrown"'),
-                      ('(fun z r -> match r with Ok _ -> true | _ -> false)', '"terminates normally"')] + ofeatures + iofeatures)
+#                      ('(fun z r -> match r with Ok _ -> true | _ -> false)', '"terminates normally"')
+                     ] + ofeatures ) # + iofeatures)
 
 if len(sys.argv) < 2:
     print >>(sys.stderr), 'Missing argument: OCaml file to be pre-processed.'

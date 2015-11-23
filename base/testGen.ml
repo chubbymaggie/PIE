@@ -31,7 +31,8 @@ let pred g p =
      if (p cand) then cand else loopUntil() in
        loopUntil ())
 
-let char = (fun rand -> Char.chr (List.hd (generate ~n:1 ~rand:rand (32 -- 126))))
+let rec char = (fun rand -> let c = Char.chr (List.hd (generate ~n:1 ~rand:rand (32 -- 126))) in
+                            if c = '\\' then char rand else c)
 
 let string_len rng =
     (fun rand ->
@@ -69,7 +70,7 @@ let quint_dumper d1 d2 d3 d4 d5 (a, b, c, d, e) = "(" ^ (d1 a) ^ ", " ^ (d2 b) ^
 let test_size = ref 6400
 
 let sint = (-4) -- 5
-let sposInt = 0 -- 4
+let sposInt = 0 -- 6
 let string = string_len (0 -- 13)
 
 

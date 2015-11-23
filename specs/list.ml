@@ -108,6 +108,32 @@ let my_postconditions = [] in
 
 
 
+(*** List.memq ***)
+
+let lmemq = fun (m,l) -> List.memq m l;;
+
+let memqRes = fun ?(pind=(-1)) () ->
+let name = "memq" in
+let f = lmemq in
+let arguments = [ "m" ; "l" ] in
+let tests = int_intList_tests () in
+let dumper = int_intList_dumper in
+let typ = [ TInt ; TList ] in
+let tfun = fun (m,l) -> [ of_int m ; of_list of_int l ] in
+let def_features = (*PYF:l|T(m:1,l:L(1))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(m:1,l:L(1))|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
 (*** List.rev ***)
 
 let revRes = fun ?(pind=(-1)) () ->
@@ -385,16 +411,103 @@ let my_postconditions = [] in
 ;;
 
 
+
+(*** List.assq ***)
+
+let lassq = fun (a,l) -> List.assq a l;;
+
+let assqRes = fun ?(pind=(-1)) () ->
+let name = "assq" in
+let f = lassq in
+let arguments = [ "a" ; "l" ] in
+let tests = int__int_int_List_tests () in
+let dumper = int__int_int_List_dumper in
+let typ = [ TInt ; TList ] in
+let tfun = fun (a,l) -> [ of_int a ; of_list (fun (x,y) -> VList [ of_int x ; of_int y ]) l ] in
+let def_features = (*PYF:l|T(a:1,l:L(T(x:1,y:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(a:1,l:L(T(x:1,y:2)))|2*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
+let lmem_assq = fun (a,l) -> List.mem_assq a l;;
+
+let mem_assqRes = fun ?(pind=(-1)) () ->
+let name = "mem_assq" in
+let f = lmem_assq in
+let arguments = [ "a" ; "l" ] in
+let tests = int__int_int_List_tests () in
+let dumper = int__int_int_List_dumper in
+let typ = [ TInt ; TList ] in
+let tfun = fun (a,l) -> [ of_int a ; of_list (fun (x,y) -> VList [ of_int x ; of_int y ]) l ] in
+let def_features = (*PYF:l|T(a:1,l:L(T(x:1,y:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(a:1,l:L(T(x:1,y:2)))|B*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
+let lremove_assq = fun (a,l) -> List.remove_assq a l;;
+
+let remove_assqRes = fun ?(pind=(-1)) () ->
+let name = "remove_assq" in
+let f = lremove_assq in
+let arguments = [ "a" ; "l" ] in
+let tests = int__int_int_List_tests () in
+let dumper = int__int_int_List_dumper in
+let typ = [ TInt ; TList ] in
+let tfun = fun (a,l) -> [ of_int a ; of_list (fun (x,y) -> VList [ of_int x ; of_int y ]) l ] in
+let def_features = (*PYF:l|T(a:1,l:L(T(x:1,y:2)))*) in
+let my_features = [] in
+let def_postconditions = (*PYP:l|T(a:1,l:L(T(x:1,y:2)))|L(T(p:1,q:2))*) in
+let my_postconditions = [] in
+  let trans = (typ, tfun) in
+  let features = def_features @ my_features in
+  let postconds = def_postconditions @ my_postconditions in
+    resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_list
+                           ~arg_names:arguments f tests features
+                           (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;
+
+
+
 let () =
     test_size := __TEST_SIZE__ ;
     max_conflict_set_size := __MAX_CONFLICT_SET_SIZE__ ;
     let run = (fun ((s, f) : (string * (?pind:int -> unit -> 'a))) ->
                   output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
                   print_specs stderr (f ~pind:__POST_INDEX__ ())) in
-        run (List.nth [ ("List.length(l)", lengthRes) ; ("List.hd(l)", hdRes) ; ("List.nth(l, n)", nthRes) ;
-                        ("List.mem(m, l)", memRes) ; ("List.rev(l)", revRes) ; ("List.tl(l)", tlRes) ;
-                        ("List.append(l0, l1)", appendRes) ; ("List.combine(l0, l1)", combineRes);
-                        ("List.concat(l)", concatRes) ; ("List.flatten(l)", flattenRes) ;
-                        ("List.rev_append(l0, l1)", rev_appendRes) ; ("List.split(l)", splitRes) ;
-                        ("List.assoc(a, l)", assocRes) ; ("List.mem_assoc(a, l)", mem_assocRes) ;
-                        ("List.remove_assoc(a, l)", remove_assocRes) ] __FUNCTION_INDEX__)
+        run (List.nth [ ("List.length(l)", lengthRes) ;
+                        ("List.hd(l)", hdRes) ;
+                        ("List.tl(l)", tlRes) ;
+                        ("List.nth(l, n)", nthRes) ;
+                        ("List.rev(l)", revRes) ;
+                        ("List.append(l0, l1)", appendRes) ;
+                        ("List.rev_append(l0, l1)", rev_appendRes) ;
+                        ("List.concat(l)", concatRes) ;
+                        ("List.flatten(l)", flattenRes) ;
+                        ("List.mem(m, l)", memRes) ;
+                        ("List.memq(m, l)", memqRes) ;
+                        ("List.split(l)", splitRes) ;
+                        ("List.combine(l0, l1)", combineRes);
+                        ("List.assoc(a, l)", assocRes) ;
+                        ("List.assq(a, l)", assqRes) ;
+                        ("List.mem_assoc(a, l)", mem_assocRes) ;
+                        ("List.mem_assq(a, l)", mem_assqRes) ;
+                        ("List.remove_assoc(a, l)", remove_assocRes) ;
+                        ("List.remove_assq(a, l)", remove_assqRes) ] __FUNCTION_INDEX__)

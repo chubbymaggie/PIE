@@ -221,7 +221,7 @@ let empty = {
              | [VList x] -> VBool (List.length x = 0)
              | _ -> VError);
     name = "empty?";
-    dump = (fun l -> "empty(" ^ (List.hd l) ^ ")")
+    dump = (fun l -> "(" ^ (List.hd l) ^ " = [])")
 }
 
 let reverse = {
@@ -507,7 +507,7 @@ let str_containsc = {
              | [VString s; VChar t] -> VBool (String.contains s t)
              | _ -> VError);
     name = "str_containsc";
-    dump = (fun l -> "(contains(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
+    dump = (fun l -> "(has(" ^ (List.hd l) ^ ", " ^ (List.hd (List.tl l)) ^ "))")
 }
 
 let str_index_of = {

@@ -19,7 +19,7 @@ if __name__ == "__main__":
         data = f.readlines()[1:]
 
     header = header.split('\t')
-    data = {line.split(' : ')[0].strip():line.split(' : ')[1].strip() for line in data}
+    data = {line.split(' : ')[0].strip():line.split(' : ')[1].strip() for line in data if line.strip() != ''}
 
     model = {var.strip():fix(data[var.strip()]) if var.strip() in data else '-' for var in header}
     sys.stderr.write("    [+] Counter examples added from root state : %s\n" % str(model))

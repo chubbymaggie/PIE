@@ -7,7 +7,7 @@ TESTS="$4"
 TOOL="$5"
 SZ_CONFLICT_SET="$6"
 
-TIMEOUT="1h"
+TIMEOUT="60m"
 
 if [[ "$CGROUP" == "" ]]; then
     LOCATION="../logs/$TESTS/$TOOL/$SZ_CONFLICT_SET/specs/$FILE"
@@ -29,9 +29,9 @@ for PINDEX in `seq 0 1024`; do
 
     cd "$LOCATION"
 
-    echo 0 > /sys/fs/cgroup/memory/mem8gb/memory.failcnt
-    echo 0 > /sys/fs/cgroup/memory/mem8gb/memory.force_empty
-    echo 0 > /sys/fs/cgroup/memory/mem8gb/memory.memsw.max_usage_in_bytes
+    echo 0 > /sys/fs/cgroup/memory/$CGROUP/memory.failcnt
+    echo 0 > /sys/fs/cgroup/memory/$CGROUP/memory.force_empty
+    echo 0 > /sys/fs/cgroup/memory/$CGROUP/memory.memsw.max_usage_in_bytes
 
     if [[ "$CGROUP" == "" ]]; then
         timeout $TIMEOUT bash -c "bash -c 'time ./$FILE.e' |& tee -a RESULT"
@@ -43,7 +43,7 @@ for PINDEX in `seq 0 1024`; do
     if [[ "$LASTLINE" == 'Fatal error: exception Invalid_argument("Index past end of list")' ]]; then break; fi
 
     echo -ne "\n[M]ax Memory Usage = " |& tee -a RESULT
-    echo $(( $(cat /sys/fs/cgroup/memory/mem8gb/memory.memsw.max_usage_in_bytes) / (1024 * 1024) )) |& tee -a RESULT
+    echo $(( $(cat /sys/fs/cgroup/memory/$CGROUP/memory.memsw.max_usage_in_bytes) / (1024 * 1024) )) |& tee -a RESULT
     echo -ne "\n\n" |& tee -a RESULT
 
     ./clean RESULT
