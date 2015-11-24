@@ -1,0 +1,119 @@
+ ==> 6401 final_tests.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7
+     - guard : NON-DETERMINISTIC
+
+   # Invariant Guess = true
+
+   [V1] Verification query {pre} = true
+     - Result = VALID
+
+   [V2] Verification query {pos} = ((!true) | (!true) | (true & (k > 0)))
+     - Result = FAILED
+
+   [Q1] Abduction query = ((!true) | (!true) | (true & (k > 0)))
+   [#] Simplified query: ((!true) | (!true) | (true & (k > 0)))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 6399t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- (k > 1)                            
+
+     - Result = (k > 1)
+
+   # Invariant Guess = ((k > 1) & true)
+
+   [V3] Verification query {pre} = ((1 > 1) & true)
+    [+] Counter examples added from root state : {'k': '-', 'w': '-'}
+     - Result = FAILED
+
+ ----------------------------------------< RESTART >---------------------------------------- 
+
+   # Invariant Guess = true
+
+   [V4] Verification query {pre} = true
+     - Result = VALID
+
+   [V5] Verification query {pos} = ((!true) | (!true) | (true & (k > 0)))
+     - Result = FAILED
+
+   [Q2] Abduction query = ((!true) | (!true) | (true & (k > 0)))
+   [#] Simplified query: ((!true) | (!true) | (true & (k > 0)))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 6495t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6496t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (2f x 6496t) ...                                     
+    [?] Verifying [k = 2] --- ((k > 1) | (1 = k))                            
+
+     - Result = ((k > 1) | (1 = k))
+
+   # Invariant Guess = (((k > 1) | (1 = k)) & true)
+
+   [V6] Verification query {pre} = (((1 > 1) | (1 = 1)) & true)
+     - Result = VALID
+
+   [V7] Verification query {pos} = ((!(((k > 1) | (1 = k)) & true)) | (!true) | (true & (k > 0)))
+     - Result = VALID
+
+   [V8] Verification query {ind} = ((!(((k > 1) | (1 = k)) & true)) | (!true) | ((((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) & true) | (!true)) & (((((k + w) > 1) | (1 = (k + w))) & true) | (!true))))
+     - Result = FAILED
+
+   [Q3] Abduction query = ((!(((k > 1) | (1 = k)) & true)) | (!true) | ((((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) & true) | (!true)) & (((((k + w) > 1) | (1 = (k + w))) & true) | (!true))))
+   [#] Simplified query: ((!(((k > 1) | (1 = k)) & true)) | (!true) | ((((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) & true) | (!true)) & (((((k + w) > 1) | (1 = (k + w))) & true) | (!true))))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 6495t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 2, -3 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6496t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (2f x 6496t) ...                                     
+    [?] Verifying [k = 2] --- ((w > 1) | (1 = w))                            
+
+     - Result = ((w > 1) | (1 = w))
+
+   # Invariant Guess = (((w > 1) | (1 = w)) & (((k > 1) | (1 = k)) & true))
+
+   [V9] Verification query {pre} = (((1 > 1) | (1 = 1)) & (((1 > 1) | (1 = 1)) & true))
+     - Result = VALID
+
+   [V10] Verification query {pos} = ((!(((w > 1) | (1 = w)) & (((k > 1) | (1 = k)) & true))) | (!true) | (true & (k > 0)))
+     - Result = VALID
+
+   [V11] Verification query {ind} = ((!(((w > 1) | (1 = w)) & (((k > 1) | (1 = k)) & true))) | (!true) | ((((((w + 1) > 1) | (1 = (w + 1))) & ((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) & true)) | (!true)) & ((((w > 1) | (1 = w)) & ((((k + w) > 1) | (1 = (k + w))) & true)) | (!true))))
+     - Result = VALID
+
+
+[###] Final invariant = (((w > 1) | (1 = w)) & (((k > 1) | (1 = k)) & true)) [###]
+================================================================================
+checker_exec.sh: line 1: 21734 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/specInfer/logs/mem8gb/6400/pie/16/03.cpp -abducer /home/saswat/Repos/specInfer/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../specInfer/bm_oopsla/03.cpp --
+
+real	0m21.222s
+user	0m19.660s
+sys	0m0.500s
+
+
+--- Processed 03.cpp ---
+sat: 7
+unsat: 10
+unk: 0
+escher: 5
+
+[$] OOM Count = 0
+[$] MAX Usage = 118

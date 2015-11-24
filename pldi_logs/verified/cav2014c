@@ -1,0 +1,85 @@
+ ==> 889 final_tests.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B5
+     - guard : NON-DETERMINISTIC
+
+   # Invariant Guess = true
+
+   [V1] Verification query {pre} = true
+     - Result = VALID
+
+   [V2] Verification query {pos} = ((!true) | (!true) | (true & (#len(r) > i)))
+     - Result = FAILED
+
+   [Q1] Abduction query = ((!true) | (!true) | (true & (#len(r) > i)))
+   [#] Simplified query: ((!true) | (!true) | (true & (#len(r) > i)))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 887t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ "", 0 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3 @4
+    [%] Inferring {true} [k = 1] (2f x 888t) ...                                     
+    [?] Verifying [k = 1] --- ((#len(r)) > i)                            
+
+     - Result = (#len(r) > i)
+
+   # Invariant Guess = ((#len(r) > i) & true)
+
+   [V3] Verification query {pre} = ((#len("a") > 0) & true)
+     - Result = VALID
+
+   [V4] Verification query {pos} = ((!((#len(r) > i) & true)) | (!true) | (true & (#len(r) > i)))
+     - Result = VALID
+
+   [V5] Verification query {ind} = ((!((#len(r) > i) & true)) | (!true) | ((#len(#rep(r, "a", "aa")) > (i + 1)) & true))
+     - Result = FAILED
+
+   [Q2] Abduction query = ((!((#len(r) > i) & true)) | (!true) | ((#len(#rep(r, "a", "aa")) > (i + 1)) & true))
+   [#] Simplified query: ((!((#len(r) > i) & true)) | (!true) | ((#len(#rep(r, "a", "aa")) > (i + 1)) & true))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 887t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ "", -1 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (2f x 888t) ...                                     
+    [?] Verifying [k = 1] --- (#has(r, "a"))                            
+
+     - Result = #has(r, "a")
+
+   # Invariant Guess = (#has(r, "a") & ((#len(r) > i) & true))
+
+   [V6] Verification query {pre} = (#has("a", "a") & ((#len("a") > 0) & true))
+     - Result = VALID
+
+   [V7] Verification query {pos} = ((!(#has(r, "a") & ((#len(r) > i) & true))) | (!true) | (true & (#len(r) > i)))
+     - Result = VALID
+
+   [V8] Verification query {ind} = ((!(#has(r, "a") & ((#len(r) > i) & true))) | (!true) | (#has(#rep(r, "a", "aa"), "a") & ((#len(#rep(r, "a", "aa")) > (i + 1)) & true)))
+     - Result = VALID
+
+
+[###] Final invariant = (#has(r, "a") & ((#len(r) > i) & true)) [###]
+================================================================================
+checker_exec.sh: line 1: 10787 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/specInfer/logs/mem8gb/6400/pie/16/cav2014c.cpp -abducer /home/saswat/Repos/specInfer/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/specInfer/abducer/../bm_strings/cav2014c.cpp --
+
+real	0m9.952s
+user	0m8.912s
+sys	0m0.272s
+
+
+--- Processed cav2014c.cpp ---
+sat: 4
+unsat: 8
+unk: 0
+escher: 4
+
+[$] OOM Count = 0
+[$] MAX Usage = 79

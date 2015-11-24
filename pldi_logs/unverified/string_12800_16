@@ -1,0 +1,691 @@
+
+=== (0) String.length(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.429s
+user	0m0.392s
+sys	0m0.032s
+
+[M]ax Memory Usage = 7
+
+[V]erdict = GOOD
+
+=== (0) String.length(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (res = 0)
+
+real	0m0.442s
+user	0m0.416s
+sys	0m0.024s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (1) String.get(s, i) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (((0 > i) | (i > (#len(s)))) || (i = (#len(s))))
+postcondition: exception thrown
+
+real	0m0.596s
+user	0m0.548s
+sys	0m0.044s
+
+[M]ax Memory Usage = 13
+
+[V]erdict = GOOD
+
+=== (2) String.set(s, i, c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: ((0 > i) | ((#len(s)) <= i))
+postcondition: exception thrown
+
+real	0m0.557s
+user	0m0.528s
+sys	0m0.028s
+
+[M]ax Memory Usage = 13
+
+[V]erdict = GOOD
+
+=== (2) String.set(s, i, c) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: (#eql(res, ""))
+
+real	0m0.432s
+user	0m0.396s
+sys	0m0.032s
+
+[M]ax Memory Usage = 5
+
+[V]erdict = GOOD
+
+=== (3) String.create(i) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 > i)
+postcondition: exception thrown
+
+real	0m0.031s
+user	0m0.028s
+sys	0m0.000s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = BAD
+
+=== (3) String.create(i) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (i = 0)
+postcondition: (#eql(res, ""))
+
+real	0m0.059s
+user	0m0.016s
+sys	0m0.000s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (4) String.make(i,c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 > i)
+postcondition: exception thrown
+
+real	0m0.037s
+user	0m0.032s
+sys	0m0.004s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = BAD
+
+=== (4) String.make(i,c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (i = 0)
+postcondition: (#eql(res, ""))
+
+real	0m0.056s
+user	0m0.012s
+sys	0m0.008s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (5) String.copy(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.432s
+user	0m0.408s
+sys	0m0.020s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (5) String.copy(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.455s
+user	0m0.412s
+sys	0m0.040s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (6) String.sub(s,i1,i2) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (((0 > i2) | (i1 > ((#len(s)) - i2))) || (0 > i1))
+postcondition: exception thrown
+
+real	0m3.566s
+user	0m3.492s
+sys	0m0.048s
+
+[M]ax Memory Usage = 1657
+
+[V]erdict = GOOD
+
+=== (6) String.sub(s,i1,i2) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (i2 = 0)
+postcondition: (#eql(res, ""))
+
+real	0m0.450s
+user	0m0.400s
+sys	0m0.020s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (7) String.fill(s, i0, i1, c) ===
+
+[S]ynthesized feaures = 7
+
+precondition: ((0 > i1) || (0 > i0) || (i0 > ((#len(s)) - i1)))
+postcondition: exception thrown
+
+real	0m1.081s
+user	0m1.052s
+sys	0m0.024s
+
+[M]ax Memory Usage = 23
+
+[V]erdict = GOOD
+
+=== (7) String.fill(s, i0, i1, c) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (i1 = (#len(s))) && (i1 = i0)
+postcondition: (#eql(res, ""))
+
+real	0m0.451s
+user	0m0.384s
+sys	0m0.044s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (8) String.blit(s0, i0, s1, i1, il) ===
+
+[S]ynthesized feaures = 0
+
+[M]ax Memory Usage = 5534
+
+[V]erdict = FAIL
+
+=== (8) String.blit(s0, i0, s1, i1, il) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (i0 = (#len(s0))) && (#has(s1, s0))
+postcondition: (#eql(res, ""))
+
+real	0m0.864s
+user	0m0.792s
+sys	0m0.040s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (9) String.concat(s, sl) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m1.247s
+user	0m1.168s
+sys	0m0.076s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (9) String.concat(s, sl) ===
+
+[S]ynthesized feaures = 6
+
+precondition: ((tl(sl) = []) || (tl(tl(sl)) = []) || !((0 = (#len(hd(sl)))))) && (!((tl(sl) = [])) || (0 = (#len(hd(sl))))) && ((sl = []) || (#has(s, hd(rev(sl))))) && ((sl = []) || (tl(sl) = []) || (#eql(s, hd(sl))))
+postcondition: (#eql(res, ""))
+
+real	0m1.544s
+user	0m1.440s
+sys	0m0.100s
+
+[M]ax Memory Usage = 15
+
+[V]erdict = BAD
+
+=== (10) String.trim(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.420s
+user	0m0.384s
+sys	0m0.032s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (10) String.trim(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(res, ""))
+
+real	1m17.983s
+user	1m17.660s
+sys	0m0.288s
+
+[M]ax Memory Usage = 1102
+
+[V]erdict = FAIL
+
+=== (11) String.escaped(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.419s
+user	0m0.392s
+sys	0m0.024s
+
+[M]ax Memory Usage = 7
+
+[V]erdict = GOOD
+
+=== (11) String.escaped(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.438s
+user	0m0.408s
+sys	0m0.028s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (12) String.index(s, c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (! (has(s, c)))
+postcondition: exception thrown
+
+real	0m0.452s
+user	0m0.412s
+sys	0m0.036s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (12) String.index(s, c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (has((#get(s, 0)), c))
+postcondition: (res = 0)
+
+real	0m0.461s
+user	0m0.396s
+sys	0m0.020s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (13) String.rindex(s, c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (! (has(s, c)))
+postcondition: exception thrown
+
+real	0m0.454s
+user	0m0.424s
+sys	0m0.028s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (13) String.rindex(s, c) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (! (has((#sub(s, 1, ((#len(s)) - 1))), c)))
+postcondition: (res = 0)
+
+real	0m0.529s
+user	0m0.452s
+sys	0m0.036s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (14) String.index_from(s, i, c) ===
+
+[S]ynthesized feaures = 6
+
+
+precondition: ((i > (#len(s))) || (! (has((#sub(s, i, ((#len(s)) - i))), c))) || (0 > i))
+postcondition: exception thrown
+
+real	0m50.334s
+user	0m50.060s
+sys	0m0.220s
+
+[M]ax Memory Usage = 955
+
+[V]erdict = GOOD
+
+=== (14) String.index_from(s, i, c) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (has((#get(s, 0)), c)) && (i = 0)
+postcondition: (res = 0)
+
+real	0m0.430s
+user	0m0.388s
+sys	0m0.032s
+
+[M]ax Memory Usage = 5
+
+[V]erdict = GOOD
+
+=== (15) String.rindex_from(s, i, c) ===
+
+[M]ax Memory Usage = 5329
+
+[V]erdict = FAIL
+
+=== (15) String.rindex_from(s, i, c) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (has((#get(s, 0)), c)) && (! (has((#get(s, 1)), c)))
+postcondition: (res = 0)
+
+real	0m0.498s
+user	0m0.392s
+sys	0m0.036s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (16) String.contains(s, c) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.424s
+user	0m0.404s
+sys	0m0.016s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (16) String.contains(s, c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: ! (has(s, c))
+postcondition: (res = false)
+
+real	0m0.441s
+user	0m0.404s
+sys	0m0.036s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (17) String.contains_from(s, i, c) ===
+
+[S]ynthesized feaures = 3
+
+precondition: ((i > (#len(s))) || (0 > i))
+postcondition: exception thrown
+
+real	0m0.603s
+user	0m0.584s
+sys	0m0.016s
+
+[M]ax Memory Usage = 15
+
+[V]erdict = GOOD
+
+=== (17) String.contains_from(s, i, c) ===
+
+[S]ynthesized feaures = 3
+
+precondition: (has((#sub(s, 0, i)), c))
+postcondition: (res = false)
+
+real	0m0.701s
+user	0m0.660s
+sys	0m0.020s
+
+[M]ax Memory Usage = 18
+
+[V]erdict = GOOD
+
+=== (18) String.rcontains_from(s, i, c) ===
+
+[S]ynthesized feaures = 3
+
+precondition: (((#len(s)) <= i) || (0 > i))
+postcondition: exception thrown
+
+real	0m0.603s
+user	0m0.576s
+sys	0m0.024s
+
+[M]ax Memory Usage = 14
+
+[V]erdict = GOOD
+
+=== (18) String.rcontains_from(s, i, c) ===
+
+[S]ynthesized feaures = 1
+
+precondition: ! (has((#sub(s, 0, (i + 1))), c))
+postcondition: (res = false)
+
+real	0m0.489s
+user	0m0.452s
+sys	0m0.016s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (19) String.uppercase(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.421s
+user	0m0.372s
+sys	0m0.044s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (19) String.uppercase(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.443s
+user	0m0.424s
+sys	0m0.016s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (20) String.lowercase(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.427s
+user	0m0.400s
+sys	0m0.024s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (20) String.lowercase(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.446s
+user	0m0.420s
+sys	0m0.024s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (21) String.capitalize(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.420s
+user	0m0.396s
+sys	0m0.020s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (21) String.capitalize(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.442s
+user	0m0.400s
+sys	0m0.040s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (22) String.uncapitalize(s) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.420s
+user	0m0.384s
+sys	0m0.032s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (22) String.uncapitalize(s) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.642s
+user	0m0.412s
+sys	0m0.028s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (23) String.compare(s0, s1) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.826s
+user	0m0.772s
+sys	0m0.052s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (23) String.compare(s0, s1) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (#has(s0, s1)) && (#has(s1, s0))
+postcondition: (res = 0)
+
+real	0m0.895s
+user	0m0.848s
+sys	0m0.044s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+

@@ -1,0 +1,133 @@
+ ==> 1877 final_tests.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B9
+     - guard : (x < n)
+
+   # Invariant Guess = true
+
+   [V1] Verification query {pre} = true
+     - Result = VALID
+
+   [V2] Verification query {pos} = ((!true) | (x < n) | ((((true & (m < n)) & (0 <= m)) | (!(n > 0))) & (true | (n > 0))))
+     - Result = FAILED
+
+   [Q1] Abduction query = ((!true) | (x < n) | ((((true & (m < n)) & (0 <= m)) | (!(n > 0))) & (true | (n > 0))))
+   [#] Simplified query: ((!true) | (x < n) | ((((true & (m < n)) & (0 <= m)) | (!(n > 0))) & (true | (n > 0))))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 1875t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 1, 1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (2f x 1876t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= m)                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @2 @3
+    [%] Inferring {true} [k = 1] (4f x 1877t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (4f x 1877t) ...                                     
+    [?] Verifying [k = 2] --- ((! (1 = x)) | (m = 0))                            
+      [+] Added test ... [ 2, 1, -1 ]
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (4f x 1878t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (4f x 1878t) ...                                     
+    [?] Verifying [k = 2] --- ((! (1 = x)) | (m = 0)) & (0 <= m)                            
+      [+] Added test ... [ 2, 1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 1879t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (5f x 1879t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 3] (5f x 1879t) ...                                     
+    [?] Verifying [k = 3] --- ((n > x) | (m = 0) | (x = n)) & ((! (1 = x)) | (m = 0)) & (0 <= m)                            
+      [+] Added test ... [ 2, 2, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 1880t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (6f x 1880t) ...                                     
+    [?] Verifying [k = 2] --- (0 <= m) & ((m = 0) | (n > m))                            
+
+     - Result = ((0 <= m) & ((m = 0) | (n > m)))
+
+   # Invariant Guess = (((0 <= m) & ((m = 0) | (n > m))) & true)
+
+   [V3] Verification query {pre} = (((0 <= 0) & ((0 = 0) | (n > 0))) & true)
+     - Result = VALID
+
+   [V4] Verification query {pos} = ((!(((0 <= m) & ((m = 0) | (n > m))) & true)) | (x < n) | ((((true & (m < n)) & (0 <= m)) | (!(n > 0))) & (true | (n > 0))))
+     - Result = VALID
+
+   [V5] Verification query {ind} = ((!(((0 <= m) & ((m = 0) | (n > m))) & true)) | (!(x < n)) | (((((0 <= x) & ((x = 0) | (n > x))) & true) | (!true)) & ((((0 <= m) & ((m = 0) | (n > m))) & true) | (!true))))
+     - Result = FAILED
+
+   [Q2] Abduction query = ((!(((0 <= m) & ((m = 0) | (n > m))) & true)) | (!(x < n)) | (((((0 <= x) & ((x = 0) | (n > x))) & true) | (!true)) & ((((0 <= m) & ((m = 0) | (n > m))) & true) | (!true))))
+   [#] Simplified query: ((!(((0 <= m) & ((m = 0) | (n > m))) & true)) | (!(x < n)) | (((((0 <= x) & ((x = 0) | (n > x))) & true) | (!true)) & ((((0 <= m) & ((m = 0) | (n > m))) & true) | (!true))))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 1875t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (2f x 1876t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (2f x 1876t) ...                                     
+    [?] Verifying [k = 2] --- ((n > m) | (m = x))                            
+      [+] Added test ... [ 0, 1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (4f x 1877t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (4f x 1877t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 3] (4f x 1877t) ...                                     
+    [?] Verifying [k = 3] --- ((m = x) | (n > 1) | (n = x))                            
+      [+] Added test ... [ 0, 2, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 1878t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (5f x 1878t) ...                                     
+    [?] Verifying [k = 2] --- ((m = x) | (x > m))                            
+
+     - Result = ((m = x) | (x > m))
+
+   # Invariant Guess = (((m = x) | (x > m)) & (((0 <= m) & ((m = 0) | (n > m))) & true))
+
+   [V6] Verification query {pre} = (((0 = 0) | (0 > 0)) & (((0 <= 0) & ((0 = 0) | (n > 0))) & true))
+     - Result = VALID
+
+   [V7] Verification query {pos} = ((!(((m = x) | (x > m)) & (((0 <= m) & ((m = 0) | (n > m))) & true))) | (x < n) | ((((true & (m < n)) & (0 <= m)) | (!(n > 0))) & (true | (n > 0))))
+     - Result = VALID
+
+   [V8] Verification query {ind} = ((!(((m = x) | (x > m)) & (((0 <= m) & ((m = 0) | (n > m))) & true))) | (!(x < n)) | (((((x = (x + 1)) | ((x + 1) > x)) & (((0 <= x) & ((x = 0) | (n > x))) & true)) | (!true)) & ((((m = (x + 1)) | ((x + 1) > m)) & (((0 <= m) & ((m = 0) | (n > m))) & true)) | (!true))))
+     - Result = VALID
+
+
+[###] Final invariant = (((m = x) | (x > m)) & (((0 <= m) & ((m = 0) | (n > m))) & true)) [###]
+================================================================================
+checker_exec.sh: line 1:  4077 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/specInfer/logs/mem8gb/6400/pie/16/33.cpp -abducer /home/saswat/Repos/specInfer/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/specInfer/abducer/../bm_oopsla/33.cpp --
+
+real	0m19.082s
+user	0m17.688s
+sys	0m0.436s
+
+
+--- Processed 33.cpp ---
+sat: 10
+unsat: 8
+unk: 0
+escher: 11
+
+[$] OOM Count = 0
+[$] MAX Usage = 112

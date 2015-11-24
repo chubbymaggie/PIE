@@ -1,0 +1,316 @@
+
+=== (0) BatAvlTree.is_empty(t) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m10.562s
+user	0m9.920s
+sys	0m0.636s
+
+[M]ax Memory Usage = 14
+
+[V]erdict = GOOD
+
+=== (0) BatAvlTree.is_empty(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: (res = true)
+
+real	0m10.607s
+user	0m9.976s
+sys	0m0.624s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (1) BatAvlTree.make_tree(l, v, r) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m21.083s
+user	0m19.848s
+sys	0m1.224s
+
+[M]ax Memory Usage = 26
+
+[V]erdict = GOOD
+
+=== (1) BatAvlTree.make_tree(l, v, r) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: empty(res)
+
+real	0m21.236s
+user	0m19.936s
+sys	0m1.288s
+
+[M]ax Memory Usage = 26
+
+[V]erdict = GOOD
+
+=== (2) BatAvlTree.create(l, v, r) ===
+
+[S]ynthesized feaures = 6
+
+precondition: ((height(l) > (height(r) + 1)) || (height(r) > (height(l) + 1)))
+postcondition: exception thrown
+
+real	0m25.252s
+user	0m23.780s
+sys	0m1.460s
+
+[M]ax Memory Usage = 74
+
+[V]erdict = GOOD
+
+=== (2) BatAvlTree.create(l, v, r) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: empty(res)
+
+real	0m21.155s
+user	0m19.888s
+sys	0m1.256s
+
+[M]ax Memory Usage = 22
+
+[V]erdict = GOOD
+
+=== (3) BatAvlTree.height(t) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m10.703s
+user	0m10.028s
+sys	0m0.668s
+
+[M]ax Memory Usage = 14
+
+[V]erdict = GOOD
+
+=== (3) BatAvlTree.height(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: (res = 0)
+
+real	0m10.599s
+user	0m9.996s
+sys	0m0.564s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (4) BatAvlTree.left_branch(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m10.600s
+user	0m9.944s
+sys	0m0.648s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (4) BatAvlTree.left_branch(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(left(t))
+postcondition: empty(res)
+
+real	0m10.614s
+user	0m9.888s
+sys	0m0.688s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (5) BatAvlTree.right_branch(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m10.611s
+user	0m10.024s
+sys	0m0.580s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (5) BatAvlTree.right_branch(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(right(t))
+postcondition: empty(res)
+
+real	0m10.611s
+user	0m9.928s
+sys	0m0.652s
+
+[M]ax Memory Usage = 15
+
+[V]erdict = GOOD
+
+=== (6) BatAvlTree.root(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m10.664s
+user	0m9.992s
+sys	0m0.664s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (7) BatAvlTree.singleton_tree(v) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.018s
+user	0m0.016s
+sys	0m0.000s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (7) BatAvlTree.singleton_tree(v) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: empty(res)
+
+real	0m0.018s
+user	0m0.008s
+sys	0m0.008s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (8) BatAvlTree.split_leftmost(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m10.650s
+user	0m10.084s
+sys	0m0.560s
+
+[M]ax Memory Usage = 20
+
+[V]erdict = GOOD
+
+=== (9) BatAvlTree.split_rightmost(t) ===
+
+[S]ynthesized feaures = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m10.541s
+user	0m10.000s
+sys	0m0.532s
+
+[M]ax Memory Usage = 18
+
+[V]erdict = GOOD
+
+=== (10) BatAvlTree.concat(t0, t1) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m21.216s
+user	0m19.868s
+sys	0m1.336s
+
+[M]ax Memory Usage = 28
+
+[V]erdict = GOOD
+
+=== (10) BatAvlTree.concat(t0, t1) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (empty(l) & empty(r))
+postcondition: empty(res)
+
+real	0m21.211s
+user	0m19.876s
+sys	0m1.324s
+
+[M]ax Memory Usage = 33
+
+[V]erdict = GOOD
+
+=== (11) BatAvlTree.check(t) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m10.622s
+user	0m9.984s
+sys	0m0.632s
+
+[M]ax Memory Usage = 16
+
+[V]erdict = GOOD
+
+=== (11) BatAvlTree.check(t) ===
+
+[S]ynthesized feaures = 0
+
+precondition: true
+postcondition: (res = true)
+
+real	0m10.566s
+user	0m9.852s
+sys	0m0.708s
+
+[M]ax Memory Usage = 15
+
+[V]erdict = GOOD
+

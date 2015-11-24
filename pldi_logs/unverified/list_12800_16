@@ -1,0 +1,456 @@
+
+=== (0) List.length(l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.019s
+user	0m0.016s
+sys	0m0.000s
+
+[M]ax Memory Usage = 7
+
+[V]erdict = GOOD
+
+=== (0) List.length(l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (l = [])
+postcondition: (res = 0)
+
+real	0m0.067s
+user	0m0.020s
+sys	0m0.008s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (1) List.hd(l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (l = [])
+postcondition: exception thrown
+
+real	0m0.036s
+user	0m0.032s
+sys	0m0.000s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (2) List.tl(l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (l = [])
+postcondition: exception thrown
+
+real	0m0.036s
+user	0m0.032s
+sys	0m0.000s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (2) List.tl(l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (tl(l) = [])
+postcondition: res = []
+
+real	0m0.048s
+user	0m0.024s
+sys	0m0.000s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (3) List.nth(l, n) ===
+
+[S]ynthesized feaures = 6
+
+precondition: ((len(l) <= n) || (0 > n))
+postcondition: exception thrown
+
+real	0m0.453s
+user	0m0.448s
+sys	0m0.000s
+
+[M]ax Memory Usage = 23
+
+[V]erdict = GOOD
+
+=== (4) List.rev(l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.021s
+user	0m0.020s
+sys	0m0.000s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (4) List.rev(l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (l = [])
+postcondition: res = []
+
+real	0m0.036s
+user	0m0.028s
+sys	0m0.004s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (5) List.append(l0, l1) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.030s
+user	0m0.024s
+sys	0m0.004s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (5) List.append(l0, l1) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (l1 = l0) && (l1 = [])
+postcondition: res = []
+
+real	0m0.082s
+user	0m0.076s
+sys	0m0.004s
+
+[M]ax Memory Usage = 12
+
+[V]erdict = GOOD
+
+=== (6) List.rev_append(l0, l1) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.031s
+user	0m0.028s
+sys	0m0.000s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (6) List.rev_append(l0, l1) ===
+
+[S]ynthesized feaures = 2
+
+precondition: (l0 = l1) && (l1 = [])
+postcondition: res = []
+
+real	0m0.071s
+user	0m0.068s
+sys	0m0.000s
+
+[M]ax Memory Usage = 11
+
+[V]erdict = GOOD
+
+=== (7) List.concat(l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.040s
+user	0m0.036s
+sys	0m0.000s
+
+[M]ax Memory Usage = 11
+
+[V]erdict = GOOD
+
+=== (7) List.concat(l) ===
+
+real	8m18.108s
+user	8m17.252s
+sys	0m0.660s
+
+[M]ax Memory Usage = 2917
+
+[V]erdict = FAIL
+
+=== (8) List.flatten(l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.046s
+user	0m0.040s
+sys	0m0.004s
+
+[M]ax Memory Usage = 12
+
+[V]erdict = GOOD
+
+=== (8) List.flatten(l) ===
+
+real	0m19.441s
+user	0m19.320s
+sys	0m0.112s
+
+[M]ax Memory Usage = 485
+
+[V]erdict = FAIL
+
+=== (9) List.mem(m, l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.022s
+user	0m0.016s
+sys	0m0.004s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (9) List.mem(m, l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: !(m in l)
+postcondition: (res = false)
+
+real	0m0.058s
+user	0m0.036s
+sys	0m0.000s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (10) List.memq(m, l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.022s
+user	0m0.016s
+sys	0m0.004s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (10) List.memq(m, l) ===
+
+[S]ynthesized feaures = 1
+
+precondition: !(m in l)
+postcondition: (res = false)
+
+real	0m0.040s
+user	0m0.028s
+sys	0m0.008s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = BAD
+
+=== (11) List.split(l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.036s
+user	0m0.028s
+sys	0m0.004s
+
+[M]ax Memory Usage = 11
+
+[V]erdict = GOOD
+
+=== (12) List.combine(l0, l1) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (! (len(l0) = len(l1)))
+postcondition: exception thrown
+
+real	0m0.070s
+user	0m0.060s
+sys	0m0.008s
+
+[M]ax Memory Usage = 11
+
+[V]erdict = GOOD
+
+=== (12) List.combine(l0, l1) ===
+
+[S]ynthesized feaures = 1
+
+precondition: (l1 = [])
+postcondition: res = []
+
+real	0m0.051s
+user	0m0.020s
+sys	0m0.004s
+
+[M]ax Memory Usage = 6
+
+[V]erdict = GOOD
+
+=== (13) List.assoc(a, l) ===
+
+real	0m12.357s
+user	0m12.240s
+sys	0m0.108s
+
+[M]ax Memory Usage = 440
+
+[V]erdict = FAIL
+
+=== (14) List.assq(a, l) ===
+
+real	0m10.463s
+user	0m10.384s
+sys	0m0.072s
+
+[M]ax Memory Usage = 391
+
+[V]erdict = FAIL
+
+=== (15) List.mem_assoc(a, l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.029s
+user	0m0.024s
+sys	0m0.000s
+
+[M]ax Memory Usage = 8
+
+[V]erdict = GOOD
+
+=== (15) List.mem_assoc(a, l) ===
+
+real	0m7.080s
+user	0m7.032s
+sys	0m0.044s
+
+[M]ax Memory Usage = 267
+
+[V]erdict = FAIL
+
+=== (16) List.mem_assq(a, l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.026s
+user	0m0.024s
+sys	0m0.000s
+
+[M]ax Memory Usage = 7
+
+[V]erdict = GOOD
+
+=== (16) List.mem_assq(a, l) ===
+
+real	0m6.808s
+user	0m6.704s
+sys	0m0.088s
+
+[M]ax Memory Usage = 263
+
+[V]erdict = FAIL
+
+=== (17) List.remove_assoc(a, l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.035s
+user	0m0.028s
+sys	0m0.000s
+
+[M]ax Memory Usage = 10
+
+[V]erdict = GOOD
+
+=== (17) List.remove_assoc(a, l) ===
+
+real	0m45.746s
+user	0m45.492s
+sys	0m0.224s
+
+[M]ax Memory Usage = 793
+
+[V]erdict = FAIL
+
+=== (18) List.remove_assq(a, l) ===
+
+[S]ynthesized feaures = 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.031s
+user	0m0.028s
+sys	0m0.000s
+
+[M]ax Memory Usage = 9
+
+[V]erdict = GOOD
+
+=== (18) List.remove_assq(a, l) ===
+
+real	0m1.676s
+user	0m1.664s
+sys	0m0.008s
+
+[M]ax Memory Usage = 79
+
+[V]erdict = FAIL
+

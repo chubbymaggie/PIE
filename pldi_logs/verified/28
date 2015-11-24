@@ -1,0 +1,138 @@
+ ==> 580 final_tests.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7
+     - guard : NON-DETERMINISTIC
+
+   # Invariant Guess = true
+
+   [V1] Verification query {pre} = true
+     - Result = VALID
+
+   [V2] Verification query {pos} = ((!true) | (!true) | ((true & (y = z)) & (x = y)))
+     - Result = FAILED
+
+   [Q1] Abduction query = ((!true) | (!true) | ((true & (y = z)) & (x = y)))
+   [#] Simplified query: ((!true) | (!true) | ((true & (y = z)) & (x = y)))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 578t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 579t) ...                                     
+    [?] Verifying [k = 1] --- (x = z)                            
+      [+] Added test ... [ -1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 580t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (2f x 581t) ...                                     
+    [?] Verifying [k = 1] --- (x = z) & (x = y)                            
+
+     - Result = ((x = z) & (x = y))
+
+   # Invariant Guess = (((x = z) & (x = y)) & true)
+
+   [V3] Verification query {pre} = (((0 = 0) & (0 = 0)) & true)
+     - Result = VALID
+
+   [V4] Verification query {pos} = ((!(((x = z) & (x = y)) & true)) | (!true) | ((true & (y = z)) & (x = y)))
+     - Result = VALID
+
+   [V5] Verification query {ind} = ((!(((x = z) & (x = y)) & true)) | (!true) | ((((((x + 1) = (z + 1)) & ((x + 1) = (y + 1))) & true) | (!((k % 3) = 0))) & ((((x = (z + 1)) & (x = (y + 1))) & true) | ((k % 3) = 0))))
+     - Result = FAILED
+
+   [Q2] Abduction query = ((!(((x = z) & (x = y)) & true)) | (!true) | ((((((x + 1) = (z + 1)) & ((x + 1) = (y + 1))) & true) | (!((k % 3) = 0))) & ((((x = (z + 1)) & (x = (y + 1))) & true) | ((k % 3) = 0))))
+   [#] Simplified query: ((!(((x = z) & (x = y)) & true)) | (!true) | ((((((x + 1) = (z + 1)) & ((x + 1) = (y + 1))) & true) | (!((k % 3) = 0))) & ((((x = (z + 1)) & (x = (y + 1))) & true) | ((k % 3) = 0))))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 578t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3 @4
+    [%] Inferring {true} [k = 1] (2f x 579t) ...                                     
+    [?] Verifying [k = 1] --- (! (k = 1))                            
+      [+] Added test ... [ 0, 0, 0, -2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 580t) ...                                     
+    [?] Verifying [k = 1] --- (! (k = 1)) & (y <= k)                            
+      [+] Added test ... [ -2, -2, -2, -2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 581t) ...                                     
+    [?] Verifying [k = 1] --- (! (k = 1)) & (0 <= k)                            
+      [+] Added test ... [ 0, 0, 0, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (6f x 582t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (6f x 582t) ...                                     
+    [?] Verifying [k = 2] --- (!((k > 3)) | (y > 1)) & (! (k = 1)) & (0 <= k)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (7f x 583t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (7f x 583t) ...                                     
+    [?] Verifying [k = 2] --- (!((k > 3)) | (y > 1)) & (! (k = 1)) & (! (3 = (k + 1))) & (0 <= k)                            
+      [+] Added test ... [ 2, 2, 2, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (8f x 584t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (8f x 584t) ...                                     
+    [?] Verifying [k = 2] --- (! (k = 1)) & (! (3 = (k + 1))) & (!((k > 3)) | (k > (3 + 1))) & (0 <= k)                            
+      [+] Added test ... [ 0, 0, 0, 5 ]
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (8f x 585t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (8f x 585t) ...                                     
+    [?] Verifying [k = 2] --- ((y > 1) | !((k > (3 + 1)))) & (! (k = 1)) & (! (3 = (k + 1))) & (!((k > 3)) | (k > (3 + 1))) & (0 <= k)                            
+      [+] Added test ... [ 2, 2, 2, 5 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (9f x 586t) ...                                     
+    [?] Verifying [k = 1] --- (k = (3 * y))                            
+
+     - Result = (k = (3 * y))
+
+   # Invariant Guess = ((k = (3 * y)) & (((x = z) & (x = y)) & true))
+
+   [V6] Verification query {pre} = ((0 = (3 * 0)) & (((0 = 0) & (0 = 0)) & true))
+     - Result = VALID
+
+   [V7] Verification query {pos} = ((!((k = (3 * y)) & (((x = z) & (x = y)) & true))) | (!true) | ((true & (y = z)) & (x = y)))
+     - Result = VALID
+
+   [V8] Verification query {ind} = ((!((k = (3 * y)) & (((x = z) & (x = y)) & true))) | (!true) | (((((((x + 1) + (y + 1)) + (z + 1)) = (3 * (y + 1))) & ((((x + 1) = (z + 1)) & ((x + 1) = (y + 1))) & true)) | (!((k % 3) = 0))) & (((((x + (y + 1)) + (z + 1)) = (3 * (y + 1))) & (((x = (z + 1)) & (x = (y + 1))) & true)) | ((k % 3) = 0))))
+     - Result = VALID
+
+
+[###] Final invariant = ((k = (3 * y)) & (((x = z) & (x = y)) & true)) [###]
+================================================================================
+checker_exec.sh: line 1:  1249 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/specInfer/logs/mem8gb/6400/pie/16/28.cpp -abducer /home/saswat/Repos/specInfer/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/specInfer/abducer/../bm_oopsla/28.cpp --
+
+real	0m19.430s
+user	0m17.860s
+sys	0m0.480s
+
+
+--- Processed 28.cpp ---
+sat: 13
+unsat: 8
+unk: 0
+escher: 11
+
+[$] OOM Count = 0
+[$] MAX Usage = 111

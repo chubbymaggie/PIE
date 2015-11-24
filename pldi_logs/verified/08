@@ -1,0 +1,67 @@
+ ==> 2043 final_tests.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B5
+     - guard : (i < n)
+
+   # Invariant Guess = true
+
+   [V1] Verification query {pre} = ((!(n >= 0)) | true)
+     - Result = VALID
+
+   [V2] Verification query {pos} = ((!true) | (i < n) | (true & (j = n)))
+     - Result = FAILED
+
+   [Q1] Abduction query = ((!true) | (i < n) | (true & (j = n)))
+   [#] Simplified query: ((!true) | (i < n) | (true & (j = n)))
+
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 1] (0f x 2041t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 2042t) ...                                     
+    [?] Verifying [k = 1] --- (i = j)                            
+      [+] Added test ... [ 1, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3 @2 @3
+    [%] Inferring {true} [k = 1] (3f x 2043t) ...                                     
+    [%] Removing conflicts ... 
+    [%] Inferring {true} [k = 2] (3f x 2043t) ...                                     
+    [?] Verifying [k = 2] --- ((n > j) | (j = n)) & (i = j)                            
+
+     - Result = (((n > j) | (j = n)) & (i = j))
+
+   # Invariant Guess = ((((n > j) | (j = n)) & (i = j)) & true)
+
+   [V3] Verification query {pre} = ((!(n >= 0)) | ((((n > 0) | (0 = n)) & (0 = 0)) & true))
+     - Result = VALID
+
+   [V4] Verification query {pos} = ((!((((n > j) | (j = n)) & (i = j)) & true)) | (i < n) | (true & (j = n)))
+     - Result = VALID
+
+   [V5] Verification query {ind} = ((!((((n > j) | (j = n)) & (i = j)) & true)) | (!(i < n)) | ((((n > (j + 1)) | ((j + 1) = n)) & ((i + 1) = (j + 1))) & true))
+     - Result = VALID
+
+
+[###] Final invariant = ((((n > j) | (j = n)) & (i = j)) & true) [###]
+================================================================================
+checker_exec.sh: line 1: 27463 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/specInfer/logs/mem8gb/6400/pie/16/08.cpp -abducer /home/saswat/Repos/specInfer/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/specInfer/abducer/../bm_oopsla/08.cpp --
+
+real	0m15.219s
+user	0m14.504s
+sys	0m0.224s
+
+
+--- Processed 08.cpp ---
+sat: 3
+unsat: 5
+unk: 0
+escher: 3
+
+[$] OOM Count = 0
+[$] MAX Usage = 108
