@@ -21,7 +21,7 @@ ln -fs "$ROOT/../base/escher_components.ml"   escher_components.ml
 ln -fs "$ROOT/../base/escher_types.ml"        escher_types.ml
 ln -fs "$ROOT/../base/escher_synth.ml"        escher_synth.ml
 
-ln -fs "$ROOT/../base/specInfer.ml"   specInfer.ml
+ln -fs "$ROOT/../base/pie.ml"         pie.ml
 ln -fs "$ROOT/../base/top_helper.ml"  top_helper.ml
 ln -fs "$ROOT/../base/makefile"       makefile
 
@@ -42,4 +42,4 @@ chmod +x compile.sh
 ocamlfind ocamlopt -package qcheck -package batteries -w a -c "T$FILENAME.ml"
 ocamlfind ocamlopt -o "$FILENAME.e" -linkpkg -package qcheck -package batteries       \
                    testGen.cmx escher_types.cmx escher_core.cmx escher_components.cmx \
-                   escher_synth.cmx specInfer.cmx "T$FILENAME.cmx"
+                   escher_synth.cmx pie.cmx "T$FILENAME.cmx"

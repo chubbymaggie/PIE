@@ -5,7 +5,7 @@ open Escher_types
 open Escher_core
 open Escher_components
 open Escher_synth
-open SpecInfer
+open Pie
 
 let extra_comps = default_list @ default_char @ [ str_getc ; str_containsc ]
 

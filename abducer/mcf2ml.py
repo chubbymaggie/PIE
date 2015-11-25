@@ -140,7 +140,7 @@ if __name__ == "__main__":
     print("\nopen Batteries")
     print("open QCheck.Arbitrary")
     print("\nopen Escher_types")
-    print("open SpecInfer")
+    print("open Pie")
     print("open TestGen")
     print("\n\nlet index_of = fun s0 s1 -> try (BatString.find s0 s1) with Not_found -> (-1)")
     print("\n\nlet n_arg_gen %s = (fun rand -> (%s))" % (' '.join('g%d' % i for i in range(len(uvars))), ', '.join('g%d rand' % i for i in range(len(uvars)))))

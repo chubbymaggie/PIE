@@ -5,7 +5,7 @@ open Escher_core
 open Escher_components
 open Escher_synth
 
-open SpecInfer
+open Pie
 
 let gen_post_conds ((in_vals, out_val) : 'a * 'b)
                    ((in_names, in_types) : string list * typ list)
