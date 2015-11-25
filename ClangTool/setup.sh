@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# -ne 3 ]]; then
-  echo "Please provide path to LLVM_ROOT and CGROUP_NAME"
+if [[ $# -lt 2 ]]; then
+  echo "Please provide path to LLVM_ROOT"
   exit 1
 fi
 
@@ -13,10 +13,12 @@ ABDUCER_ROOT="`cd ../abducer/ && pwd`"
 WORKING_ROOT="`cd ../logs/ || mkdir -p ../logs/ && pwd`"
 
 CGROUP_NAME="$2"
-echo "[+] Creating cgroup [$CGROUP_NAME]."
-sudo cgcreate -t $USER:$USER -a $USER:$USER -g memory,cpu:$CGROUP_NAME
-cgset -r memory.limit_in_bytes=$((8*1024*1024*1024)) $CGROUP_NAME
-cgset -r memory.memsw.limit_in_bytes=$((8*1024*1024*1024)) $CGROUP_NAME
+if [[ "$CGROUP_NAME" != "" ]]; then
+    echo "[+] Creating cgroup [$CGROUP_NAME]."
+    sudo cgcreate -t $USER:$USER -a $USER:$USER -g memory,cpu:$CGROUP_NAME
+    cgset -r memory.limit_in_bytes=$((8*1024*1024*1024)) $CGROUP_NAME
+    cgset -r memory.memsw.limit_in_bytes=$((8*1024*1024*1024)) $CGROUP_NAME
+fi
 
 cd "$LLVM_ROOT/tools/clang/tools"
 
