@@ -36,18 +36,18 @@ for PINDEX in `seq 0 1024`; do
     fi
 
     if [[ "$CGROUP" == "" ]]; then
-        timeout $TIMEOUT bash -c "bash -c 'time ./$FILE.e' |& tee -a RESULT"
+        timeout $TIMEOUT bash -c "bash -c 'time ./$FILE.e' 2>&1 | tee -a RESULT"
     else
-        timeout $TIMEOUT bash -c "bash -c 'time cgexec -g memory,cpu:$CGROUP ./$FILE.e' |& tee -a RESULT"
+        timeout $TIMEOUT bash -c "bash -c 'time cgexec -g memory,cpu:$CGROUP ./$FILE.e' 2>&1 | tee -a RESULT"
     fi
 
     LASTLINE="`tail -n 5 RESULT | head -n 1`"
     if [[ "$LASTLINE" == 'Fatal error: exception Invalid_argument("Index past end of list")' ]]; then break; fi
 
     if [[ "$CGROUP" != "" ]]; then
-        echo -ne "\n[M]ax Memory Usage = " |& tee -a RESULT
-        echo $(( $(cat /sys/fs/cgroup/memory/$CGROUP/memory.memsw.max_usage_in_bytes) / (1024 * 1024) )) |& tee -a RESULT
-        echo -ne "\n\n" |& tee -a RESULT
+        echo -ne "\n[M]ax Memory Usage = " 2>&1 | tee -a RESULT
+        echo $(( $(cat /sys/fs/cgroup/memory/$CGROUP/memory.memsw.max_usage_in_bytes) / (1024 * 1024) )) 2>&1 | tee -a RESULT
+        echo -ne "\n\n" 2>&1 | tee -a RESULT
     fi
 
     ./clean RESULT

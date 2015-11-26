@@ -86,9 +86,9 @@ if [[ "$CGROUP" != "" ]]; then
     echo 0 > "$CG_LOCATION/memory.force_empty"
     echo 0 > "$CG_LOCATION/memory.memsw.failcnt"
     echo 0 > "$CG_LOCATION/memory.memsw.max_usage_in_bytes"
-    cgexec -g memory,cpu:$CGROUP bash checker_exec.sh |& tee -a "$TOTAL_LOG"
+    cgexec -g memory,cpu:$CGROUP bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
 else
-    bash checker_exec.sh |& tee -a "$TOTAL_LOG"
+    bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
 fi
 rm checker_exec.sh
 
