@@ -11,10 +11,10 @@ FILENAME="`basename \"$FILE\" .ml`"
 cd "$TARGET"
 
 ln -fs "$FILE" "$FILENAME.ml"
-perl -pe 's#__MAX_CONFLICT_SET_SIZE__#'"$3"'#g' < "$FILE" > "t$FILENAME.ml"
-perl -pi -e 's#__TEST_SIZE__#'"$4"'#g' "t$FILENAME.ml"
-perl -pi -e 's#__FUNCTION_INDEX__#'"$5"'#g' "t$FILENAME.ml"
-perl -pi -e 's#__POST_INDEX__#'"$6"'#g' "t$FILENAME.ml"
+perl -pe 's#__MAX_CONFLICT_SET_SIZE__#'"$3"'#g' < "$FILE" > "X$FILENAME.ml"
+perl -pi -e 's#__TEST_SIZE__#'"$4"'#g' "X$FILENAME.ml"
+perl -pi -e 's#__FUNCTION_INDEX__#'"$5"'#g' "X$FILENAME.ml"
+perl -pi -e 's#__POST_INDEX__#'"$6"'#g' "X$FILENAME.ml"
 
 ln -fs "$ROOT/../base/escher_core.ml"         escher_core.ml
 ln -fs "$ROOT/../base/escher_components.ml"   escher_components.ml
@@ -31,7 +31,7 @@ ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
 ln -fs "$ROOT/clean.sh"     clean
 
-./preprocess "t$FILENAME.ml" ALL > "T$FILENAME.ml"
+./preprocess "X$FILENAME.ml" ALL > "T$FILENAME.ml"
 
 make -s clean ; make -s
 

@@ -9,6 +9,11 @@ SZ_CONFLICT_SET="$5"
 TOOL="pie"
 TIMEOUT="60m"
 
+if [[ ! `command -v timeo 2>&1 >/dev/null` ]]; then
+    TMOUTDEF="function timeout() { perl -e 'alarm shift; exec @ARGV' \"$@\"; }"
+    function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+fi
+
 if [[ "$CGROUP" == "" ]]; then
     LOCATION="../logs/$TESTS/$TOOL/$SZ_CONFLICT_SET/specs/$FILE"
 else
@@ -23,7 +28,7 @@ for PINDEX in `seq 0 1024`; do
     fi
     if [[ "$?" != "0" ]]; then break; fi
 
-    echo -ne "#!/bin/bash\n\nFILE=\"$FILE\"\nCGROUP=\"$CGROUP\"\nTIMEOUT=\"$TIMEOUT\"\n\n./compile.sh\n\n" > "$LOCATION/run_last_test.sh"
+    echo -ne "#!/bin/bash\n\n$TMOUTDEF\n\nFILE=\"$FILE\"\nCGROUP=\"$CGROUP\"\nTIMEOUT=\"$TIMEOUT\"\n\n./compile.sh\n\n" > "$LOCATION/run_last_test.sh"
     tail -n 25 test.sh | head -n 22 >> "$LOCATION/run_last_test.sh"
     chmod +x "$LOCATION/run_last_test.sh"
 
@@ -52,5 +57,5 @@ for PINDEX in `seq 0 1024`; do
 
     ./clean RESULT
 
-    cd -
+    cd ~-
 done

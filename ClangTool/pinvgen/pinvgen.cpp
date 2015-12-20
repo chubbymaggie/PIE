@@ -58,13 +58,10 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
           dom_tree.buildDominatorTree(* mgr.getAnalysisDeclContext(fd));
 
           CFGBlock *loop_head;
-          vector<bool> isLoopHeader(cfg->getNumBlockIDs());
-
           for(CFG::iterator it = cfg->begin(), ei = cfg->end(); it != ei; ++it) {
             CFGBlock *block = *it;
             for(CFGBlock::succ_iterator succ = block->succ_begin(), esucc = block->succ_end(); succ != esucc; ++succ) {
               if(dom_tree.dominates(*succ, block)) {
-                isLoopHeader[(*succ)->getBlockID()] = true;
                 loop_head = *succ;
                 break;
               }
@@ -90,6 +87,7 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
           PredicateNode nguard {"!", {guard}};
 
           //FIXME: Generalize treatment of non-determinism. Can occur elsewhere too.
+          //FIXME: Remove B instead of defining truth values.
 
           // nguard and guard behaviour:
           // NON-DETERMINISTIC ... guard = true  ; nguard = false
