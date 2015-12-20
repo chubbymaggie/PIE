@@ -163,34 +163,6 @@ let my_postconditions = [] in
 
 let ssub = (fun (s, i1, i2) -> String.sub s i1 i2)
 
-(* the ideal precondition for when an exception is thrown:
-   i1 < 0 || i2 < 0 || (i1 + i2) > length(s)
-   if we can do it, this one is nice for several reasons:
-     - it's unclear from the type whether i2 is the end index or the length
-     - even if that's known, the boundary conditions might be unclear
-       (e.g., you are allowed to ask for (String.sub "hello" 5 0))
-*)
-
-(* currently we get None for the above precondition.
-   however, within a small scope we can get spurious results for other postconditions,
-   including "terminates normally".  by moving to larger scopes -- in particular I increased
-   the range of integers and increased the sizes of strings -- we properly get None for these.
-   and we get one correct spec:
-   (Some [[Pos "i2 = 0"]; [Neg "i1 < i2"]; [Neg "len(s) < i1"]],
-    "len(res) = 0");
-   but we still get one spurious spec with the current settings:
-   (Some
-     [[Pos "i2 % 2 = 0"]; [Neg "i1 < 0"]; [Pos "i2 = 0"; Neg "i1 > i2"];
-      [Neg "len(s) < i1"]; [Neg "len(s) < i2"];
-      [Pos "i1 = 0"; Neg "len(s) = i2"];
-      [Pos "len(s) % 2 = 0"; Pos "i2 = 0"; Pos "i1 < i2"]],
-    "len(res) % 2 = 0")]
-
-   we can identify spurious ones as having lots of clauses.  the question is what to do then?
-   - increase the scope of tests to try to get conflicts?
-   - remove some features to try to get conflicts?
-*)
-
 let ssubRes = fun ?(pind=(-1)) () ->
 let name = "ssub" in
 let f = ssub in
