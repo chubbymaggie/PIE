@@ -128,11 +128,12 @@ if __name__ == "__main__":
     uvars = sorted(uniq_vars.values())
     uniq_consts = list(uniq_consts)
 
-    with open('/dev/null', 'w') as err:
-        out = check_output(['./chkSAT', sys.argv[1], '0'], stderr=err).decode().split("\n")
-    if out[0] == 'UNSAT' or out[0] == '~UNKNOWN~':
-        sys.exit(1)
-    model = dict((uniq_vars[kv[0].strip()], kv[1].strip()) for kv in (line.partition(':')[0::2] for line in filter(None, out[1:])))
+    if INITIAL_CHK_SAT:
+        with open('/dev/null', 'w') as err:
+            out = check_output(['./chkSAT', sys.argv[1], '0'], stderr=err).decode().split("\n")
+        if out[0] == 'UNSAT' or out[0] == '~UNKNOWN~':
+            sys.exit(1)
+        model = dict((uniq_vars[kv[0].strip()], kv[1].strip()) for kv in (line.partition(':')[0::2] for line in filter(None, out[1:])))
 
     print('\n(*** Variable mapping ***)')
     for kv in sorted(uniq_vars.items(), key=lambda kv: int(kv[1][1:-1])):
