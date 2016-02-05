@@ -14,3 +14,4 @@ a.out
 logs*
 
 ClangTool/my.setup.sh
+ClangTool/CMakeLists.txt

@@ -100,6 +100,9 @@ void set_init_values(std::string args, int argc, char* argv[]) {
           fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());               \
           auto PRINT_VARS = [&]() {                                         \
             fprintf(OUTPUT_STREAM, rep<count>("%d").c_str(), args);         \
+          };                                                                \
+          auto PRINT_BAR = [&]() {                                          \
+            fprintf(OUTPUT_STREAM, "---\n");                                \
           }
 
 template <unsigned int N>

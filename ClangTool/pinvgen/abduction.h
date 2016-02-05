@@ -22,42 +22,15 @@ extern std::string WORKING_PATH;
 extern std::string MAIN_FILENAME;
 extern std::string CONFLICT_SIZE;
 
+void copyTests(const int);
 PredicateNode abduce(PredicateNode);
 PredicateNode simplify(PredicateNode);
 bool chkVALID(const PredicateNode, bool);
 
 PredicateNode getAbductionResultFor(const PredicateNode);
 
-CheckResult checkValidity(PredicateNode,
-                          clang::CFGBlock*,
-                          clang::CFG*,
+CheckResult checkValidity(clang::CFG*,
                           clang::DominatorTree*,
-                          clang::CFGReverseBlockReachabilityAnalysis*,
-                          PredicateNode,
-                          PredicateNode);
-
-CheckResult checkPreconditionValidity(PredicateNode,
-                                      clang::CFGBlock*,
-                                      clang::CFG*,
-                                      clang::DominatorTree*,
-                                      clang::CFGReverseBlockReachabilityAnalysis*,
-                                      PredicateNode,
-                                      PredicateNode);
-
-CheckResult checkInductiveValidity(PredicateNode,
-                                   clang::CFGBlock*,
-                                   clang::CFG*,
-                                   clang::DominatorTree*,
-                                   clang::CFGReverseBlockReachabilityAnalysis*,
-                                   PredicateNode,
-                                   PredicateNode);
-
-CheckResult checkPostconditionValidity(PredicateNode,
-                                       clang::CFGBlock*,
-                                       clang::CFG*,
-                                       clang::DominatorTree*,
-                                       clang::CFGReverseBlockReachabilityAnalysis*,
-                                       PredicateNode,
-                                       PredicateNode);
+                          clang::CFGReverseBlockReachabilityAnalysis*);
 
 #endif

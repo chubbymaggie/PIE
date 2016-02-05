@@ -55,45 +55,9 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
               mgr.getAnalysisDeclContext(fd)->getCFGReachablityAnalysis();
 
           DominatorTree dom_tree;
-          dom_tree.buildDominatorTree(* mgr.getAnalysisDeclContext(fd));
+          dom_tree.buildDominatorTree(*mgr.getAnalysisDeclContext(fd));
 
-          CFGBlock *loop_head;
-          for(CFG::iterator it = cfg->begin(), ei = cfg->end(); it != ei; ++it) {
-            CFGBlock *block = *it;
-            for(CFGBlock::succ_iterator succ = block->succ_begin(), esucc = block->succ_end(); succ != esucc; ++succ) {
-              if(dom_tree.dominates(*succ, block)) {
-                loop_head = *succ;
-                break;
-              }
-            }
-          }
-
-          Expr *guard_expr = dyn_cast<Expr>(loop_head -> getTerminatorCondition(false));
-          PredicateNode guard;
-
-          llvm::errs() << "\n   + Found guard in B" << loop_head->getBlockID() << "\n";
-
-          bool non_deterministic = false;
-          //FIXME: The guard may `contain' a call instead of `being' a  call
-          if(isUnknownFunction(guard_expr)) {
-            non_deterministic = true;
-            guard = PredicateNode {"true", {}};
-            llvm::errs() << "     - guard : NON-DETERMINISTIC\n";
-          } else {
-            guard = Expr2PredicateNode(guard_expr);
-            llvm::errs() << "     - guard : " << PredicateNode2MCF(guard) << "\n";
-          }
-
-          PredicateNode nguard {"!", {guard}};
-
-          //FIXME: Generalize treatment of non-determinism. Can occur elsewhere too.
-          //FIXME: Remove B instead of defining truth values.
-
-          // nguard and guard behaviour:
-          // NON-DETERMINISTIC ... guard = true  ; nguard = false
-          // DETERMINISTIC     ... guard = guard ; nguard = !guard
-
-          CheckResult res = checkValidity(PredicateNode {"true", {}}, loop_head, cfg, &dom_tree, reachables, non_deterministic ? nguard : guard, nguard);
+          CheckResult res = checkValidity(cfg, &dom_tree, reachables);
 
           if(res.status == VERIFIED)
             llvm::errs() << "\n\n[###] Final invariant = " << PredicateNode2MCF(res.guess) << " [###]\n";
