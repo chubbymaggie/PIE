@@ -51,21 +51,21 @@ PredicateNode wpOfCallExpr(PredicateNode pred, const CallExpr *call) {
   return pred;
 }
 
-PredicateNode wpOfDeclStmt(PredicateNode pred, const DeclStmt * decls) {
+PredicateNode wpOfDeclStmt(PredicateNode pred, const DeclStmt *decls) {
   for(DeclStmt::const_decl_iterator di = decls->decl_begin(); di != decls->decl_end(); ++di)
     if(const VarDecl * vdecl = dyn_cast<VarDecl>(*di))
       pred = wpOfVarDecl(pred, vdecl);
   return pred;
 }
 
-PredicateNode wpOfUnaryOperator(PredicateNode pred, const UnaryOperator * uop) {
+PredicateNode wpOfUnaryOperator(PredicateNode pred, const UnaryOperator *uop) {
   if(uop->getOpcode() == UO_PostInc || uop->getOpcode() == UO_PreInc)
     return substituteVar(pred,
                          (dyn_cast<DeclRefExpr>(uop->getSubExpr()))->getNameInfo().getAsString(),
                          PredicateNode {"+", {
                            Expr2PredicateNode(uop->getSubExpr()),
                            PredicateNode {"1", {}}}});
-  else if(uop->getOpcode() == UO_PostDec || uop->getOpcode() == UO_PreDec)
+  if(uop->getOpcode() == UO_PostDec || uop->getOpcode() == UO_PreDec)
     return substituteVar(pred,
                          (dyn_cast<DeclRefExpr>(uop->getSubExpr()))->getNameInfo().getAsString(),
                          PredicateNode {"-", {
@@ -74,16 +74,23 @@ PredicateNode wpOfUnaryOperator(PredicateNode pred, const UnaryOperator * uop) {
   return pred;
 }
 
-PredicateNode wpOfBinaryOperator(PredicateNode pred, const BinaryOperator * bop) {
+PredicateNode wpOfBinaryOperator(PredicateNode pred, const BinaryOperator *bop) {
+  if(isUnknownFunction(bop->getRHS()->IgnoreCasts()))
+    return pred;
   if(bop->getOpcode() == BO_Assign) {
-    if(!isUnknownFunction(bop->getRHS()->IgnoreCasts()))
-      return substituteVar(pred,
-                           (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString(),
-                           Expr2PredicateNode(bop->getRHS()));
-  } if(bop->getOpcode() == BO_AddAssign) {
+    return substituteVar(pred,
+                         (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString(),
+                         Expr2PredicateNode(bop->getRHS()));
+  }
+  if(bop->getOpcode() == BO_AddAssign) {
     return substituteVar(pred,
                          (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString(),
                          PredicateNode {"+", {Expr2PredicateNode(bop->getLHS()), Expr2PredicateNode(bop->getRHS())}});
+  }
+  if(bop->getOpcode() == BO_SubAssign) {
+    return substituteVar(pred,
+                         (dyn_cast<DeclRefExpr>(bop->getLHS()))->getNameInfo().getAsString(),
+                         PredicateNode {"-", {Expr2PredicateNode(bop->getLHS()), Expr2PredicateNode(bop->getRHS())}});
   }
   return pred;
 }
@@ -124,7 +131,7 @@ PredicateNode wpOfSubgraph(PredicateNode pred, CFGBlock *from, CFGBlock *to,
     return wpOfBlock(pred, from);
 
   CFGBlock* single;
-  register unsigned cnt = 0;
+  unsigned cnt = 0;
   for(CFGBlock::const_pred_iterator pre = from->pred_begin(), epre = from->pred_end(); pre != epre; ++pre)
     if(isReachable(reachables, to, *pre) && !dom_tree->dominates(from, *pre)) {
       ++cnt;
@@ -147,20 +154,22 @@ PredicateNode wpOfSubgraph(PredicateNode pred, CFGBlock *from, CFGBlock *to,
   //FIXME: Exponential exploration happening. Jump from dominator to dominator
 
   //FIXME: Assumed order: then, else
-  bool non_deterministic = false;
+
   Expr* cond_expr = dyn_cast<Expr>(to->getTerminatorCondition(false));
   PredicateNode cond;
+  PredicateNode ncond;
 
   if(isUnknownFunction(cond_expr)) {
-    non_deterministic = true;
-    cond = PredicateNode {"true", {}};
-  } else
+    cond = PredicateNode {"false", {}};
+    ncond = PredicateNode {"false", {}};
+  } else {
     cond = Expr2PredicateNode(cond_expr);
-  PredicateNode ncond {"!", {cond}};
+    ncond = PredicateNode {"!", {cond}};
+  }
 
   return wpOfBlock(
       {"&", {
           {"|", {wpOfSubgraph(pred, from, *(to->succ_begin()), dom_tree, reachables), ncond}},
-          {"|", {wpOfSubgraph(pred, from, *(to->succ_begin() + 1), dom_tree, reachables), non_deterministic ? ncond : cond}}}},
+          {"|", {wpOfSubgraph(pred, from, *(to->succ_begin() + 1), dom_tree, reachables), cond}}}},
       to);
 }
