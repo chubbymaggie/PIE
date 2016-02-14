@@ -18,7 +18,7 @@ menu:
     spacer:
     ova:
       text: "<i class='fa fa-linux'></i> .ova VM Image"
-      absoluteUrl: TODO
+      absoluteUrl: https://docs.google.com/uc?id=0B8JvTQ_ruBSESHlXYkJnUVBiMFE&export=download
     paper:
       text: "<i class='fa fa-file-pdf-o'></i> PLDI Submission"
       absoluteUrl: https://raw.githubusercontent.com/SaswatPadhi/PIE/master/paper-83.pdf
