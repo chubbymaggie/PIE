@@ -21,4 +21,4 @@ menu:
       absoluteUrl: TODO
     paper:
       text: "<i class='fa fa-file-pdf-o'></i> PLDI Submission"
-      relativeUrl: paper-83.pdf
+      absoluteUrl: https://raw.githubusercontent.com/SaswatPadhi/PIE/master/paper-83.pdf

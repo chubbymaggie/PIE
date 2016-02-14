@@ -6,7 +6,7 @@ A tool to infer precondition for OCaml programs.
 
 1. Download the .ova VM image.
 2. Import into your favorite virtualization software.
-   ([Instructions for VirtualBox][virtualbox-ova-instructions])
+   ([Instructions for VirtualBox](https://www.virtualbox.org/manual/ch01.html#ovf))
 3. Boot and follow on-screen instructions.
 
 **Note:**
@@ -38,8 +38,8 @@ You may skip directly to [overview of tests](#overview-of-tests).
   - `batteries` (for OCaml)
   - `qcheck` (for OCaml)
 - Constraint solvers
-  - [Z3Str2][Z3str2]
-  - [CVC4][CVC4]
+  - [Z3Str2](https://github.com/z3str/Z3-str)
+  - [CVC4](https://github.com/CVC4/CVC4)
 
 **Note:**  
   - PIE assumes that the binaries for the constraint solvers are in your `$PATH`.
@@ -75,7 +75,7 @@ strong or too weak ones. (Refer to Figure 10 in our paper)
 Once we have an optimal configuration for PIE, we run the loop invariant inference
 benchmarks with this configuration. As mentioned in the paper, we run 30 benchmarks -
 26 benchmarks from the HOLA tool and 4 string benchmarks from
-(another recent loop invariant inference technique)[cite-rahul].
+[another recent loop invariant inference technique](http://web.stanford.edu/~sharmar/pubs/c2i.pdf).
 
 ### Tests in PLDI Submission
 

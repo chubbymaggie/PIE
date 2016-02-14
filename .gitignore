@@ -14,3 +14,5 @@ a.out
 logs*
 
 ClangTool/my.setup.sh
+
+.couscous
