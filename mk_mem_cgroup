@@ -1,9 +1,0 @@
-#!/bin/bash
-
-CGROUP_NAME="$1"
-MEM_LIMIT="$2"
-
-echo "[+] Creating cgroup [$CGROUP_NAME] with MEM_LIMIT $MEM_LIMIT GB."
-sudo cgcreate -t $USER:$USER -a $USER:$USER -g memory,cpu:$CGROUP_NAME
-cgset -r memory.limit_in_bytes=$(($MEM_LIMIT*1024*1024*1024)) $CGROUP_NAME
-cgset -r memory.memsw.limit_in_bytes=$(($MEM_LIMIT*1024*1024*1024)) $CGROUP_NAME

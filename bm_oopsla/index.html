@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>PIE</title>
+
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://saswatpadhi.github.io/PIE/">
+                PIE
+                <small class="hidden-xs hidden-sm">
+                    Precondition Inference Engine
+                </small>
+            </a>
+
+                            <a href="https://github.com/SaswatPadhi/PIE">
+                    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+                </a>
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="https://github.com/SaswatPadhi/PIE/zipball/master">
+                                        <i class='fa fa-file-archive-o'></i> .zip Source
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="https://github.com/SaswatPadhi/PIE/tarball/master">
+                                        <i class='fa fa-file-archive-o'></i> .tar.gz Source
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/">
+                                        
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="TODO">
+                                        <i class='fa fa-linux'></i> .ova VM Image
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/paper-83.pdf">
+                                        <i class='fa fa-file-pdf-o'></i> PLDI Submission
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="benchmarks-from-hola-paper-oopsla13">Benchmarks from HOLA Paper (OOPSLA'13)</h1>
+<h2 id="building">Building</h2>
+<ul>
+<li>Single-loop programs have been modified to guarantee execution.</li>
+<li>To print variables during runtime:
+<ul>
+<li><code>#include "bm_oopsla.h"</code></li>
+<li>Use <code>INITIALIZE()</code> macro with a format string and the list of variables to be printed</li>
+<li>Call <code>PRINT_VARS()</code> at program points where variables should be printed</li>
+<li>Compile with <code>--std=c++11</code></li>
+</ul></li>
+</ul>
+<h2 id="status">Status</h2>
+<p>Limitations of the Clang plugin:</p>
+<ul>
+<li>Only single loop</li>
+<li>Only <code>main</code> function is analyzed by plugin</li>
+<li>No boolean operators (<code>&amp;&amp;</code>, <code>||</code> etc.) because of short-circuiting</li>
+</ul>
+<h3 id="single-loop-programs-white_check_mark--25--26">Single-Loop Programs (:white_check_mark: = 25 / 26)</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th style="text-align: center;">Invariant</th>
+<th style="text-align: center;">Status (Restarts &gt; 0)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="00.cpp">00</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/oc7ea3o.png" alt="00_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="01.cpp">01</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/qfhcrfh.png" alt="01_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="02.cpp">02</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/pa3ut8l.png" alt="02_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="03.cpp">03</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/ntm5zez.png" alt="03_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="05.cpp">05</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/o3sztl6.png" alt="05_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="06.cpp">06</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/pf7zlnk.png" alt="06_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="07.cpp">07</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/q5ssdys.png" alt="07_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="08.cpp">08</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/p8gbrxa.png" alt="08_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="09.cpp">09</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/oq2y9ap.png" alt="09_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="10.cpp">10</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/nataogh.png" alt="10_inv" /></td>
+<td style="text-align: center;">:white_check_mark: (1)</td>
+</tr>
+<tr>
+<td><a href="11.cpp">11</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/nlpgffe.png" alt="11_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="12.cpp">12</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/nc9vwyl.png" alt="12_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="13.cpp">13</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/nhag4gb.png" alt="13_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="14.cpp">14</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/p3ju4lr.png" alt="14_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="17.cpp">17</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/ojo9lk9.png" alt="17_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="18.cpp">18</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/qg5yno2.png" alt="18_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="19.cpp">19</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/o3p6llt.png" alt="19_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="22.cpp">22</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/nzpt6df.png" alt="22_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="23.cpp">23</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/pawny6x.png" alt="23_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="24.cpp">24</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/ph5hmgr.png" alt="24_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="25.cpp">25</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/o8mjsdf.png" alt="25_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="26.cpp">26</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/pluqjcs.png" alt="26_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="27.cpp">27</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="27_inv" /></td>
+<td style="text-align: center;">Ran out of coffee &amp; patience</td>
+</tr>
+<tr>
+<td><a href="28.cpp">28</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/pjbgymx.png" alt="28_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="32.cpp">32</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/pwtndu9.png" alt="32_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+<tr>
+<td><a href="33.cpp">33</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/qg5yno2.png" alt="33_inv" /></td>
+<td style="text-align: center;">:white_check_mark:</td>
+</tr>
+</tbody>
+</table>
+<h3 id="multi-loop-programs">Multi-Loop Programs</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th style="text-align: center;">Invariant</th>
+<th style="text-align: center;">Remark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="04.cpp">04</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="04_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="15.cpp">15</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="15_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="16.cpp">16</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="16_inv" /></td>
+<td style="text-align: center;">Multiple loops</td>
+</tr>
+<tr>
+<td><a href="20.cpp">20</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="20_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="21.cpp">21</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="21_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="29.cpp">29</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="29_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="30.cpp">30</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="30_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="31.cpp">31</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="31_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="34.cpp">34</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="34_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="35.cpp">35</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="35_inv" /></td>
+<td style="text-align: center;">Break!</td>
+</tr>
+<tr>
+<td><a href="36.cpp">36</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="36_inv" /></td>
+<td style="text-align: center;">Multiple loops</td>
+</tr>
+<tr>
+<td><a href="37.cpp">37</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="37_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="38.cpp">38</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="38_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="39.cpp">39</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="39_inv" /></td>
+<td style="text-align: center;">Break, Goto!</td>
+</tr>
+<tr>
+<td><a href="40.cpp">40</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="40_inv" /></td>
+<td style="text-align: center;">Nested loops</td>
+</tr>
+<tr>
+<td><a href="41.cpp">41</a></td>
+<td style="text-align: center;"><img src="http://mathurl.com/py8jd3p.png" alt="41_inv" /></td>
+<td style="text-align: center;">Multiple loops</td>
+</tr>
+</tbody>
+</table>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

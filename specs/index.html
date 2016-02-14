@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>PIE</title>
+
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://saswatpadhi.github.io/PIE/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://saswatpadhi.github.io/PIE/">
+                PIE
+                <small class="hidden-xs hidden-sm">
+                    Precondition Inference Engine
+                </small>
+            </a>
+
+                            <a href="https://github.com/SaswatPadhi/PIE">
+                    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+                </a>
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="https://github.com/SaswatPadhi/PIE/zipball/master">
+                                        <i class='fa fa-file-archive-o'></i> .zip Source
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="https://github.com/SaswatPadhi/PIE/tarball/master">
+                                        <i class='fa fa-file-archive-o'></i> .tar.gz Source
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/">
+                                        
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="TODO">
+                                        <i class='fa fa-linux'></i> .ova VM Image
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/paper-83.pdf">
+                                        <i class='fa fa-file-pdf-o'></i> PLDI Submission
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="specifications-for-ocaml-modules">Specifications for OCaml modules</h1>
+<h2 id="batavltree">BatAvlTree</h2>
+<h4 id="batavltreecheck-t">BatAvlTree.check (t)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: true
+postcondition: (res = true)</code></pre>
+<h4 id="batavltreeis_empty-t">BatAvlTree.is_empty (t)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (height(t) = 0)
+postcondition: (res = true)</code></pre>
+<h4 id="batavltreesingleton_tree-v">BatAvlTree.singleton_tree (v)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: true
+postcondition: (height(res) &gt; 0)
+
+precondition: false
+postcondition: (height(res) = 0)</code></pre>
+<h4 id="batavltreecreate-lvr">BatAvlTree.create (l,v,r)</h4>
+<pre><code>precondition: ((height(r) &gt; (height(l) + 1)) | (height(l) &gt; (height(r) + 1)))
+postcondition: exception thrown
+
+precondition: ((height(l) &lt;= (height(r) + 1)) &amp; (height(r) &lt;= (height(l) + 1)))
+postcondition: terminates normally
+
+precondition: true
+postcondition: (height(res) &gt; 0)
+
+precondition: false
+postcondition: (height(res) = 0)</code></pre>
+<h4 id="batavltreemake_tree-lvr">BatAvlTree.make_tree (l,v,r)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: true
+postcondition: (height(res) &gt; 0)
+
+precondition: false
+postcondition: (height(res) = 0)</code></pre>
+<h4 id="batavltreeleft_branch-t">BatAvlTree.left_branch (t)</h4>
+<pre><code>precondition: empty(t)
+postcondition: exception thrown
+
+precondition: (! empty(t))
+postcondition: terminates normally
+
+precondition: (! empty(left(t)))
+postcondition: (height(res) &gt; 0)
+
+precondition: empty(left(t))
+postcondition: (height(res) = 0)
+
+precondition: false
+postcondition: (t = res)
+
+precondition: true
+postcondition: (height(t) &gt; height(res))
+
+precondition: false
+postcondition: (height(t) = height(res))</code></pre>
+<h4 id="batavltreeright_branch-t">BatAvlTree.right_branch (t)</h4>
+<pre><code>precondition: empty(t)
+postcondition: exception thrown
+
+precondition: (! empty(t))
+postcondition: terminates normally
+
+precondition: (! empty(right(t)))
+postcondition: (height(res) &gt; 0)
+
+precondition: empty(right(t))
+postcondition: (height(res) = 0)
+
+precondition: false
+postcondition: (t = res)
+
+precondition: true
+postcondition: (height(t) &gt; height(res))
+
+precondition: false
+postcondition: (height(t) = height(res))</code></pre>
+<h4 id="batavltreesplit_leftmost-t">BatAvlTree.split_leftmost (t)</h4>
+<pre><code>precondition: empty(t)
+postcondition: exception thrown
+
+precondition: (! empty(t))
+postcondition: terminates normally
+
+precondition: (height(t) &gt; 1)
+postcondition: (height(l) &gt; 0)
+
+precondition: (1 = height(t))
+postcondition: (height(l) = 0)</code></pre>
+<h4 id="batavltreesplit_rightmost-t">BatAvlTree.split_rightmost (t)</h4>
+<pre><code>precondition: empty(t)
+postcondition: exception thrown
+
+precondition: (! empty(t))
+postcondition: terminates normally
+
+precondition: (height(t) &gt; 1)
+postcondition: (height(r) &gt; 0)
+
+precondition: (1 = height(t))
+postcondition: (height(r) = 0)</code></pre>
+<h4 id="batavltreeroot-t">BatAvlTree.root (t)</h4>
+<pre><code>precondition: empty(t)
+postcondition: exception thrown
+
+precondition: (! empty(t))
+postcondition: terminates normally</code></pre>
+<h4 id="batavltreeconcat-lr">BatAvlTree.concat (l,r)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (! (empty(r) &amp; empty(l)))
+postcondition: (height(res) &gt; 0)
+
+precondition: (empty(r) &amp; empty(l))
+postcondition: (height(res) = 0)</code></pre>
+<h2 id="string">String</h2>
+<h4 id="stringget-si">String.get (s,i)</h4>
+<pre><code>precondition: ((0 &gt; i) | ((#len(s)) &lt;= i))
+postcondition: exception thrown
+
+precondition: ((0 &lt;= i) &amp; ((#len(s)) &gt; i))
+postcondition: terminates normally</code></pre>
+<h4 id="stringset-s-i-c">String.set (s, i, c)</h4>
+<pre><code>precondition: (((0 &gt; i) | (0 = (#len(s)))) || ((#len(s)) &lt;= i))
+postcondition: exception thrown
+
+precondition: ((0 &lt;= i) &amp; ((#len(s)) &gt; i))
+postcondition: terminates normally
+
+precondition: true
+postcondition: (#len(res) &gt; 0)
+
+precondition: false
+postcondition: (#len(res) = 0)</code></pre>
+<h4 id="stringcreate-i">String.create (i)</h4>
+<pre><code>precondition: (0 &gt; i)
+postcondition: exception thrown
+
+precondition: (0 &lt;= i)
+postcondition: terminates normally
+
+precondition: (i &gt; 0)
+postcondition: (#len(res) &gt; 0)
+
+precondition: (i = 0)
+postcondition: (#len(res) = 0)
+
+precondition: false
+postcondition: (i &gt; #len(res))
+
+precondition: true
+postcondition: (i = #len(res))</code></pre>
+<h4 id="stringmake-i-c">String.make (i, c)</h4>
+<pre><code>precondition: (0 &gt; i)
+postcondition: exception thrown
+
+precondition: (0 &lt;= i)
+postcondition: terminates normally
+
+precondition: (i &gt; 0)
+postcondition: (#len(res) &gt; 0)
+
+precondition: (i = 0)
+postcondition: (#len(res) = 0)</code></pre>
+<h4 id="stringcopy-s">String.copy (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (((#len(s)) &gt; 1) || (1 = (#len(s))))
+postcondition: (#len(res) &gt; 0)
+
+precondition: (0 = (#len(s)))
+postcondition: (#len(res) = 0)
+
+precondition: true
+postcondition: (#eql(s, res))
+
+precondition: false
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: true
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringsub-si1i2">String.sub (s,i1,i2)</h4>
+<pre><code>precondition: (((0 &gt; i1) | (0 &gt; i2)) || (i2 &gt; ((#len(s)) - i1)))
+postcondition: exception thrown
+
+precondition: ((0 &lt;= i2) &amp; (0 &lt;= i1)) &amp;&amp; (i2 &lt;= ((#len(s)) - i1))
+postcondition: terminates normally
+
+precondition: ((i2 &gt; 0) &amp; (0 &lt;= i1))
+postcondition: (#len(res) &gt; 0)
+
+precondition: (i2 = 0)
+postcondition: (#len(res) = 0)</code></pre>
+<h4 id="stringfill-s0-i0-i1-c">String.fill (s0, i0, i1, c)</h4>
+<pre><code>precondition: ~~ FAILED ~~
+postcondition: exception thrown
+
+precondition: ~~ FAILED ~~
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) = 0)</code></pre>
+<h4 id="stringblit-s0-i0-s1-i1-il">String.blit (s0, i0, s1, i1, il)</h4>
+<pre><code>precondition: ~~ FAILED ~~
+postcondition: exception thrown
+
+precondition: ~~ FAILED ~~
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) = 0)</code></pre>
+<h4 id="stringconcat-s-sl">String.concat (s, sl)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (#les(res) &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) = 0)</code></pre>
+<h4 id="stringtrim-s">String.trim (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(res) = 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(s, res))
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringescape-s">String.escape (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (((#len(s)) &gt; 1) || (1 = (#len(s))))
+postcondition: (#len(res) &gt; 0)
+
+precondition: (0 = (#len(s)))
+postcondition: (#len(res) = 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(s, res))
+
+precondition: false
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: ~~ FAILED ~~
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringindex-s-c">String.index (s, c)</h4>
+<pre><code>precondition: (! (contains(s, c)))
+postcondition: exception thrown
+
+precondition: (contains(s, c))
+postcondition: terminates normally
+
+precondition: (! (contains((#get(s, 0)), c)))
+postcondition: (res &gt; 0)
+
+precondition: (contains((#get(s, 0)), c))
+postcondition: (res = 0)</code></pre>
+<h4 id="stringrindex-s-c">String.rindex (s, c)</h4>
+<pre><code>precondition: (! (contains(s, c)))
+postcondition: exception thrown
+
+precondition: (contains(s, c))
+postcondition: terminates normally
+
+precondition: (contains((#sub(s, 1, ((#len(s)) - 1))), c))
+postcondition: (res &gt; 0)
+
+precondition: (! (contains((#sub(s, 1, ((#len(s)) - 1))), c)))
+postcondition: (res = 0)</code></pre>
+<h4 id="stringindex_from-s-i-c">String.index_from (s, i, c)</h4>
+<pre><code>precondition: ~~ FAILED ~~
+postcondition: exception thrown
+
+precondition: ~~ FAILED ~~
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (res &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (res = 0)</code></pre>
+<h4 id="stringrindex_from-s-i-c">String.rindex_from (s, i, c)</h4>
+<pre><code>precondition: ~~ FAILED ~~
+postcondition: exception thrown
+
+precondition: ~~ FAILED ~~
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (res &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (res = 0)</code></pre>
+<h4 id="stringcontains-s-c">String.contains (s, c)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: contains(s,c)
+postcondition: (res = true)</code></pre>
+<h4 id="stringcontains_from-s-i-c">String.contains_from (s, i, c)</h4>
+<pre><code>precondition: ((i &gt; (#len(s))) || (0 &gt; i))
+postcondition: exception thrown
+
+precondition: (((0 &lt;= i) &amp; ((#len(s)) &gt; i)) || (i = (#len(s))))
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (res = true)</code></pre>
+<h4 id="stringrcontains_from-s-i-c">String.rcontains_from (s, i, c)</h4>
+<pre><code>precondition: (((#len(s)) &lt;= i) || (0 &gt; i))
+postcondition: exception thrown
+
+precondition: (((0 &lt;= i) &amp; ((#len(s)) &gt; 1)) || (0 = i)) &amp;&amp; ((#len(s)) &gt; i)
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (res = true)</code></pre>
+<h4 id="stringuppercase-s">String.uppercase (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ((#len(s)) &gt; 0)
+postcondition: (#len(res) &gt; 0)
+
+precondition: (0 = (#len(s)))
+postcondition: (#len(res) = 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(s, res))
+
+precondition: false
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: true
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringlowercase-s">String.lowercase (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ((#len(s)) &gt; 0)
+postcondition: (#len(res) &gt; 0)
+
+precondition: (0 = (#len(s)))
+postcondition: (#len(res) = 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(s, res))
+
+precondition: false
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: true
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringcapitalize-s">String.capitalize (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (((#len(s)) &gt; 1) || (1 = (#len(s))))
+postcondition: (#len(res) &gt; 0)
+
+precondition: (0 = (#len(s)))
+postcondition: (#len(res) = 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(s, res))
+
+precondition: false
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: true
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringuncapitalize-s">String.uncapitalize (s)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (((#len(s)) &gt; 1) || (1 = (#len(s))))
+postcondition: (#len(res) &gt; 0)
+
+precondition: (0 = (#len(s)))
+postcondition: (#len(res) = 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (#eql(s, res))
+
+precondition: false
+postcondition: (#len(s) &gt; #len(res))
+
+precondition: true
+postcondition: (#len(s) = #len(res))</code></pre>
+<h4 id="stringcompare-s0-s1">String.compare (s0, s1)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (res &gt; 0)
+
+precondition: (#eql(s0, s1))
+postcondition: (res = 0)</code></pre>
+<h2 id="list">List</h2>
+<h4 id="listlength-l">List.length (l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (! empty(l))
+postcondition: (res &gt; 0)
+
+precondition: empty(l)
+postcondition: (res = 0)
+
+precondition: false
+postcondition: len(l) &gt; res
+
+precondition: true
+postcondition: len(l) = res</code></pre>
+<h4 id="listhd-l">List.hd (l)</h4>
+<pre><code>precondition: empty(l)
+postcondition: exception thrown
+
+precondition: (! empty(l))
+postcondition: terminates normally</code></pre>
+<h4 id="listtl-l">List.tl (l)</h4>
+<pre><code>precondition: empty(l)
+postcondition: exception thrown
+
+precondition: (! empty(l))
+postcondition: terminates normally
+
+precondition: (len(l) &gt; 1)
+postcondition: (len(res) &gt; 0)
+
+precondition: (1 = len(l))
+postcondition: (len(res) = 0)
+
+precondition: false
+postcondition: (l = res)
+
+precondition: true
+postcondition: (len(l) &gt; len(res))
+
+precondition: false
+postcondition: (len(l) = len(res))</code></pre>
+<h4 id="listnth-l-n">List.nth (l, n)</h4>
+<pre><code>precondition: (((0 &gt; n) | (n &gt; len(l))) || (n = len(l)))
+postcondition: exception thrown
+
+precondition: ((0 &lt;= n) &amp; (len(l) &gt; n))
+postcondition: terminates normally</code></pre>
+<h4 id="listrev-a">List.rev (a)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (! empty(l))
+postcondition: (len(res) &gt; 0)
+
+precondition: empty(l)
+postcondition: (len(res) = 0)
+
+precondition: (l = rev(l))
+postcondition: (l = res)
+
+precondition: false
+postcondition: (len(l) &gt; len(res))
+
+precondition: true
+postcondition: (len(l) = len(res))</code></pre>
+<h4 id="listappend-l0-l1">List.append (l0, l1)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ((! empty(l0)) || (! empty(l1)))
+postcondition: (len(res) &gt; 0)
+
+precondition: empty(l0) &amp;&amp; empty(l1)
+postcondition: (len(res) = 0)</code></pre>
+<h4 id="listrev_append-l0-l1">List.rev_append (l0, l1)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ((! empty(l1)) || (! empty(l0)))
+postcondition: (len(res) &gt; 0)
+
+precondition: empty(l1) &amp;&amp; empty(l0)
+postcondition: (len(res) = 0)</code></pre>
+<h4 id="listconcat-l">List.concat (l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: len(res) &gt; 0
+
+precondition: ~~ FAILED ~~
+postcondition: len(res) = 0
+
+precondition: ~~ FAILED ~~
+postcondition: len(l) &gt; len(res)
+
+precondition: ~~ FAILED ~~
+postcondition: len(l) = len(res)</code></pre>
+<h4 id="listflatten-l">List.flatten (l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: len(res) &gt; 0
+
+precondition: ~~ FAILED ~~
+postcondition: len(res) = 0
+
+precondition: ~~ FAILED ~~
+postcondition: len(l) &gt; len(res)
+
+precondition: ~~ FAILED ~~
+postcondition: len(l) = len(res)</code></pre>
+<h4 id="listmem-m-l">List.mem (m, l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (m in l)
+postcondition: res = true</code></pre>
+<h4 id="listassoc-a-l">List.assoc (a, l)</h4>
+<pre><code>precondition: ~~ FAILED ~~
+postcondition: exception thrown
+
+precondition: ~~ FAILED ~~
+postcondition: terminates normally</code></pre>
+<h4 id="listmem_assoc-a-l">List.mem_assoc (a, l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (res = true)</code></pre>
+<h4 id="listremove_assoc-a-l">List.remove_assoc (a, l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: ~~ FAILED ~~
+postcondition: (len(res) &gt; 0)
+
+precondition: ~~ FAILED ~~
+postcondition: (len(res) = 0)</code></pre>
+<h4 id="listsplit-l">List.split (l)</h4>
+<pre><code>precondition: false
+postcondition: exception thrown
+
+precondition: true
+postcondition: terminates normally
+
+precondition: (! empty(l))
+postcondition: (len(r0) &gt; 0)
+
+precondition: empty(l)
+postcondition: (len(r0) = 0)
+
+precondition: (! empty(l))
+postcondition: (len(r1) &gt; 0)
+
+precondition: empty(l)
+postcondition: (len(r1) = 0)
+
+precondition: false
+postcondition: len(r0) &gt; len(r1)
+
+precondition: true
+postcondition: len(r0) = len(r1)</code></pre>
+<h4 id="listcombine-l0-l1">List.combine (l0, l1)</h4>
+<pre><code>precondition: (! (len(l0) = len(l1)))
+postcondition: exception thrown
+
+precondition: (len(l0) = len(l1))
+postcondition: terminates normally
+
+precondition: (! empty(l0))
+postcondition: (len(res) &gt; 0)
+
+precondition: empty(l1)
+postcondition: (len(res) = 0)</code></pre>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>
