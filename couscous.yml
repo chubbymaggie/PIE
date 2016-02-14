@@ -1,0 +1,24 @@
+baseUrl: http://saswatpadhi.github.io/PIE
+
+github:
+  user: SaswatPadhi
+  repo: PIE
+
+title: PIE
+subTitle: Precondition Inference Engine
+
+menu:
+  items:
+    src-zip:
+      text: "<i class='fa fa-file-archive-o'></i> .zip Source"
+      absoluteUrl: https://github.com/SaswatPadhi/PIE/zipball/master
+    src-tar:
+      text: "<i class='fa fa-file-archive-o'></i> .tar.gz Source"
+      absoluteUrl: https://github.com/SaswatPadhi/PIE/tarball/master
+    spacer:
+    ova:
+      text: "<i class='fa fa-linux'></i> .ova VM Image"
+      absoluteUrl: TODO
+    paper:
+      text: "<i class='fa fa-file-pdf-o'></i> PLDI Submission"
+      relativeUrl: paper-83.pdf

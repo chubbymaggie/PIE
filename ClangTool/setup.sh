@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $# -lt 2 ]]; then
+if [[ $# -lt 1 ]]; then
   echo "Please provide path to LLVM_ROOT"
   exit 1
 fi
