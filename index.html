@@ -104,7 +104,6 @@
                     <h1 id="pie">PIE</h1>
 <p>A tool to infer precondition for OCaml programs.</p>
 <h2><i class="fa fa-fw fa-cogs" id="setting-up-the-vm"></i> Setting up the VM</h2>
-<hr />
 <ol>
 <li>Download the .ova VM image.</li>
 <li>Import into your favorite virtualization software.
@@ -113,7 +112,7 @@
 </ol>
 <p><strong>Note:</strong></p>
 <ul>
-<li>Default Username = Default Password = <kbd>pie</kbd></li>
+<li>Default Username = Default Password = <code>pie</code></li>
 <li><code>~/Repos</code> is symlinked to <code>~/Desktop/Repos</code> for convenience</li>
 <li>Internet access is not necessary, but might be useful when running the VM.</li>
 <li><strong>Please have at least 18GB of free space, before importing the .ova image.</strong><br />
@@ -123,7 +122,6 @@ depending on usage. Please make sure that you have sufficient available disk spa
 </ul>
 <p>You may skip directly to <a href="#overview-of-tests">overview of tests</a>.</p>
 <h2><i class="fa fa-fw fa-wrench" id="manual-setup"></i> Manual Setup</h2>
-<hr />
 <h3 id="environment-amp-compilers">Environment &amp; Compilers</h3>
 <ul>
 <li>System packages
@@ -154,7 +152,6 @@ depending on usage. Please make sure that you have sufficient available disk spa
 <li>PIE assumes that the binaries for the constraint solvers are in your <code>$PATH</code>.</li>
 </ul>
 <h2><i class="fa fa-fw fa-table" id="overview-of-tests"></i> Overview of Tests</h2>
-<hr />
 <h3 id="configurations">Configurations</h3>
 <p>A configuration is defined by the two parameters:</p>
 <ul>
@@ -208,18 +205,38 @@ specifies one.</p>
 creates a new <code>cgroup</code> with a user-specified name and limit on total memory usage.
 Example invocation:</p>
 <pre><code class="language-html">~/Repos/PIE/mk_mem_cgroup "test_8gb" 8</code></pre>
-<p>This would create a new <code>cgroup</code> named <kbd>&quot;test_8gb&quot;</kbd> which can be used as a
+<p>This would create a new <code>cgroup</code> named <code>test_8gb</code> which can be used as a
 <code>&lt;cg&gt;</code> parameter in the invocations described in the next section.
-The <code>&lt;cg&gt;</code> parameter can always be empty <kbd>&quot;&quot;</kbd>. Note that the quotes
+The <code>&lt;cg&gt;</code> parameter can always be empty <code>""</code>. Note that the quotes
 are <em>necessary</em>, for your shell to even recognize that parameter.</p>
+<p>Running application within these <code>cgroup</code>s would cause them to crash as soon as they
+exhaust the maximum allowed memory; as <code>mk_mem_cgroup</code> restricts applications from
+using any swap space at all.</p>
 <p><strong>Note:</strong> The virtual machine already creates the <code>test_8gb</code> cgroup on booting the
 system.</p>
 <h2><i class="fa fa-fw fa-tasks" id="running-the-tests"></i> Running the Tests</h2>
-<hr />
 <p><strong>Note:</strong> This section assumes that the <code>llvm</code> directory (source code for LLVM and Clang projects)
 is a sibling of <code>PIE</code> in the directory-tree. The test VM already has this setup; but if
 you are manually testing and this does not hold, please change the relative paths in this
 section accordingly.</p>
+<h3 id="quirks">Quirks!</h3>
+<p>PIE has several sources of non-determinism:</p>
+<ul>
+<li><em>(Precondition Inference)</em> We generate tests randomly</li>
+<li><em>(Loop Invariant Inference)</em> The constraint solvers return random counter examples</li>
+</ul>
+<p>Thus, each run of PIE might:</p>
+<ul>
+<li>require different amount of memory,</li>
+<li>run for different lengths of time,</li>
+<li>converge after different number of iterations,</li>
+<li>in rare cases, crash or return an over-fitted precondition</li>
+</ul>
+<p>Given a large set of tests, and the way our algorithm works, these differences
+should be minimal; nonetheless they are possible theoretically.</p>
+<p><strong>Note:</strong> Running PIE on a virtual machine, might slightly degrade performance. The
+data collected in the paper was collected on an Intel i7 (at 3.60 GHz) machine with
+8GB memory limit.</p>
 <h3 id="precondition-inference-tests">Precondition Inference Tests</h3>
 <p><strong>Note:</strong> For testing this subsection, please <code>cd ~/Repos/PIE/specs</code>.</p>
 <h5 id="testing">Testing <em>all</em> preconditions for <em>all</em> functions in <em>all</em> modules with <em>all</em> configurations</h5>
@@ -306,8 +323,8 @@ sys 0m0.000s
 .</code></pre>
 <p>Couple of points to note:</p>
 <ul>
-<li>One might see a debug error about missing <code>RESULT</code> file, depending on whether or not it's
-the first time this script was run.</li>
+<li>One might see a debug output about missing <code>RESULT</code> file, depending on whether
+script was run for the first time.</li>
 <li>The <code>Fatal error: exception Invalid_argument("Index past end of list")</code> is thrown when all
 postconditions for a particular function have been tested. I would suppress this at some point.</li>
 </ul>
@@ -586,10 +603,9 @@ lost sys.stderr</code></pre>
 <p>are generated from Z3Str2, because of a <a href="http://bugs.python.org/issue11380">Python bug</a>.</p></li>
 </ul>
 <h2><i class="fa fa-fw fa-pencil-square-o" id="defining-custom-tests"></i> Defining Custom Tests</h2>
-<hr />
 <h3 id="testing-precondition-inference">Testing Precondition Inference</h3>
 <p>It might be easier to understand how the tests are instrumented, if we pick an example.
-Let us examine <code>PIE/specs/batavltree.ml</code> which tests the functions in module <code>BatAvlTree</code>.
+Let's examine <code>PIE/specs/batavltree.ml</code> which tests the functions in module <code>BatAvlTree</code>.
 After including the standard OCaml libraries, a section of the file which defines the
 precondition tests for a particular function (say <code>BatAvlTree.create</code>) looks like:
 (additional comments have been inserted)</p>
@@ -606,14 +622,14 @@ let createRes = fun ?(pind=(-1)) () -&gt;
   (* The function to be analyzed *)
   let f = avlcreate in
 
-  (* The function to be analyzed *)
+  (* Argument names for printing *)
   let arguments = [ "l" ; "v" ; "r" ] in
 
   (* Random test generation, based on input type of f.
      These functions are defined in PIE/base/testGen.ml. *)
   let tests = iavltree_int_iavltree_tests () in
 
-  (* A function to dump the input values (tests). *)
+  (* A function to print the input values (tests). *)
   let dumper = iavltree_int_iavltree_dumper in
 
   (* The type of the function input, in synthesizer's (Escher) type system.
@@ -655,6 +671,28 @@ let createRes = fun ?(pind=(-1)) () -&gt;
                              ~arg_names:arguments f tests features
                              (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;</code></pre>
+<p>After defining these <code>*Res()</code> functions for testing preconditions of all
+functions of interest; the user should add a footer similar to the following, at
+the end of the <code>.ml</code> file:</p>
+<pre><code class="language-html">let () =
+    (* __TEST_SIZE__ is set by the test.sh script *)
+    test_size := __TEST_SIZE__ ;
+
+    (* __MAX_CONFLICT_SET_SIZE__ is set by the test.sh script *)
+    max_conflict_set_size := __MAX_CONFLICT_SET_SIZE__ ;
+
+    (* __FUNCTION_INDEX__ is set by the test.sh script*)
+    let run = (fun ((s, f) : (string * (?pind:int -&gt; unit -&gt; 'a))) -&gt;
+                  output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
+                  print_specs stderr (f ~pind:__POST_INDEX__ ())) in
+
+        (* Please register each *Res function here *)
+        run (List.nth [ ("BatAvlTree.is_empty(t)", is_emptyRes) ;
+                        .
+                        .
+                        ("BatAvlTree.check(t)", checkRes) ] __FUNCTION_INDEX__)</code></pre>
+<p>In general, it might be easier to start with one of the provided test files (like
+the batavltree.ml) and edit it as required.</p>
 <h5 id="custom-postconditions">Custom postconditions</h5>
 <p>Users can define their own postconditions in the following format:</p>
 <pre><code class="language-html">let my_postconditions = [
@@ -787,13 +825,12 @@ In the above example,</p>
 <li><code>eql</code> is used to check equality, instead of <code>==</code> operator.</li>
 <li><code>sub</code> is used for substring, instead of <code>string.substr()</code>.</li>
 <li><code>cat</code> is used for concatenation, instead of <code>+</code> operator.</li>
-<li><code>len</code> is used for length, instead of <code>string.length</code>.</li>
+<li><code>len</code> is used for length, instead of <code>string.length()</code>.</li>
 </ul>
 <p>Additionally, <code>has</code>, <code>get</code> and <code>ind</code> have been defined in <code>bm_strings.h</code>.</p>
 </li>
 </ol>
 <h2><i class="fa fa-fw fa-cubes" id="modifying-and-rebuilding"></i> Modifying and Rebuilding</h2>
-<hr />
 <p>No changes to PIE require recompilation / rebuilding. The OCaml code is rebuilt, but the
 scripts take care of that; the user does not have to manually build anything.</p>
 <p>Changes to the Clang tool (<code>pinvgen</code>) require rebuilding; but there are no tunable parameters
