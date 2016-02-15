@@ -221,7 +221,7 @@ is a sibling of <code>PIE</code> in the directory-tree. The test VM already has 
 you are manually testing and this does not hold, please change the relative paths in this
 section accordingly.</p>
 <h3 id="precondition-inference-tests">Precondition Inference Tests</h3>
-<p><strong>Note:</strong> This subsection assumes that your <code>pwd</code> is <code>PIE/specs</code>.</p>
+<p><strong>Note:</strong> For testing this subsection, please <code>cd ~/Repos/PIE/specs</code>.</p>
 <h5 id="testing">Testing <em>all</em> preconditions for <em>all</em> functions in <em>all</em> modules with <em>all</em> configurations</h5>
 <pre><code class="language-bash">./test_all.sh [&lt;cg&gt;]</code></pre>
 <p>The brackets around <kbd>&lt;cg&gt;</kbd> indicate that this is an optional parameter. If
@@ -357,7 +357,8 @@ sys 0m0.000s
 <ul>
 <li><code>&lt;module&gt;</code> The module's test file (one of the <code>.ml</code> files in
 <a href="https://github.com/SaswatPadhi/PIE/tree/master/specs">specs</a>)</li>
-<li><code>&lt;func&gt;</code> = Index of the function in that module. The list of all tested functions is at the end of each <code>.ml</code> file. The function index (starting with <code>0</code>) could be looked up there.</li>
+<li><code>&lt;func&gt;</code> = The index (starting from 0) of the function in the list of all
+tested functions at the end of the module's <code>.ml</code> file.</li>
 <li><code>&lt;cg&gt;</code> = Empty string or a <code>cgroup</code> name</li>
 <li><code>&lt;tests&gt;</code> = Maximum number of generated tests</li>
 <li><code>&lt;sz_conflicts&gt;</code> = Maximum size of conflict groups passed to the synthesizer.</li>
@@ -403,7 +404,7 @@ real  0m5.725s
 user  0m4.864s
 sys 0m0.444s</code></pre>
 <h3 id="loop-invariant-inference-benchmarks">Loop Invariant Inference Benchmarks</h3>
-<p><strong>Note:</strong> This subsection assumes that your <code>pwd</code> is <code>llvm/build</code>.</p>
+<p><strong>Note:</strong> For testing this subsection, please <code>cd ~/Repos/llvm/build</code>.</p>
 <h5 id="checking">Checking <em>all</em> benchmarks with a specific PIE configuration</h5>
 <pre><code class="language-bash">./check_all_with_config &lt;tests&gt; &lt;tool&gt; &lt;cg&gt; &lt;sz_conflicts&gt;</code></pre>
 <ul>
