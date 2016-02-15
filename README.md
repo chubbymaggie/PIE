@@ -2,7 +2,6 @@
 A tool to infer precondition for OCaml programs.
 
 ## <i class="fa fa-fw fa-cogs" id="setting-up-the-vm"></i> Setting up the VM
-----------------------------------------------------------------------------
 
 1. Download the .ova VM image.
 2. Import into your favorite virtualization software.
@@ -23,7 +22,6 @@ You may skip directly to [overview of tests](#overview-of-tests).
 
 
 ## <i class="fa fa-fw fa-wrench" id="manual-setup"></i> Manual Setup
---------------------------------------------------------------------
 
 ### Environment & Compilers
 - System packages
@@ -47,7 +45,6 @@ You may skip directly to [overview of tests](#overview-of-tests).
 
 
 ## <i class="fa fa-fw fa-table" id="overview-of-tests"></i> Overview of Tests
------------------------------------------------------------------------------
 
 ### Configurations
 A configuration is defined by the two parameters:
@@ -105,18 +102,40 @@ This would create a new `cgroup` named <kbd>"test_8gb"</kbd> which can be used a
 The `<cg>` parameter can always be empty <kbd>""</kbd>. Note that the quotes
 are *necessary*, for your shell to even recognize that parameter.
 
+Running application within these `cgroup`s would cause them to crash as soon as they
+exhaust the maximum allowed memory; as `mk_mem_cgroup` restricts applications from
+using any swap space at all.
+
 **Note:** The virtual machine already creates the `test_8gb` cgroup on booting the
 system.
 
 
 
 ## <i class="fa fa-fw fa-tasks" id="running-the-tests"></i> Running the Tests
------------------------------------------------------------------------------
 
 **Note:** This section assumes that the `llvm` directory (source code for LLVM and Clang projects)
 is a sibling of `PIE` in the directory-tree. The test VM already has this setup; but if
 you are manually testing and this does not hold, please change the relative paths in this
 section accordingly.
+
+### Quirks!
+
+PIE has several sources of non-determinism:
+- _(Precondition Inference)_ We generate tests randomly
+- _(Loop Invariant Inference)_ The constraint solvers return random counter examples
+
+Thus, each run of PIE might:
+- require different amount of memory,
+- run for different lengths of time,
+- converge after different number of iterations,
+- in rare cases, crash or return an over-fitted precondition
+
+Given a large set of tests, and the way our algorithm works, these differences
+should be minimal; nonetheless they are possible theoretically.
+
+**Note:** Running PIE on a virtual machine, might slightly degrade performance. The
+data collected in the paper was collected on an Intel i7 (at 3.60 GHz) machine with
+8GB memory limit.
 
 ### Precondition Inference Tests
 
@@ -227,8 +246,8 @@ sys 0m0.000s
 ```
 
 Couple of points to note:
-- One might see a debug error about missing `RESULT` file, depending on whether or not it's
-  the first time this script was run.
+- One might see a debug output about missing `RESULT` file, depending on whether
+  script was run for the first time.
 - The `Fatal error: exception Invalid_argument("Index past end of list")` is thrown when all
   postconditions for a particular function have been tested. I would suppress this at some point.
 
@@ -548,7 +567,6 @@ Couple of points to note:
 
 
 ## <i class="fa fa-fw fa-pencil-square-o" id="defining-custom-tests"></i> Defining Custom Tests
------------------------------------------------------------------------------------------------
 
 ### Testing Precondition Inference
 
@@ -572,14 +590,14 @@ let createRes = fun ?(pind=(-1)) () ->
   (* The function to be analyzed *)
   let f = avlcreate in
 
-  (* The function to be analyzed *)
+  (* Argument names for printing *)
   let arguments = [ "l" ; "v" ; "r" ] in
 
   (* Random test generation, based on input type of f.
      These functions are defined in PIE/base/testGen.ml. *)
   let tests = iavltree_int_iavltree_tests () in
 
-  (* A function to dump the input values (tests). *)
+  (* A function to print the input values (tests). *)
   let dumper = iavltree_int_iavltree_dumper in
 
   (* The type of the function input, in synthesizer's (Escher) type system.
@@ -622,6 +640,32 @@ let createRes = fun ?(pind=(-1)) () ->
                              (if pind = (-1) then postconds else [List.nth postconds pind]) trans
 ;;
 ```
+
+After defining these `*Res()` functions for testing preconditions of all
+functions of interest; the user should add a footer similar to the following, at
+the end of the `.ml` file:
+```html
+let () =
+    (* __TEST_SIZE__ is set by the test.sh script *)
+    test_size := __TEST_SIZE__ ;
+
+    (* __MAX_CONFLICT_SET_SIZE__ is set by the test.sh script *)
+    max_conflict_set_size := __MAX_CONFLICT_SET_SIZE__ ;
+
+    (* __FUNCTION_INDEX__ is set by the test.sh script*)
+    let run = (fun ((s, f) : (string * (?pind:int -> unit -> 'a))) ->
+                  output_string stderr ("\n\n=== (" ^ (string_of_int __FUNCTION_INDEX__) ^ ") " ^ s ^ " ===\n") ;
+                  print_specs stderr (f ~pind:__POST_INDEX__ ())) in
+
+        (* Please register each *Res function here *)
+        run (List.nth [ ("BatAvlTree.is_empty(t)", is_emptyRes) ;
+                        .
+                        .
+                        ("BatAvlTree.check(t)", checkRes) ] __FUNCTION_INDEX__)
+```
+
+In general, it might be easier to start with one of the provided test files (like
+the batavltree.ml) and edit it as required.
 
 ##### Custom postconditions
 
@@ -773,13 +817,12 @@ The key differences from the integer benchmarks being:
      - `eql` is used to check equality, instead of `==` operator.
      - `sub` is used for substring, instead of `string.substr()`.
      - `cat` is used for concatenation, instead of `+` operator.
-     - `len` is used for length, instead of `string.length`.
+     - `len` is used for length, instead of `string.length()`.
 
   Additionally, `has`, `get` and `ind` have been defined in `bm_strings.h`.
 
 
 ## <i class="fa fa-fw fa-cubes" id="modifying-and-rebuilding"></i> Modifying and Rebuilding
--------------------------------------------------------------------------------------------
 
 No changes to PIE require recompilation / rebuilding. The OCaml code is rebuilt, but the
 scripts take care of that; the user does not have to manually build anything.
