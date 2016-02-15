@@ -9,7 +9,7 @@ A tool to infer precondition for OCaml programs.
 3. Boot and follow on-screen instructions.
 
 **Note:**
-- Default Username = Default Password = <kbd>pie</kbd>
+- Default Username = Default Password = `pie`
 - `~/Repos` is symlinked to `~/Desktop/Repos` for convenience
 - Internet access is not necessary, but might be useful when running the VM.
 - **Please have at least 18GB of free space, before importing the .ova image.**  
@@ -97,9 +97,9 @@ Example invocation:
 ~/Repos/PIE/mk_mem_cgroup "test_8gb" 8
 ```
 
-This would create a new `cgroup` named <kbd>"test_8gb"</kbd> which can be used as a
+This would create a new `cgroup` named `test_8gb` which can be used as a
 `<cg>` parameter in the invocations described in the next section.
-The `<cg>` parameter can always be empty <kbd>""</kbd>. Note that the quotes
+The `<cg>` parameter can always be empty `""`. Note that the quotes
 are *necessary*, for your shell to even recognize that parameter.
 
 Running application within these `cgroup`s would cause them to crash as soon as they
@@ -571,7 +571,7 @@ Couple of points to note:
 ### Testing Precondition Inference
 
 It might be easier to understand how the tests are instrumented, if we pick an example.
-Let us examine `PIE/specs/batavltree.ml` which tests the functions in module `BatAvlTree`.
+Let's examine `PIE/specs/batavltree.ml` which tests the functions in module `BatAvlTree`.
 After including the standard OCaml libraries, a section of the file which defines the
 precondition tests for a particular function (say `BatAvlTree.create`) looks like:
 (additional comments have been inserted)
@@ -759,17 +759,19 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 ```
+
 We only need to instrument the loop and the entry of the code:
+
 1. `#include "bm_oopsla.h"`
 2. Define the state using `RECORD` at the entry.
 3. Any unknown variables at the entry, should be assigned as
-    ```cpp
-    INIT_myvar(my_unknown_function);
-    ```
-    instead of
-    ```cpp
-    myvar = my_unknown_function();
-    ```
+```cpp
+INIT_myvar(my_unknown_function);
+```
+instead of
+```cpp
+myvar = my_unknown_function();
+```
 4. `PRINT_VARS()` at the loop head and just after the loop.
 
 ##### Strings
@@ -800,7 +802,9 @@ int main() {
   return 0;
 }
 ```
+
 The key differences from the integer benchmarks being:
+
 1. The header: `bm_strings.h`.
 2. `RECORD` cannot be used any more, because it assumes all integer variables.
    Instead, we use a different macro: `INITIALIZE`.
