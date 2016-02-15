@@ -36,32 +36,32 @@
 
                         <ul class="nav nav-pills nav-stacked">
                                                             <li class="">
-                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#setting-up-the-vm">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html#setting-up-the-vm">
                                         <i class='fa fa-cogs'></i> Setting up the VM
                                     </a>
                                 </li>
                                                             <li class="">
-                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#manual-setup">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html#manual-setup">
                                         <i class='fa fa-wrench'></i> Manual Setup
                                     </a>
                                 </li>
                                                             <li class="">
-                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#overview-of-tests">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html#overview-of-tests">
                                         <i class='fa fa-table'></i> Overview of tests
                                     </a>
                                 </li>
                                                             <li class="">
-                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#running-the-tests">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html#running-the-tests">
                                         <i class='fa fa-tasks'></i> Running the tests
                                     </a>
                                 </li>
                                                             <li class="">
-                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#defining-custom-tests">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html#defining-custom-tests">
                                         <i class='fa fa-pencil-square-o'></i> Defining Custom tests
                                     </a>
                                 </li>
                                                             <li class="">
-                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#modifying-and-rebuilding">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html#modifying-and-rebuilding">
                                         <i class='fa fa-cubes'></i> Modifying and Rebuilding
                                     </a>
                                 </li>
@@ -103,7 +103,7 @@
                 <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
                     <h1 id="pie">PIE</h1>
 <p>A tool to infer precondition for OCaml programs.</p>
-<h2><i class="fa fa-fw fa-cogs"></i> Setting up the VM</h2>
+<h2><i class="fa fa-fw fa-cogs" id="setting-up-the-vm"></i> Setting up the VM</h2>
 <hr />
 <ol>
 <li>Download the .ova VM image.</li>
@@ -122,7 +122,7 @@ The .ova image is ~2GB, but expands to ~8GB when imported. The actual
 depending on usage. Please make sure that you have sufficient available disk space!</li>
 </ul>
 <p>You may skip directly to <a href="#overview-of-tests">overview of tests</a>.</p>
-<h2><i class="fa fa-fw fa-wrench"></i> Manual Setup</h2>
+<h2><i class="fa fa-fw fa-wrench" id="manual-setup"></i> Manual Setup</h2>
 <hr />
 <h3 id="environment-amp-compilers">Environment &amp; Compilers</h3>
 <ul>
@@ -153,7 +153,7 @@ depending on usage. Please make sure that you have sufficient available disk spa
 <ul>
 <li>PIE assumes that the binaries for the constraint solvers are in your <code>$PATH</code>.</li>
 </ul>
-<h2><i class="fa fa-fw fa-table"></i> Overview of Tests</h2>
+<h2><i class="fa fa-fw fa-table" id="overview-of-tests"></i> Overview of Tests</h2>
 <hr />
 <h3 id="configurations">Configurations</h3>
 <p>A configuration is defined by the two parameters:</p>
@@ -214,7 +214,7 @@ The <code>&lt;cg&gt;</code> parameter can always be empty <kbd>&quot;&quot;</kbd
 are <em>necessary</em>, for your shell to even recognize that parameter.</p>
 <p><strong>Note:</strong> The virtual machine already creates the <code>test_8gb</code> cgroup on booting the
 system.</p>
-<h2><i class="fa fa-fw fa-tasks"></i> Running the Tests</h2>
+<h2><i class="fa fa-fw fa-tasks" id="running-the-tests"></i> Running the Tests</h2>
 <hr />
 <p><strong>Note:</strong> This section assumes that the <code>llvm</code> directory (source code for LLVM and Clang projects)
 is a sibling of <code>PIE</code> in the directory-tree. The test VM already has this setup; but if
@@ -584,7 +584,7 @@ sys.excepthook is missing
 lost sys.stderr</code></pre>
 <p>are generated from Z3Str2, because of a <a href="http://bugs.python.org/issue11380">Python bug</a>.</p></li>
 </ul>
-<h2><i class="fa fa-fw fa-pencil-square-o"></i> Defining Custom Tests</h2>
+<h2><i class="fa fa-fw fa-pencil-square-o" id="defining-custom-tests"></i> Defining Custom Tests</h2>
 <hr />
 <h3 id="testing-precondition-inference">Testing Precondition Inference</h3>
 <p>It might be easier to understand how the tests are instrumented, if we pick an example.
@@ -791,7 +791,7 @@ In the above example,</p>
 <p>Additionally, <code>has</code>, <code>get</code> and <code>ind</code> have been defined in <code>bm_strings.h</code>.</p>
 </li>
 </ol>
-<h2><i class="fa fa-fw fa-cubes"></i> Modifying and Rebuilding</h2>
+<h2><i class="fa fa-fw fa-cubes" id="modifying-and-rebuilding"></i> Modifying and Rebuilding</h2>
 <hr />
 <p>No changes to PIE require recompilation / rebuilding. The OCaml code is rebuilt, but the
 scripts take care of that; the user does not have to manually build anything.</p>
