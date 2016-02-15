@@ -36,13 +36,48 @@
 
                         <ul class="nav nav-pills nav-stacked">
                                                             <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#setting-up-the-vm">
+                                        <i class='fa fa-cogs'></i> Setting up the VM
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#manual-setup">
+                                        <i class='fa fa-wrench'></i> Manual Setup
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#overview-of-tests">
+                                        <i class='fa fa-table'></i> Overview of tests
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#running-the-tests">
+                                        <i class='fa fa-tasks'></i> Running the tests
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#defining-custom-tests">
+                                        <i class='fa fa-pencil-square-o'></i> Defining Custom tests
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/index.html/#modifying-and-rebuilding">
+                                        <i class='fa fa-cubes'></i> Modifying and Rebuilding
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://saswatpadhi.github.io/PIE/">
+                                        
+                                    </a>
+                                </li>
+                                                            <li class="">
                                     <a href="https://github.com/SaswatPadhi/PIE/zipball/master">
-                                        <i class='fa fa-file-archive-o'></i> .zip Source
+                                        <i class='fa fa-file-archive-o'></i> Source: .zip
                                     </a>
                                 </li>
                                                             <li class="">
                                     <a href="https://github.com/SaswatPadhi/PIE/tarball/master">
-                                        <i class='fa fa-file-archive-o'></i> .tar.gz Source
+                                        <i class='fa fa-file-archive-o'></i> Source: .tar.gz
                                     </a>
                                 </li>
                                                             <li class="">
@@ -52,7 +87,7 @@
                                 </li>
                                                             <li class="">
                                     <a href="https://docs.google.com/uc?id=0B8JvTQ_ruBSESHlXYkJnUVBiMFE&amp;export=download">
-                                        <i class='fa fa-linux'></i> .ova VM Image
+                                        <i class='fa fa-linux'></i> Test VM Image
                                     </a>
                                 </li>
                                                             <li class="">
@@ -68,7 +103,7 @@
                 <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
                     <h1 id="pie">PIE</h1>
 <p>A tool to infer precondition for OCaml programs.</p>
-<h2 id="setting-up-the-vm">Setting up the VM</h2>
+<h2><i class="fa fa-fw fa-cogs"></i> Setting up the VM</h2>
 <hr />
 <ol>
 <li>Download the .ova VM image.</li>
@@ -87,7 +122,7 @@ The .ova image is ~2GB, but expands to ~8GB when imported. The actual
 depending on usage. Please make sure that you have sufficient available disk space!</li>
 </ul>
 <p>You may skip directly to <a href="#overview-of-tests">overview of tests</a>.</p>
-<h2 id="manual-setup">Manual Setup</h2>
+<h2><i class="fa fa-fw fa-wrench"></i> Manual Setup</h2>
 <hr />
 <h3 id="environment-amp-compilers">Environment &amp; Compilers</h3>
 <ul>
@@ -118,7 +153,7 @@ depending on usage. Please make sure that you have sufficient available disk spa
 <ul>
 <li>PIE assumes that the binaries for the constraint solvers are in your <code>$PATH</code>.</li>
 </ul>
-<h2 id="overview-of-tests">Overview of Tests</h2>
+<h2><i class="fa fa-fw fa-table"></i> Overview of Tests</h2>
 <hr />
 <h3 id="configurations">Configurations</h3>
 <p>A configuration is defined by the two parameters:</p>
@@ -132,23 +167,16 @@ depending on usage. Please make sure that you have sufficient available disk spa
 <li>maximum size of conflict group ranging over {2, 16, <em>all</em> <sup>#</sup>}</li>
 </ul>
 <p><sup>#</sup> <em>all</em> refers to the case where we pass the entire conflict group to the synthesizer.</p>
-<h3 id="parameter-tuning">Parameter Tuning</h3>
-<p>We first find an optimal configuration for PIE, by doing precondition inference over
-101 precondition inference tests under different configurations. Optimal here indicates
-that PIE successfully determines the most preconditions, i.e. it does not generate too
-strong or too weak ones. (Refer to Figure 10 in our paper)</p>
-<ol>
-<li>First, we determing an optimal limit for the size of conflict groups.
-We assumed a high value of number of tests 6400, and test the impact of
-different limits on size of conflict groups, fixing the number of tests at 6400.</li>
-<li>Once we have an optimal limit for the size of conflict groups, we test
-the impact of changing the number of random tests, fixing the optimal limit
-on size of conflict groups, which we found to be 16.</li>
-</ol>
-<p>Once we have an optimal configuration for PIE, we run the loop invariant inference
-benchmarks with this configuration. As mentioned in the paper, we run 30 benchmarks -
-26 benchmarks from the HOLA tool and 4 string benchmarks from
-<a href="http://web.stanford.edu/~sharmar/pubs/c2i.pdf">another recent loop invariant inference technique</a>.</p>
+<h3 id="parameter-selection">Parameter Selection</h3>
+<p>As described in the paper, we test the following configurations for our 2 sets of experiments:</p>
+<ul>
+<li>Precondition Inference:
+<ul>
+<li>Varying sizes of conflict groups: {6400} x {2, 16, <em>all</em> }</li>
+<li>Varying number of tests: {1600, 3200, 6400, 12800} x {16}</li>
+</ul></li>
+<li>Loop Invariant Inference: &lt;6400, 16&gt;</li>
+</ul>
 <h3 id="tests-in-pldi-submission">Tests in PLDI Submission</h3>
 <ul>
 <li><strong>Precondition Inference</strong> (for all first order functions from these OCaml modules)
@@ -179,12 +207,14 @@ specifies one.</p>
 <p>Currently, we only monitor the memory usage of our tools. The script <code>PIE/mk_mem_cgroup</code>
 creates a new <code>cgroup</code> with a user-specified name and limit on total memory usage.
 Example invocation:</p>
-<pre><code class="language-bash">./mk_mem_cgroup "limit_8gb" 8</code></pre>
-<p>This would create a new <code>cgroup</code> named <kbd>&quot;limit_8gb&quot;</kbd> which can be used as a
+<pre><code class="language-html">~/Repos/PIE/mk_mem_cgroup "test_8gb" 8</code></pre>
+<p>This would create a new <code>cgroup</code> named <kbd>&quot;test_8gb&quot;</kbd> which can be used as a
 <code>&lt;cg&gt;</code> parameter in the invocations described in the next section.
 The <code>&lt;cg&gt;</code> parameter can always be empty <kbd>&quot;&quot;</kbd>. Note that the quotes
 are <em>necessary</em>, for your shell to even recognize that parameter.</p>
-<h2 id="running-the-tests">Running the Tests</h2>
+<p><strong>Note:</strong> The virtual machine already creates the <code>test_8gb</code> cgroup on booting the
+system.</p>
+<h2><i class="fa fa-fw fa-tasks"></i> Running the Tests</h2>
 <hr />
 <p><strong>Note:</strong> This section assumes that the <code>llvm</code> directory (source code for LLVM and Clang projects)
 is a sibling of <code>PIE</code> in the directory-tree. The test VM already has this setup; but if
@@ -197,10 +227,12 @@ section accordingly.</p>
 <p>The brackets around <kbd>&lt;cg&gt;</kbd> indicate that this is an optional parameter. If
 a <code>cgroup</code> name is provided, the <code>test_all.sh</code> script would test each instantiation of PIE
 in a (clean) environment with the limits imposed by the <code>cgroup</code>; and report the memory usage.</p>
-<p>In all cases, the <code>test_all.sh</code> script prints the precondition, the postcondition, and
-running time for PIE (with other details like module and function names). A successful
-run should look something like:</p>
-<pre><code class="language-bash">pie@pie-VirtualBox:~/Repos/PIE/specs$ ./test_all.sh
+<p>The results presented in the paper were generated using:</p>
+<pre><code class="language-html">pie@pie-VirtualBox:~/Repos/PIE/specs$ ./test_all.sh "test_8gb"</code></pre>
+<p>The script prints the precondition, the postcondition, and running time for PIE
+(with other details like module and function names). A successful run should
+look something like:</p>
+<pre><code class="language-html">pie@pie-VirtualBox:~/Repos/PIE/specs$ ./test_all.sh
 
  ############ CG_SIZE = 2 ############
 
@@ -281,7 +313,7 @@ postconditions for a particular function have been tested. I would suppress this
 </ul>
 <p>On running <code>test_all.sh</code> with a <code>cgroup</code>, the output should be similar but with memory usages
 printed too (in MBs), like:</p>
-<pre><code class="language-bash">pie@pie-VirtualBox:~/Repos/PIE/specs$ ./test_all.sh test_8gb
+<pre><code class="language-html">pie@pie-VirtualBox:~/Repos/PIE/specs$ ./test_all.sh test_8gb
 
  ############ CG_SIZE = 2 ############
 
@@ -320,7 +352,7 @@ sys 0m0.000s
 .
 .</code></pre>
 <p><br></p>
-<h5 id="testing-specific-functions-in-specific-modules-with-specific-configurations">Testing specific functions in specific modules with specific configurations</h5>
+<h5 id="testing-a-specific-function-in-a-specific-module">Testing a specific function in a specific module</h5>
 <pre><code class="language-bash">./test.sh &lt;module&gt; &lt;func&gt; &lt;cg&gt; &lt;tests&gt; &lt;sz_conflicts&gt;</code></pre>
 <ul>
 <li><code>&lt;module&gt;</code> The module's test file (one of the <code>.ml</code> files in
@@ -390,6 +422,11 @@ sys 0m0.444s</code></pre>
 .
 .
 .</code></pre>
+<p>The results presented in the paper were generated using:</p>
+<pre><code class="language-html">pie@pie-VirtualBox:~/Repos/llvm/build$ ./check_all_with_config 6400 pie "test_8gb" 16</code></pre>
+<p>for results with PIE, and using:</p>
+<pre><code class="language-html">pie@pie-VirtualBox:~/Repos/llvm/build$ ./check_all_with_config 6400 escher "test_8gb" all</code></pre>
+<p>for results with just Escher.</p>
 <p>Couple of points to note:</p>
 <ul>
 <li>The memory errors <code>*** Error in 'bin/pinvgen': double free or corruption (out): 0x00007ffd1f253da0 ***</code>
@@ -462,7 +499,7 @@ escher: 1</code></pre>
 <li>The last 4 lines indicated the number of calls to the constraint solver (with their results) and to the synthesizer.</li>
 </ul>
 <p><br></p>
-<h5 id="checking-1">Checking <em>all</em> benchmarks with a specific PIE configuration</h5>
+<h5 id="checking-a-specific-benchmark">Checking a specific benchmark</h5>
 <pre><code class="language-bash">./checker &lt;benchmark&gt; &lt;tests&gt; &lt;tool&gt; &lt;cg&gt; &lt;sz_conflicts&gt;</code></pre>
 <ul>
 <li><code>&lt;benchmark&gt;</code> = The <code>.cpp</code> benchmark file (either from
@@ -537,8 +574,225 @@ escher: 3
 
 [$] OOM Count = 0
 [$] MAX Usage = 172</code></pre>
-<p><code>checker</code> also logs the result to <code>TOTAL.LOG</code> as with <code>check_all_with_config</code>, but prints the same on screen too.</p>
-<h2 id="modifying-and-re-building">Modifying and Re-building</h2>
+<p>Couple of points to note:</p>
+<ul>
+<li>Like <code>check_all_with_config</code>, <code>checker</code> also logs the result to <code>TOTAL.LOG</code>,
+but prints the same on screen too.</li>
+<li>The following errors:
+<pre><code class="language-html">close failed in file object destructor:
+sys.excepthook is missing
+lost sys.stderr</code></pre>
+<p>are generated from Z3Str2, because of a <a href="http://bugs.python.org/issue11380">Python bug</a>.</p></li>
+</ul>
+<h2><i class="fa fa-fw fa-pencil-square-o"></i> Defining Custom Tests</h2>
+<hr />
+<h3 id="testing-precondition-inference">Testing Precondition Inference</h3>
+<p>It might be easier to understand how the tests are instrumented, if we pick an example.
+Let us examine <code>PIE/specs/batavltree.ml</code> which tests the functions in module <code>BatAvlTree</code>.
+After including the standard OCaml libraries, a section of the file which defines the
+precondition tests for a particular function (say <code>BatAvlTree.create</code>) looks like:
+(additional comments have been inserted)</p>
+<pre><code class="language-html">(*** BatAvlTree.create ***)
+
+(* PIE currently analyzes functions with single arguments *)
+let avlcreate = fun (l,v,r) -&gt; BatAvlTree.create l v r;;
+
+(* The top-level function which runs the precondition tests *)
+let createRes = fun ?(pind=(-1)) () -&gt;
+  (* For the humans *)
+  let name = "create" in
+
+  (* The function to be analyzed *)
+  let f = avlcreate in
+
+  (* The function to be analyzed *)
+  let arguments = [ "l" ; "v" ; "r" ] in
+
+  (* Random test generation, based on input type of f.
+     These functions are defined in PIE/base/testGen.ml. *)
+  let tests = iavltree_int_iavltree_tests () in
+
+  (* A function to dump the input values (tests). *)
+  let dumper = iavltree_int_iavltree_dumper in
+
+  (* The type of the function input, in synthesizer's (Escher) type system.
+     Escher operates on its own types. Functions in the Escher's language map a
+     list of Escher-types (imagine a tuple); to an Escher-type.
+     These functions are defined in PIE/base/escher_types.ml. *)
+  let typ = [ TAVLTree ; TInt ; TAVLTree ] in
+
+  (* Transformation function for mapping input values of f to Escher-types.
+     Basically, we break the tuple to a list (why list? mentioned above), with
+     each element of the list being in Escher-types.
+     These functions are defined in PIE/base/escher_types.ml. *)
+  let tfun = fun (l,v,r) -&gt; [ of_avltree of_int l ; of_int v ; of_avltree of_int r ] in
+
+  (* Type-based default features generation.
+     The script PIE/base/preprocess.py reads these annotations and plugs in
+     some simple features based on the types provided.
+     Currently disabled. The Python script returns an empty list [] here. *)
+  let def_features = (*PYF:t|T(l:R(1),v:1,r:R(1))*) in
+
+  (* Additional user-defined features. *)
+  let my_features = [] in
+
+  (* Type-based default postconditions generation.
+     The script PIE/base/preprocess.py reads these annotations and plugs in
+     some simple postconditions based on the types provided.
+     This can be empty [] though. Use might choose to provide their own
+     postconditions. *)
+  let def_postconditions = (*PYP:t|T(l:R(1),v:1,r:R(1))|R(1)*) in
+
+  (* Additional user-defined postconditions. *)
+  let my_postconditions = [] in
+
+    (* Combine the stuff above and make required calls. *)
+    let trans = (typ, tfun) in
+    let features = def_features @ my_features in
+    let postconds = def_postconditions @ my_postconditions in
+      resolveAndPacLearnSpec ~dump:(name, dumper) ~record:name ~comps:default_avl
+                             ~arg_names:arguments f tests features
+                             (if pind = (-1) then postconds else [List.nth postconds pind]) trans
+;;</code></pre>
+<h5 id="custom-postconditions">Custom postconditions</h5>
+<p>Users can define their own postconditions in the following format:</p>
+<pre><code class="language-html">let my_postconditions = [
+  (* a postcondition is a pair of a binary boolean function and string *)
+  (
+    (* A boolean function that checks the postcondition, given input and output *)
+    (fun input output_or_exception -&gt; match output_or_exception with
+        Bad _ -&gt; ...                            (* postcondition for exceptions *)
+        Ok output -&gt; fancy_check(input, output) (* postcondition for normal output *)
+    ),
+
+    (* A human-readable comment on the postcondition *)
+    "My fancy postcondition"
+  );
+
+  (fun i r -&gt; match r with Bad _ | Ok o -&gt; f(i,o) , "post_2")
+]</code></pre>
+<h5 id="custom-features">Custom features</h5>
+<p>Similarly, features can be defined in the following format:</p>
+<pre><code class="language-html">let my_features = [
+  (* a feature is a pair of a unary boolean function and string *)
+  (
+    (* A boolean function defined on input *)
+    (fun input -&gt; check_property_is_awesome(input)),
+
+    (* A human-readable comment on the feature *)
+    "My fancy feature"
+  );
+
+  (fun i -&gt; is_awesome(i), "f2")
+]</code></pre>
+<h5 id="custom-types">Custom types</h5>
+<p>PIE by itself, does not impose any restrictions on types. The restrictions arise
+from:</p>
+<ul>
+<li>Requirements of the synthesizer</li>
+<li>For random test generation, the types should have a <code>_tests</code> function</li>
+<li>For input / output purposes, the types should have a <code>_dumper</code> function</li>
+</ul>
+<p>Adding types to the synthesizer (Escher), is beyond the scope of this document.</p>
+<p>But if the user's problem can be represented in the types supported by Escher,
+then the user only needs to define <code>typ</code> and <code>tfun</code>.
+(refer to the <code>BatAvlTree.create</code> example above)</p>
+<ul>
+<li><code>typ</code> should be the type of the input (i.e. tests) when represented in Escher's
+types. As Escher-functions always accept their arguments as a List of Escher-types,
+<code>typ</code> must thus always be a List of Escher-types.</li>
+<li><code>tfun</code> should be the function which can transform the tests to <code>tfun</code> type.</li>
+</ul>
+<p>Defining <code>_tests</code> and <code>_dumper</code> function has been explained in <code>PIE/base/testGen.ml</code>
+with sufficient examples.</p>
+<h3 id="testing-loop-invariant-inference">Testing Loop Invariant Inference</h3>
+<p>Currently our tool can handle single loop C++ programs over strings and integers.</p>
+<h5 id="integers">Integers</h5>
+<p>Creating benchmarks for loop invariant inference is very simple. Let's start with
+an example, <a href="https://github.com/SaswatPadhi/PIE/blob/master/bm_oopsla/11.cpp">bm_oopsla/11.cpp</a>:</p>
+<pre><code class="language-cpp">#include "bm_oopsla.h"      // For instrumentation functions and macros
+
+int main(int argc, char* argv[]) {
+  // RECORD macro defines the program state using the given variables, assuming
+  // all integer variables. It also defines PRINT_VARS to print the state.
+  RECORD(4, j, k, l, n);
+
+  INIT_n(unknown);
+  assume(n &gt; 0);
+  j = n; k = n; l = 0;
+
+  while(j &gt; l) {
+    PRINT_VARS();           // Print the current program state
+    j--;
+    k--;
+  }
+  PRINT_VARS();             // Print the current program state
+
+  assert(k &gt;= l);
+  return 0;
+}</code></pre>
+<p>We only need to instrument the loop and the entry of the code:</p>
+<ol>
+<li><code>#include "bm_oopsla.h"</code></li>
+<li>Define the state using <code>RECORD</code> at the entry.</li>
+<li>Any unknown variables at the entry, should be assigned as
+<pre><code class="language-cpp">INIT_myvar(my_unknown_function);</code></pre>
+<p>instead of</p>
+<pre><code class="language-cpp">myvar = my_unknown_function();</code></pre></li>
+<li><code>PRINT_VARS()</code> at the loop head and just after the loop.</li>
+</ol>
+<h5 id="strings">Strings</h5>
+<p>The string benchmarks are very similar to integer ones:</p>
+<pre><code class="language-cpp">#include "bm_strings.h"     // For instrumentation functions and macros
+
+int main() {
+  int i;
+  string r, t;
+
+  // INITIALIZE macro defines PRINT_VARS which prints the current program state.
+  // The arguments are exactly like printf function.
+  INITIALIZE("%d \t %s \t %s\n", i, t.c_str(), r.c_str());
+
+  set(r, "a");
+  i = len(r);
+
+  while(unknown()) {
+    PRINT_VARS();           // Print the current program state
+    t = unknown_s(1);
+    set(r, cat(r, t));
+  }
+  PRINT_VARS();             // Print the current program state
+
+  assert(eql(sub(r, 0, i), "a"));
+  return 0;
+}</code></pre>
+<p>The key differences from the integer benchmarks being:</p>
+<ol>
+<li>The header: <code>bm_strings.h</code>.</li>
+<li><code>RECORD</code> cannot be used any more, because it assumes all integer variables.
+Instead, we use a different macro: <code>INITIALIZE</code>.</li>
+<li><code>INITIALIZE</code> does <em>not</em> declare variables unlike <code>RECORD</code>. It should thus be
+used after variables have been declared.</li>
+<li><code>INIT</code> is not defined. For string benchmarks, the counter example from solvers
+is directly added (instead of running the program rooted at the counter example).
+This would be fixed in next versions.</li>
+<li>
+<p><strong>Important</strong>: For strings, we have defined in <code>bm_strings.h</code>, a subset of
+string operations which the constraint solvers can understand. These should be
+used instead of C++'s own string operations for the code to be analyzable by our tool.
+In the above example,</p>
+<ul>
+<li><code>set</code> is used instead of assignment.</li>
+<li><code>eql</code> is used to check equality, instead of <code>==</code> operator.</li>
+<li><code>sub</code> is used for substring, instead of <code>string.substr()</code>.</li>
+<li><code>cat</code> is used for concatenation, instead of <code>+</code> operator.</li>
+<li><code>len</code> is used for length, instead of <code>string.length</code>.</li>
+</ul>
+<p>Additionally, <code>has</code>, <code>get</code> and <code>ind</code> have been defined in <code>bm_strings.h</code>.</p>
+</li>
+</ol>
+<h2><i class="fa fa-fw fa-cubes"></i> Modifying and Rebuilding</h2>
+<hr />
 <p>No changes to PIE require recompilation / rebuilding. The OCaml code is rebuilt, but the
 scripts take care of that; the user does not have to manually build anything.</p>
 <p>Changes to the Clang tool (<code>pinvgen</code>) require rebuilding; but there are no tunable parameters
