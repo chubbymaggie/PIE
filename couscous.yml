@@ -41,7 +41,7 @@ menu:
 
     ova:
       text: "<i class='fa fa-linux'></i> Test VM Image"
-      absoluteUrl: https://docs.google.com/uc?id=0B8JvTQ_ruBSESHlXYkJnUVBiMFE&export=download
+      absoluteUrl: https://docs.google.com/uc?id=0B8JvTQ_ruBSET1NDR3dCYW4wSjA&export=download
     paper:
       text: "<i class='fa fa-file-pdf-o'></i> PLDI Submission"
       absoluteUrl: https://raw.githubusercontent.com/SaswatPadhi/PIE/master/paper-83.pdf
