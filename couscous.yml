@@ -9,15 +9,38 @@ subTitle: Precondition Inference Engine
 
 menu:
   items:
+    mnu-vm-setup:
+      text: "<i class='fa fa-cogs'></i> Setting up the VM"
+      relativeUrl: index.html#setting-up-the-vm
+    mnu-manual-setup:
+      text: "<i class='fa fa-wrench'></i> Manual Setup"
+      relativeUrl: index.html#manual-setup
+    mnu-overview-of-tests:
+      text: "<i class='fa fa-table'></i> Overview of tests"
+      relativeUrl: index.html#overview-of-tests
+    mnu-running-the-tests:
+      text: "<i class='fa fa-tasks'></i> Running the tests"
+      relativeUrl: index.html#running-the-tests
+    mnu-defining-custom-tests:
+      text: "<i class='fa fa-pencil-square-o'></i> Defining Custom tests"
+      relativeUrl: index.html#defining-custom-tests
+    mnu-modifying-and-rebuilding:
+      text: "<i class='fa fa-cubes'></i> Modifying and Rebuilding"
+      relativeUrl: index.html#modifying-and-rebuilding
+
+    spacer0:
+
     src-zip:
-      text: "<i class='fa fa-file-archive-o'></i> .zip Source"
+      text: "<i class='fa fa-file-archive-o'></i> Source: .zip"
       absoluteUrl: https://github.com/SaswatPadhi/PIE/zipball/master
     src-tar:
-      text: "<i class='fa fa-file-archive-o'></i> .tar.gz Source"
+      text: "<i class='fa fa-file-archive-o'></i> Source: .tar.gz"
       absoluteUrl: https://github.com/SaswatPadhi/PIE/tarball/master
-    spacer:
+
+    spacer1:
+
     ova:
-      text: "<i class='fa fa-linux'></i> .ova VM Image"
+      text: "<i class='fa fa-linux'></i> Test VM Image"
       absoluteUrl: https://docs.google.com/uc?id=0B8JvTQ_ruBSESHlXYkJnUVBiMFE&export=download
     paper:
       text: "<i class='fa fa-file-pdf-o'></i> PLDI Submission"
