@@ -64,25 +64,21 @@ for i in `seq 1 $MAX_RUNS`; do
   ./separate_tests tests
   rm -rf tests
 done
+sort -u loopids -o loopids
 
 aterrcho " ==>"
-TNUM=0
-while true; do
-  TNUM=`expr $TNUM + 1`
-  TFILE="tests_$TNUM"
-  if [[ -f $TFILE ]]; then
-    head -n 1 < $TFILE > tests
-    tail -n +2 $TFILE > "$TFILE.tmp" && mv "$TFILE.tmp" $TFILE
-    sort -u $TFILE | shuf -n $MAX_TESTS >> tests
-    mv tests $TFILE
-    TCNT=$(($(wc -l $TFILE | awk '{print $1}')-1))
-    aterrcho "$TCNT tests for loop #$TNUM."
-  else
-    break
+for i in `cat loopids`; do
+  TFILE="tests_$i"
+  head -n 1 < $TFILE > tests
+  tail -n +2 $TFILE > "$TFILE.tmp" && mv "$TFILE.tmp" $TFILE
+  sort -u $TFILE | shuf -n $MAX_TESTS >> tests
+  mv tests $TFILE
+  TCNT=$(($(wc -l $TFILE | awk '{print $1}')-1))
+  aterrcho "$TCNT tests for loop #$i."
+  if [[ ! -f header ]]; then
+    head -n 1 < $TFILE > header
   fi
 done
-
-head -n 1 < tests_1 > header
 
 # Call the monster
 cd "$ROOT"

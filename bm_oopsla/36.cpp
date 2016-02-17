@@ -6,8 +6,9 @@ int main(int argc, char* argv[]) {
   INIT_flag(unknown4);
   t = 0; s = 0; a = 0; b = 0;
 
+  PRINT_BAR(1);
   while(unknown1()){
-    PRINT_VARS();
+    PRINT_VARS(1);
     a++;
     b++;
     s += a;
@@ -16,7 +17,7 @@ int main(int argc, char* argv[]) {
       t += a;
     }
   }
-  PRINT_VARS();
+  PRINT_VARS(1);
   //2s >= t
   x = 1;
   if (flag != 0) {
@@ -24,9 +25,9 @@ int main(int argc, char* argv[]) {
   }
   //x <= 2
   y = 0;
-  PRINT_BAR();
+  PRINT_BAR(2);
   while(y <= x) {
-    PRINT_VARS();
+    PRINT_VARS(2);
     if (unknown2()) {
       y++;
     }
@@ -34,7 +35,7 @@ int main(int argc, char* argv[]) {
       y += 2;
     }
   }
-  PRINT_VARS();
+  PRINT_VARS(2);
   assert(y <= 4);
   return 0;
 }

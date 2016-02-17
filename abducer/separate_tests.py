@@ -7,24 +7,29 @@ if __name__ == "__main__":
     
     with open(sys.argv[1], 'r') as f:
         header = f.readline()
-        counter = 1
         content = ''
+        loopid = '1'
         for line in f.readlines():
             if (line.startswith('---')):
-                tests_name = sys.argv[1] + '_' + str(counter)
-                if (not os.path.isfile(tests_name)):
-                    with open(tests_name, 'w') as tf:
-                        tf.write(header)
-                with open(tests_name, 'a') as tf:
-                    tf.write(content)
-                counter = counter + 1
-                content = ''
+                if (len(content) > 0):
+                    tests_name = sys.argv[1] + '_' + loopid
+                    if (not os.path.isfile(tests_name)):
+                        with open(tests_name, 'w') as tf:
+                            tf.write(header)
+                    with open(tests_name, 'a') as tf:
+                        tf.write(content)
+                    with open('loopids', 'a') as lf:
+                        lf.write(loopid + '\n')
+                    content = ''
+                loopid = line[3:-4]
             else:
                 content = content + line
         if (len(content) > 0):
-            tests_name = sys.argv[1] + '_' + str(counter)
+            tests_name = sys.argv[1] + '_' + loopid
             if (not os.path.isfile(tests_name)):
                 with open(tests_name, 'w') as tf:
                     tf.write(header)
             with open(tests_name, 'a') as tf:
                 tf.write(content)
+            with open('loopids', 'a') as lf:
+                lf.write(loopid + '\n')

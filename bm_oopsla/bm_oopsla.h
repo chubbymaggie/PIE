@@ -98,11 +98,11 @@ void set_init_values(std::string args, int argc, char* argv[]) {
           _FE_ ## count (GEN_INIT_TASK, args);                              \
           std::replace(___vars___.begin(), ___vars___.end(), ',', '\t');    \
           fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());               \
-          auto PRINT_VARS = [&]() {                                         \
+          auto PRINT_VARS = [&](int l = 1) {                                         \
             fprintf(OUTPUT_STREAM, rep<count>("%d").c_str(), args);         \
           };                                                                \
-          auto PRINT_BAR = [&]() {                                          \
-            fprintf(OUTPUT_STREAM, "---\n");                                \
+          auto PRINT_BAR = [&](int l = 1) {                                          \
+            fprintf(OUTPUT_STREAM, "---%d---\n", l);                                \
           }
 
 template <unsigned int N>
