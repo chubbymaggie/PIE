@@ -13,23 +13,23 @@ int main(int argc, char* argv[]) {
   }
   PRINT_BAR(1);
   while(unknown1()) {
-    PRINT_VARS(1);
+    PRINT_VARS();
     i += 2;
     if(i % 2 == 0) {
       j += 2;
     }
     else j++;
   }
-  PRINT_VARS(1);
+  PRINT_VARS();
   a = 0;
   b = 0;
   PRINT_BAR(2);
   while(unknown2()) {
-    PRINT_VARS(2);
+    PRINT_VARS();
     a++;
     b += (j - i);
   }
-  PRINT_VARS(2);
+  PRINT_VARS();
   if (flag != 0)
     assert(a == b);
   return 0;

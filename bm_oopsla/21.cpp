@@ -7,21 +7,21 @@ int main(int argc, char* argv[]) {
   k = 1;
   i = 1;
   j = 0;
+  PRINT_BAR(1);
   while(i < n) {
-    PRINT_BAR(1);
-    PRINT_VARS(1);
+    PRINT_VARS();
     j = 0;
     PRINT_BAR(2);
     while(j < i) {
-      PRINT_VARS(2);
+      PRINT_VARS();
       k += (i - j);
       j++;
     }
-    PRINT_VARS(2);
+    PRINT_VARS();
     i++;
+    PRINT_BAR(1);
   }
-  PRINT_BAR(1);
-  PRINT_VARS(1);
+  PRINT_VARS();
   assert(k >= n);
   return 0;
 }

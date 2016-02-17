@@ -7,19 +7,19 @@ int main(int argc, char* argv[]) {
 
   PRINT_BAR(1);
   while(unknown()) {
-    PRINT_VARS(1);
+    PRINT_VARS();
     x++;
     y++;
   }
-  PRINT_VARS(1);
+  PRINT_VARS();
   
   PRINT_BAR(2);
   while(x != n) {
-    PRINT_VARS(2);
+    PRINT_VARS();
     x--;
     y--;
   }
-  PRINT_VARS(2);
+  PRINT_VARS();
   
   assert(y == n);
   return 0;
