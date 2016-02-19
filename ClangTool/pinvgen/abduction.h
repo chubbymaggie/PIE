@@ -7,12 +7,6 @@
 
 #include "PredicateNode.h"
 
-enum CheckStatus { FAILED, PASSED, VERIFIED };
-struct CheckResult {
-  CheckStatus status;
-  PredicateNode guess;
-};
-
 extern long COUNT;
 extern long ABDUCTION_COUNT;
 extern long VERIFICATION_COUNT;
@@ -22,15 +16,14 @@ extern std::string WORKING_PATH;
 extern std::string MAIN_FILENAME;
 extern std::string CONFLICT_SIZE;
 
-void copyTests(const int);
-PredicateNode abduce(PredicateNode);
+PredicateNode abduce(PredicateNode, std::string);
 PredicateNode simplify(PredicateNode);
 bool chkVALID(const PredicateNode, bool);
 
 PredicateNode getAbductionResultFor(const PredicateNode);
 
-CheckResult checkValidity(clang::CFG*,
-                          clang::DominatorTree*,
-                          clang::CFGReverseBlockReachabilityAnalysis*);
+void checkValidity(clang::CFG*,
+                   clang::DominatorTree*,
+                   clang::CFGReverseBlockReachabilityAnalysis*);
 
 #endif

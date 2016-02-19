@@ -10,6 +10,7 @@ int main(int argc, char* argv[]) {
   while(i < n) {
     PRINT_VARS();
     PRINT_BAR(1);
+    assert(k >= i);
     j = 0;
     while(j < i) {
       PRINT_VARS();
@@ -22,7 +23,5 @@ int main(int argc, char* argv[]) {
   }
   PRINT_VARS();
   PRINT_BAR(1);
-  assert(k >= n);
   return 0;
 }
-

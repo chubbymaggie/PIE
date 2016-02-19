@@ -11,6 +11,7 @@ if __name__ == "__main__":
         loopid = '1'
         for line in f.readlines():
             if (line.startswith('---')):
+                loopid = line[3:-4]
                 if (len(content) > 0):
                     tests_name = sys.argv[1] + '_' + loopid
                     if (not os.path.isfile(tests_name)):
@@ -21,7 +22,6 @@ if __name__ == "__main__":
                     with open('loopids', 'a') as lf:
                         lf.write(loopid + '\n')
                     content = ''
-                loopid = line[3:-4]
             else:
                 content = content + line
         if (len(content) > 0):

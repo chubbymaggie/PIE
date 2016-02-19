@@ -57,12 +57,7 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
           DominatorTree dom_tree;
           dom_tree.buildDominatorTree(*mgr.getAnalysisDeclContext(fd));
 
-          CheckResult res = checkValidity(cfg, &dom_tree, reachables);
-
-          if(res.status == VERIFIED)
-            llvm::errs() << "\n\n[###] Final invariant = " << PredicateNode2MCF(res.guess) << " [###]\n";
-          else
-            llvm::errs() << "\n\n[---] Invariant could not be determined. [---]\n";
+          checkValidity(cfg, &dom_tree, reachables);
 
           errs() << string(80, '=') << "\n";
         }

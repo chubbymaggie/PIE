@@ -10,6 +10,8 @@
 
 #include "abduction.h"
 
+extern std::map<std::string, PredicateNode> guesses;
+
 bool isUnknownFunction(clang::Expr*);
 bool isReachable(clang::CFGReverseBlockReachabilityAnalysis*,
                  const clang::CFGBlock*, const clang::CFGBlock*);
@@ -21,10 +23,15 @@ PredicateNode wpOfUnaryOperator(PredicateNode, const clang::UnaryOperator*);
 PredicateNode wpOfBinaryOperator(PredicateNode, const clang::BinaryOperator*);
 
 PredicateNode wpOfStmt(PredicateNode, const clang::Stmt*);
-PredicateNode wpOfBlock(PredicateNode, const clang::CFGBlock*);
+PredicateNode wpOfBlock(PredicateNode,
+						clang::CFGBlock*,
+						clang::CFG*,
+						const clang::DominatorTree*,
+                        clang::CFGReverseBlockReachabilityAnalysis*);
 PredicateNode wpOfSubgraph(PredicateNode,
                            clang::CFGBlock*,
                            clang::CFGBlock*,
+                           clang::CFG*,
                            const clang::DominatorTree*,
                            clang::CFGReverseBlockReachabilityAnalysis*);
 
