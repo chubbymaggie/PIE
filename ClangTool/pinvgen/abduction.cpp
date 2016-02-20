@@ -1,5 +1,4 @@
 #include <fstream>
-#include <map>
 
 #include "clang/AST/ExprCXX.h"
 
@@ -12,7 +11,7 @@ using namespace llvm;
 using namespace clang;
 using namespace std;
 
-map<string, PredicateNode> guesses;
+StringMap<PredicateNode> guesses;
 
 void copyTests(const string loopId) {
   string command = "cp " + WORKING_PATH + "/tests_" + loopId + " " + WORKING_PATH + "/final_tests";
@@ -116,8 +115,8 @@ void checkValidity(CFG *cfg,
     if (chkVALID(wp, true)) {
       errs() << " is valid!\n";
       errs() << "\n\n[###] Final invariants: [###]\n";
-      for (const auto &guess : guesses) {
-        errs() << "Loop #" << guess.first << ": " << PredicateNode2MCF(guess.second) << '\n';
+      for (const auto & guess : guesses) {
+        errs() << "Loop #" << guess.getKey() << ": " << PredicateNode2MCF(guess.getValue()) << '\n';
       }
       return;
     }

@@ -10,7 +10,9 @@
 
 #include "abduction.h"
 
-extern std::map<std::string, PredicateNode> guesses;
+#include "llvm/ADT/StringMap.h"
+
+extern llvm::StringMap<PredicateNode> guesses;
 
 bool isUnknownFunction(clang::Expr*);
 bool isReachable(clang::CFGReverseBlockReachabilityAnalysis*,
