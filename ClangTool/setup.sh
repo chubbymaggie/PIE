@@ -29,4 +29,6 @@ chmod +x checker
 perl -pe 's#__ABDUCER_PATH_FROM_SETUP_SCRIPT__#'"$ABDUCER_ROOT"'#g' < "$OWN_ROOT/check_all.template.sh" > check_all_with_config
 chmod +x check_all_with_config
 
-cmake .. && make -j4 pinvgen
+# We need to make everything, not just pinvgen; because Clang uses so internal
+# headers etc. which are produced after a full make
+cmake .. && make -j4

@@ -25,4 +25,6 @@ if __name__ == "__main__":
     sys.stderr.write("    [+] Root state for counter-examples : %s\n" % str(model))
 
     model = ' '.join([model[var.strip()] for var in header])
-    os.system("%s %s >> %s" % (EXE, model, TST))
+
+    # TODO: Pick a reasonable amount / accept command line arg for timeout
+    os.system("timeout 1s %s %s >> %s" % (EXE, model, TST))

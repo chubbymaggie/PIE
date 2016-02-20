@@ -4,11 +4,11 @@ import os
 import sys
 
 if __name__ == "__main__":
-    
     with open(sys.argv[1], 'r') as f:
-        header = f.readline()
         content = ''
         loopid = '1'
+        header = f.readline()
+        varcount = len(header.split())
         for line in f.readlines():
             if (line.startswith('---')):
                 loopid = line[3:-4]
@@ -23,7 +23,9 @@ if __name__ == "__main__":
                         lf.write(loopid + '\n')
                     content = ''
             else:
-                content = content + line
+                if len(line.split()) == varcount:
+                    content = content + line
+                # else ignore bad (partial) line
         if (len(content) > 0):
             tests_name = sys.argv[1] + '_' + loopid
             if (not os.path.isfile(tests_name)):

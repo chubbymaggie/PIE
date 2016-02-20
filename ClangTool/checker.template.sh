@@ -1,7 +1,5 @@
 #!/bin/bash
 
-MAX_RUNS=256
-
 ROOT="`dirname \"$0\"`"
 ROOT="`cd \"$ROOT\" && pwd`"
 
@@ -11,14 +9,19 @@ USE_TOOL="$3"
 CGROUP="$4"
 CONFLICT_SIZE="$5"
 
+TIMEOUT_EACH_RUN="$6"
+MAX_RUNS="$7"
+
 if [[ ! -f "$SOURCE_FILE" ]]; then
   echo "--- File $SOURCE_FILE doesn't exist. ABORT ---"
   exit 1
 fi
 
-if [[ "$USE_TOOL" == "" ]]; then
-    USE_TOOL="pie"
-fi
+if [[ "$USE_TOOL" == "" ]]; then USE_TOOL="pie"; fi
+
+if [[ "$TIMEOUT_EACH_RUN" == "" ]]; then TIMEOUT_EACH_RUN="3600"; fi
+
+if [[ "$MAX_RUNS" == "" ]]; then MAX_RUNS="256"; fi
 
 FILE="`basename \"$SOURCE_FILE\"`"
 CG_LOCATION="/sys/fs/cgroup/memory/$CGROUP"
@@ -56,9 +59,9 @@ mv "$FILE.x" "$WORKING_PATH/"
 cd "$WORKING_PATH"
 for i in `seq 1 $MAX_RUNS`; do
   echo -ne "\r(*) Collecting test data ... $i / $MAX_RUNS"
-  TESTS=`"./$FILE.x"`
+  TESTS=`false`
   while [ $? -ne 0 ]; do
-    TESTS=`"./$FILE.x"`
+    TESTS=`timeout ${TIMEOUT_EACH_RUN}s ./$FILE.x || (( $? > 100 ))`
   done
   echo "$TESTS" >> tests
   ./separate_tests tests
@@ -70,8 +73,7 @@ aterrcho " ==>"
 for i in `cat loopids`; do
   TFILE="tests_$i"
   head -n 1 < $TFILE > tests
-  tail -n +2 $TFILE > "$TFILE.tmp" && mv "$TFILE.tmp" $TFILE
-  sort -u $TFILE | shuf -n $MAX_TESTS >> tests
+  tail -n +2 $TFILE | sort -u | shuf -n $MAX_TESTS >> tests
   mv tests $TFILE
   TCNT=$(($(wc -l $TFILE | awk '{print $1}')-1))
   aterrcho "$TCNT tests for loop #$i."
@@ -111,5 +113,4 @@ if [[ "$CGROUP" != "" ]]; then
     aterrcho -ne "[$] MAX Usage = " ; aterrcho $(( $(cat "$CG_LOCATION/memory.memsw.max_usage_in_bytes") / ( 1024 * 1024 ) ))
 fi
 
-sed -i s/
-/\\\n/g "$TOTAL_LOG"
+sed -i s//\\\n/g "$TOTAL_LOG"
