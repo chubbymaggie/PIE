@@ -11,9 +11,9 @@ def fix(string):
     return string
 
 if __name__ == "__main__":
-    [EXE, TST, RES] = sys.argv[1:]
+    [EXE, TST, HDR, RES] = sys.argv[1:]
 
-    with open(TST) as f:
+    with open(HDR) as f:
         header = f.readline()
     with open(RES) as f:
         data = f.readlines()[1:]
@@ -25,4 +25,4 @@ if __name__ == "__main__":
     sys.stderr.write("    [+] Root state for counter-examples : %s\n" % str(model))
 
     model = ' '.join([model[var.strip()] for var in header])
-    os.system("%s %s | tail -n +2 >> %s" % (EXE, model, TST))
+    os.system("%s %s >> %s" % (EXE, model, TST))

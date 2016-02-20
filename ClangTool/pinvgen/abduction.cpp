@@ -11,6 +11,13 @@ using namespace llvm;
 using namespace clang;
 using namespace std;
 
+StringMap<PredicateNode> guesses;
+
+void copyTests(const string loopId) {
+  string command = "cp " + WORKING_PATH + "/tests_" + loopId + " " + WORKING_PATH + "/final_tests";
+  system(command.c_str());
+}
+
 PredicateNode getAbductionResultFor(const PredicateNode pred) {
   string target = WORKING_PATH + "/" + to_string(++COUNT) + "A" + to_string(++ABDUCTION_COUNT) + ".mcf";
   {
@@ -31,7 +38,7 @@ PredicateNode getAbductionResultFor(const PredicateNode pred) {
   return XMLDoc2PredicateNode(target + ".xml");
 }
 
-bool chkVALID(const PredicateNode pred, bool add_counter = false) {
+bool chkVALID(const PredicateNode pred, bool add_counter) {
   string target = WORKING_PATH + "/" + to_string(++COUNT) + "V" + to_string(++VERIFICATION_COUNT) + ".mcf";
   {
     ofstream mcf_file(target);
@@ -54,8 +61,13 @@ bool chkVALID(const PredicateNode pred, bool add_counter = false) {
 
   if(add_counter) {
     string command = WORKING_PATH + "/add_counter " + WORKING_PATH + "/" + MAIN_FILENAME + ".x "
-                                                    + WORKING_PATH + "/final_tests "
-                                                    + target + ".res";
+                                                    + WORKING_PATH + "/tests "
+                                                    + WORKING_PATH + "/header "
+                                                    + target + ".res ";
+    system(command.c_str());
+    command = WORKING_PATH + "/separate_tests " + WORKING_PATH + "/tests";
+    system(command.c_str());
+    command = "rm -rf " + WORKING_PATH + "/tests";
     system(command.c_str());
   }
 
@@ -84,119 +96,31 @@ PredicateNode simplify(PredicateNode pred) {
   return XMLDoc2PredicateNode(target + ".xml");
 }
 
-PredicateNode abduce(PredicateNode query) {
+PredicateNode abduce(PredicateNode query, string loopId) {
+  copyTests(loopId);
   errs() << "\n   [Q" << ABDUCTION_COUNT+1 << "] Abduction query = " << PredicateNode2MCF(query) << "\n";
   PredicateNode res = getAbductionResultFor(query);
   errs() << "\n     - Result = " << PredicateNode2MCF(res) << "\n";
   return res;
 }
 
-CheckResult checkPreconditionValidity(PredicateNode pred,
-                                      CFGBlock* loop_head,
-                                      CFG * cfg,
-                                      DominatorTree *dom_tree,
-                                      CFGReverseBlockReachabilityAnalysis *reachables,
-                                      PredicateNode guard,
-                                      PredicateNode nguard) {
+void checkValidity(CFG *cfg,
+                   DominatorTree *dom_tree,
+                   CFGReverseBlockReachabilityAnalysis *reachables) {
 
-  PredicateNode verif = wpOfSubgraph(pred, loop_head, &(cfg->getEntry()), dom_tree, reachables);
-
-  errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pre} = "
-               << PredicateNode2MCF(verif) << "\n";
-
-  bool res;
-  errs() << "     - Result = " << ((res = chkVALID(verif, true)) ? "VALID" : "FAILED") << "\n";
-
-  if(!res) {
-    errs() << "\n ----------------------------------------< RESTART >---------------------------------------- \n";
-    return checkValidity(PredicateNode {"true", {}}, loop_head, cfg, dom_tree, reachables, guard, nguard);
-  }
-
-  return CheckResult { PASSED, pred };
-}
-
-CheckResult checkInductiveValidity(PredicateNode pred,
-                                   CFGBlock *loop_head,
-                                   CFG *cfg,
-                                   DominatorTree *dom_tree,
-                                   CFGReverseBlockReachabilityAnalysis *reachables,
-                                   PredicateNode guard,
-                                   PredicateNode nguard) {
-
-  CFGBlock* end_loop;
-  for(CFGBlock::const_pred_iterator pred = loop_head->pred_begin(), epred = loop_head->pred_end(); pred != epred; ++pred)
-    if(dom_tree->dominates(loop_head, *pred)) {
-      end_loop = *pred;
-      break;
+  while (1) {
+    guesses.clear();
+    PredicateNode wp = wpOfSubgraph({"true", {}}, &(cfg->getExit()), &(cfg->getEntry()), cfg, dom_tree, reachables);
+    errs() << "\n   # Verification@Precondition: " << PredicateNode2MCF(wp);
+    if (chkVALID(wp, true)) {
+      errs() << " is valid!\n";
+      errs() << "\n\n[###] Final invariants: [###]\n";
+      for (const auto & guess : guesses) {
+        errs() << "Loop #" << guess.getKey() << ": " << PredicateNode2MCF(guess.getValue()) << '\n';
+      }
+      return;
     }
-
-  PredicateNode wp = wpOfSubgraph(pred, end_loop, loop_head, dom_tree, reachables);
-  PredicateNode verif {"|", {{"!", {pred}}, nguard, wp}};
-
-  errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {ind} = "
-               << PredicateNode2MCF(verif) << "\n";
-
-  bool res;
-  errs() << "     - Result = " << ((res = chkVALID(verif)) ? "VALID" : "FAILED") << "\n";
-
-  if(!res) {
-    pred = simplify(PredicateNode {"&", {abduce(verif), pred}});
-    return checkValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
+    errs() << " is not valid!\n";
+    errs() << "\n----------------------------------< RESTART >-----------------------------------\n";  
   }
-
-  return CheckResult { PASSED, pred };
-}
-
-CheckResult checkPostconditionValidity(PredicateNode pred,
-                                       CFGBlock *loop_head,
-                                       CFG *cfg,
-                                       DominatorTree *dom_tree,
-                                       CFGReverseBlockReachabilityAnalysis *reachables,
-                                       PredicateNode guard,
-                                       PredicateNode nguard) {
-
-  CFGBlock *post_loop;
-  for(CFGBlock::const_succ_iterator succ = loop_head->succ_begin(), esucc = loop_head->succ_end(); succ != esucc; ++succ)
-    if(dom_tree->dominates(*succ, &(cfg->getExit()))) {
-      post_loop = *succ;
-      break;
-    }
-  PredicateNode post_cond = wpOfSubgraph({"true", {}}, &(cfg->getExit()), post_loop, dom_tree, reachables);
-  PredicateNode verif {"|", {{"!", {pred}}, guard, post_cond}};
-
-  errs() << "\n   [V" << VERIFICATION_COUNT+1 << "] Verification query {pos} = "
-               << PredicateNode2MCF(verif) << "\n";
-
-  bool res;
-  errs() << "     - Result = " << ((res = chkVALID(verif)) ? "VALID" : "FAILED") << "\n";
-
-  if(!res) {
-    pred = simplify({"&", {abduce(verif), pred}});
-    return checkValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard);
-  }
-
-  return CheckResult { PASSED, pred };
-}
-
-CheckResult checkValidity(PredicateNode pred,
-                          CFGBlock *loop_head,
-                          CFG *cfg,
-                          DominatorTree *dom_tree,
-                          CFGReverseBlockReachabilityAnalysis *reachables,
-                          PredicateNode guard,
-                          PredicateNode nguard) {
-  errs() << "\n   # Invariant Guess = " << PredicateNode2MCF(pred) << "\n";
-
-  CheckResult cr;
-
-  if((cr = checkPreconditionValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard)).status != PASSED)
-    return cr;
-
-  if((cr = checkPostconditionValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard)).status != PASSED)
-      return cr;
-
-  if((cr = checkInductiveValidity(pred, loop_head, cfg, dom_tree, reachables, guard, nguard)).status != FAILED)
-    return CheckResult { VERIFIED, cr.guess};
-
-  return { FAILED, cr.guess };
 }

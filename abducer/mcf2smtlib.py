@@ -122,9 +122,12 @@ def string_from_z3_model(mod):
     return 'SAT @ Z3\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
 
 def string_from_cvc4_model(cvc4_proc):
-    cvc4_proc.stdin.write('(get-value (%s))\n' % (' '.join(uvars)))
-    model = cvc4_proc.stdout.readline().strip()[2:-2].split(') (')
-    model = {pair.partition(' ')[0]:pair.partition(' ')[2] for pair in model}
+    if (len(' '.join(uvars)) > 0):
+        cvc4_proc.stdin.write('(get-value (%s))\n' % (' '.join(uvars)))
+        model = cvc4_proc.stdout.readline().strip()[2:-2].split(') (')
+        model = {pair.partition(' ')[0]:pair.partition(' ')[2] for pair in model}
+    else:
+        model = {'': ''}
     return 'SAT @ CVC4\n' + '\n'.join('%s : %s' % (var, model[var]) for var in model)
 
 def string_from_z3str_model(z3str_out):

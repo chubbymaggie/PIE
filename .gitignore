@@ -16,3 +16,5 @@ logs*
 ClangTool/my.setup.sh
 
 .couscous
+ClangTool/CMakeLists.txt
+bm_oopsla/test*.cpp

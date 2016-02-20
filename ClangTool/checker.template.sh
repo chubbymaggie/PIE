@@ -50,29 +50,35 @@ rm -rf "$WORKING_PATH"
 mkdir -p "$WORKING_PATH"
 ln -rfs "$FILE" "$WORKING_PATH/$FILE"
 mv "$FILE.x" "$WORKING_PATH/"
+"$ABDUCER_PATH/link.sh" "$WORKING_PATH"
 
 # Generate a bunch of tests from $MAX_RUNS successful runs
 cd "$WORKING_PATH"
-"./$FILE.x" > header
-head -n 1 < header > final_tests
-echo "" > tests
 for i in `seq 1 $MAX_RUNS`; do
   echo -ne "\r(*) Collecting test data ... $i / $MAX_RUNS"
   TESTS=`"./$FILE.x"`
   while [ $? -ne 0 ]; do
     TESTS=`"./$FILE.x"`
   done
-  echo "$TESTS" | tail -n +2 >> tests
+  echo "$TESTS" >> tests
+  ./separate_tests tests
+  rm -rf tests
 done
+sort -u loopids -o loopids
 
-# Uniquify the tests and select at most $MAX_TESTS
-sort -u tests | shuf -n $MAX_TESTS >> final_tests
-TESTS="`wc -l final_tests`"
-aterrcho " ==> $TESTS."
-
-# Clean up & link
-rm -rf header tests
-"$ABDUCER_PATH/link.sh" "$WORKING_PATH"
+aterrcho " ==>"
+for i in `cat loopids`; do
+  TFILE="tests_$i"
+  head -n 1 < $TFILE > tests
+  tail -n +2 $TFILE > "$TFILE.tmp" && mv "$TFILE.tmp" $TFILE
+  sort -u $TFILE | shuf -n $MAX_TESTS >> tests
+  mv tests $TFILE
+  TCNT=$(($(wc -l $TFILE | awk '{print $1}')-1))
+  aterrcho "$TCNT tests for loop #$i."
+  if [[ ! -f header ]]; then
+    head -n 1 < $TFILE > header
+  fi
+done
 
 # Call the monster
 cd "$ROOT"
@@ -105,4 +111,5 @@ if [[ "$CGROUP" != "" ]]; then
     aterrcho -ne "[$] MAX Usage = " ; aterrcho $(( $(cat "$CG_LOCATION/memory.memsw.max_usage_in_bytes") / ( 1024 * 1024 ) ))
 fi
 
-sed -i s//\\\n/g "$TOTAL_LOG"
+sed -i s/
+/\\\n/g "$TOTAL_LOG"
