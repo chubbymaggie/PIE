@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
   else {
     i = 1;
   }
-  
+
   while(unknown1()) {
     PRINT_VARS();
     i += 2;
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
   PRINT_BAR(1);
   a = 0;
   b = 0;
-  
+
   while(unknown2()) {
     PRINT_VARS();
     a++;

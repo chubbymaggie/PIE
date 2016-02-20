@@ -54,6 +54,9 @@ void PRINT_BAR(int loopId) { fprintf(stdout, "---%d---\n", loopId); }
 
 #define OUTPUT_STREAM stdout
 
+#define _FE_12(TASK, arg0, args...) TASK(arg0) _FE_11(TASK, args)
+#define _FE_11(TASK, arg0, args...) TASK(arg0) _FE_10(TASK, args)
+#define _FE_10(TASK, arg0, args...) TASK(arg0) _FE_9(TASK, args)
 #define _FE_9(TASK, arg0, args...)  TASK(arg0) _FE_8(TASK, args)
 #define _FE_8(TASK, arg0, args...)  TASK(arg0) _FE_7(TASK, args)
 #define _FE_7(TASK, arg0, args...)  TASK(arg0) _FE_6(TASK, args)
