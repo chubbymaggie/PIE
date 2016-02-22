@@ -247,7 +247,7 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
   for(CFGBlock::const_pred_iterator pre = from->pred_begin(), epre = from->pred_end(); pre != epre; ++pre) {
     if(dom_tree->dominates(then_head, *pre))
       then_end = *pre;
-    if(dom_tree->dominates(else_head, *pre))
+    if(dom_tree->dominates(else_head, *pre) && from->getBlockID() < (*pre)->getBlockID())
       else_end = *pre;
   }
 
