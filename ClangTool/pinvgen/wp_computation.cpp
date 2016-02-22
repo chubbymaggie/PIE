@@ -189,7 +189,7 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
                            const DominatorTree* dom_tree,
                            CFGReverseBlockReachabilityAnalysis *reachables) {
 
-  //errs() << "\n   wp of Subgraph from B" << from->getBlockID() << " to B" << to->getBlockID() << "\n";
+  // errs() << "\n   wp of Subgraph from B" << from->getBlockID() << " to B" << to->getBlockID() << "\n";
 
   if(from == to) {
     return wpOfBlock(pred, from, cfg, dom_tree, reachables);
@@ -253,9 +253,15 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
 
   pred = wpOfBlock(pred, from, cfg, dom_tree, reachables);
 
+  /*
+  errs() << "    [!] IF @ " << if_head->getBlockID()
+         << " THEN @ [" << then_head->getBlockID() << "," << then_end ? then_end->getBlockID() : "NULL" << "]"
+         << " ELSE @ [" << else_head->getBlockID() << "," << else_end ? else_end->getBlockID() : "NULL" << "]\n";
+  */
+
   return wpOfSubgraph(
       {"&", {
-          {"|", {wpOfSubgraph(pred, then_end, then_head, cfg, dom_tree, reachables), ncond}},
+          {"|", {then_end == nullptr ? pred : wpOfSubgraph(pred, then_end, then_head, cfg, dom_tree, reachables), ncond}},
           {"|", {else_end == nullptr ? pred : wpOfSubgraph(pred, else_end, else_head, cfg, dom_tree, reachables), cond}}}},
       if_head, to, cfg, dom_tree, reachables);
 }

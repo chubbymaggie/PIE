@@ -107,20 +107,23 @@ PredicateNode abduce(PredicateNode query, string loopId) {
 void checkValidity(CFG *cfg,
                    DominatorTree *dom_tree,
                    CFGReverseBlockReachabilityAnalysis *reachables) {
-
   while (1) {
     guesses.clear();
+
     PredicateNode wp = wpOfSubgraph({"true", {}}, &(cfg->getExit()), &(cfg->getEntry()), cfg, dom_tree, reachables);
     errs() << "\n   # Verification@Precondition: " << PredicateNode2MCF(wp);
+
     if (chkVALID(wp, true)) {
       errs() << " is valid!\n";
-      errs() << "\n\n[###] Final invariants: [###]\n";
-      for (const auto & guess : guesses) {
-        errs() << "Loop #" << guess.getKey() << ": " << PredicateNode2MCF(guess.getValue()) << '\n';
-      }
-      return;
+      break;
     }
+
     errs() << " is not valid!\n";
     errs() << "\n----------------------------------< RESTART >-----------------------------------\n";  
+  }
+
+  errs() << "\n\n[###] Final invariants: [###]\n";
+  for (const auto & guess : guesses) {
+    errs() << "Loop #" << guess.getKey() << ": " << PredicateNode2MCF(guess.getValue()) << '\n';
   }
 }

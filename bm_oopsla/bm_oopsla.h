@@ -104,7 +104,7 @@ void set_init_values(std::string args, int argc, char* argv[]) {
           fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());               \
           auto PRINT_VARS = [&]() {                                         \
             fprintf(OUTPUT_STREAM, rep<count>("%d").c_str(), args);         \
-          };                                                                \
+          };
 
 template <unsigned int N>
 std::string rep(const std::string str) { return str + " \t " + rep<N-1>(str); }
