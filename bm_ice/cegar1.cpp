@@ -11,7 +11,7 @@ int main(int argc, char * argv[]) {
 
   INIT_input(unknown1);
 
-  while (input) {
+  while (input != 0) {
     PRINT_VARS();
     x = x + 2;
     y = y + 2;

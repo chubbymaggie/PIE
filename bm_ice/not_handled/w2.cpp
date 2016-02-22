@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
         break;
       }
     }
-    input = __VERIFIER_nondet_int();
+    input = unknown1();
   }
 
   assert(x == n);

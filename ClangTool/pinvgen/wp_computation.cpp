@@ -37,10 +37,10 @@ PredicateNode wpOfVarDecl(PredicateNode pred, const VarDecl *vdecl) {
 PredicateNode wpOfCallExpr(PredicateNode pred, const CallExpr *call) {
   const FunctionDecl *fd = call->getDirectCallee();
   if(!fd) return pred;
-  
+
   IdentifierInfo *FnInfo = fd->getIdentifier();
   if (!FnInfo) return pred;
-  
+
   if(FnInfo->isStr("assert") || FnInfo->isStr("static_assert"))
     return {"&", {pred, Expr2PredicateNode(const_cast<Expr*>(call->getArg(0)->IgnoreCasts()))}};
   if(FnInfo->isStr("assume"))
@@ -120,17 +120,20 @@ PredicateNode wpOfBlock(PredicateNode pred,
                         CFG *cfg,
                         const DominatorTree* dom_tree,
                         CFGReverseBlockReachabilityAnalysis *reachables) {
-  
+
   //errs() << "\n   wp of Block B" << block->getBlockID() << "\n";
 
-  for(CFGBlock::const_pred_iterator end_loop = block->pred_begin(), epre = block->pred_end(); end_loop != epre; ++end_loop)
+  /* If current block has a loop head */
+  for(CFGBlock::const_pred_iterator end_loop = block->pred_begin(), epre = block->pred_end(); end_loop != epre; ++end_loop) {
     if (dom_tree->dominates(block, *end_loop)) {
       CFGBlock *loop_head = block;
       string currentLoopId = loopId;
-      Expr *guard_expr = dyn_cast<Expr>(loop_head -> getTerminatorCondition(false));
       errs() << "\n   + Found guard in B" << loop_head->getBlockID() << " for loop #" << currentLoopId << "\n";
+      errs() << "\n     - post_" << currentLoopId << " : " << PredicateNode2MCF(pred) << "\n";
+
       PredicateNode guard;
       PredicateNode nguard;
+      Expr *guard_expr = dyn_cast<Expr>(loop_head -> getTerminatorCondition(false));
       if (isUnknownFunction(guard_expr)) {
         guard = PredicateNode {"false", {}};
         nguard = PredicateNode {"false", {}};
@@ -140,30 +143,38 @@ PredicateNode wpOfBlock(PredicateNode pred,
         nguard = {"!", {guard}};
         errs() << "     - guard : " << PredicateNode2MCF(guard) << "\n";
       }
-      CFGBlock* start_loop = *(loop_head->succ_begin());
-      errs() << "\n   Post condition of loop #" << currentLoopId << ": " << PredicateNode2MCF(pred) << "\n";
+
       PredicateNode verif = {"|", {guard, pred}};
       PredicateNode inv = simplify(abduce(verif, currentLoopId));
       errs() << "\n   # Invariant@Postcondition: " << PredicateNode2MCF(inv) << "\n";
+
+      CFGBlock* start_loop = *(loop_head->succ_begin());
       while (1) {
         PredicateNode wp = wpOfSubgraph(inv, *end_loop, start_loop, cfg, dom_tree, reachables);
         verif = {"|", {{"!", {inv}}, nguard, wp}};
         errs() << "\n   # Verification@Inductivecondition: " << PredicateNode2MCF(verif);
+
         if (chkVALID(verif, false)) {
           errs() << " is valid!\n";
           break;
         }
         errs() << " is not valid!\n";
+
         inv = simplify({"&", {abduce(verif, currentLoopId), inv}});
         errs() << "\n   # Invariant@Inductivecondition: " << PredicateNode2MCF(inv) << "\n";
       }
+
       guesses[currentLoopId] = inv;
       return inv;
     }
+  }
+
+  /* Otherwise, current block is loop-free */
   for(CFGBlock::const_reverse_iterator bi = block->rbegin(); bi != block->rend(); ++bi)
     if(Optional<CFGStmt> cs = bi->getAs<CFGStmt>())
       if(const Stmt *stmt = cs->getStmt())
         pred = wpOfStmt(pred, stmt);
+
   return pred;
 }
 
@@ -177,9 +188,9 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
                            CFG *cfg,
                            const DominatorTree* dom_tree,
                            CFGReverseBlockReachabilityAnalysis *reachables) {
-  
+
   //errs() << "\n   wp of Subgraph from B" << from->getBlockID() << " to B" << to->getBlockID() << "\n";
-  
+
   if(from == to) {
     return wpOfBlock(pred, from, cfg, dom_tree, reachables);
   }
@@ -229,7 +240,7 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
 
   CFGBlock* then_head = *(if_head->succ_begin());
   CFGBlock* else_head = *(if_head->succ_begin() + 1);
-  //errs() << "\n   Found if B" << if_head->getBlockID() << " then B" << then_head->getBlockID() << " else B" << else_head->getBlockID() << "\n";
+
   CFGBlock* then_end = nullptr;
   CFGBlock* else_end = nullptr;
 
@@ -239,7 +250,7 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
     if(dom_tree->dominates(else_head, *pre))
       else_end = *pre;
   }
-  
+
   pred = wpOfBlock(pred, from, cfg, dom_tree, reachables);
 
   return wpOfSubgraph(
