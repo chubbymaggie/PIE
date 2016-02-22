@@ -45,18 +45,18 @@ int unknown1() { return unknown(); }
 int unknown2() { return unknown(); }
 int unknown3() { return unknown(); }
 
-int unknownu() { return uni_rand_interval(0, RAND_HIGH); }
-
-int unknown0to2() { return uni_rand_interval(0, 2); }
-
 // A boolean unknown function
 int unknown4() { return uni_rand_interval(0, 1); }
 
 void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
 void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
+void PRINT_BAR(int loopId) { fprintf(stdout, "---%d---\n", loopId); }
 
 #define OUTPUT_STREAM stdout
 
+#define _FE_12(TASK, arg0, args...) TASK(arg0) _FE_11(TASK, args)
+#define _FE_11(TASK, arg0, args...) TASK(arg0) _FE_10(TASK, args)
+#define _FE_10(TASK, arg0, args...) TASK(arg0) _FE_9(TASK, args)
 #define _FE_9(TASK, arg0, args...)  TASK(arg0) _FE_8(TASK, args)
 #define _FE_8(TASK, arg0, args...)  TASK(arg0) _FE_7(TASK, args)
 #define _FE_7(TASK, arg0, args...)  TASK(arg0) _FE_6(TASK, args)
@@ -104,7 +104,7 @@ void set_init_values(std::string args, int argc, char* argv[]) {
           fprintf(OUTPUT_STREAM, "%s\n", ___vars___.c_str());               \
           auto PRINT_VARS = [&]() {                                         \
             fprintf(OUTPUT_STREAM, rep<count>("%d").c_str(), args);         \
-          }
+          };                                                                \
 
 template <unsigned int N>
 std::string rep(const std::string str) { return str + " \t " + rep<N-1>(str); }

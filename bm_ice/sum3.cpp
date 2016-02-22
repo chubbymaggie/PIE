@@ -6,8 +6,8 @@ int main(int argc, char * argv[]) {
   x = 0;
   sn = 0;
 
-  INIT_n1(unknownu);
-  INIT_loop1(unknownu);
+  INIT_n1(unknown);
+  INIT_loop1(unknown);
 
   while(1){
     PRINT_VARS();

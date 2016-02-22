@@ -3,10 +3,10 @@
 int main(int argc, char * argv[]) {
   RECORD(3, x, y, input);
 
-  INIT_x(unknown0to2);
+  INIT_x(unknown);
   assume(0 <= x && x <= 2);
 
-  INIT_y(unknown0to2);
+  INIT_y(unknown);
   assume(0 <= y && y <= 2);
 
   INIT_input(unknown1);
