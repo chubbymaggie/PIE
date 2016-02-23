@@ -14,6 +14,7 @@ int main(int argc, char * argv[]) {
   }
   PRINT_VARS();
 
-  assert(k > 0);
+  assume(j >= n);
+  assert(k > -1);
   return 0;
 }

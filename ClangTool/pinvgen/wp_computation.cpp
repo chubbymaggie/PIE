@@ -255,8 +255,8 @@ PredicateNode wpOfSubgraph(PredicateNode pred,
 
   /*
   errs() << "    [!] IF @ " << if_head->getBlockID()
-         << " THEN @ [" << then_head->getBlockID() << "," << then_end ? then_end->getBlockID() : "NULL" << "]"
-         << " ELSE @ [" << else_head->getBlockID() << "," << else_end ? else_end->getBlockID() : "NULL" << "]\n";
+         << " THEN @ [" << then_head->getBlockID() << "," << (then_end ? then_end->getBlockID() : -1) << "]"
+         << " ELSE @ [" << else_head->getBlockID() << "," << (else_end ? else_end->getBlockID() : -1) << "]\n";
   */
 
   return wpOfSubgraph(

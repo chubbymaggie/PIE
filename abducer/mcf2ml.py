@@ -149,7 +149,7 @@ if __name__ == "__main__":
     print("\n\nlet f = fun (%s) -> %s" % (','.join(uvars), ml))
     print("\nlet f_tests () = generate ~n:%d (n_arg_gen %s)" % (RAND_TEST_COUNT, ' '.join(('string' if v in string_vars else 'sint') for v in uvars)))
     print("\nlet f_dumper = n_arg_dumper %s" % (' '.join(('string_dumper' if v in string_vars else 'int_dumper') for v in uvars)))
-    print("\nlet consts = [%s]" % ('; '.join("VString %s" % c if type(c) is str else "VInt %d" % c for c in uniq_consts)))
+    print("\nlet consts = [%s]" % ('; '.join("VString (%s)" % c if type(c) is str else "VInt (%d)" % c for c in uniq_consts)))
     if NO_DEF_FEATURES:
         print("\nlet def_features = []")
     else:

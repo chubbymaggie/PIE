@@ -5,7 +5,7 @@ import sys
 
 if __name__ == "__main__":
     with open(sys.argv[1], 'r') as f:
-        content = ''
+        content = []
         loopid = '1'
         header = f.readline()
         varcount = len(header.split())
@@ -18,13 +18,13 @@ if __name__ == "__main__":
                         with open(tests_name, 'w') as tf:
                             tf.write(header)
                     with open(tests_name, 'a') as tf:
-                        tf.write(content)
+                        tf.write(''.join(content))
                     with open('loopids', 'a') as lf:
                         lf.write(loopid + '\n')
-                    content = ''
+                    content = []
             else:
                 if len(line.split()) == varcount:
-                    content = content + line
+                    content.append(line)
                 # else ignore bad (partial) line
         if (len(content) > 0):
             tests_name = sys.argv[1] + '_' + loopid
@@ -32,6 +32,6 @@ if __name__ == "__main__":
                 with open(tests_name, 'w') as tf:
                     tf.write(header)
             with open(tests_name, 'a') as tf:
-                tf.write(content)
+                tf.write(''.join(content))
             with open('loopids', 'a') as lf:
                 lf.write(loopid + '\n')

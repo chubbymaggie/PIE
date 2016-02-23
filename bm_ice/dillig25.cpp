@@ -28,8 +28,9 @@ int main(int argc, char* argv[]) {
     } else
       y++;
   }
+  PRINT_VARS();
   PRINT_BAR(1);
 
-  assert(i > j);
+  assert(i > j - 1);
   return 0;
 }

@@ -21,5 +21,5 @@ int main(int argc, char * argv[]) {
   }
   PRINT_VARS();
 
-  assert(j > i + 1);
+  assert(j > i - 1);
 }

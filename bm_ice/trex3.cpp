@@ -7,6 +7,8 @@ int main(int argc, char * argv[]) {
   INIT_x2(unknown);
   INIT_x3(unknown);
 
+  assume(x1 >= 0 && x2 >= 0 && x3 >= 0);
+
   d1 = 1;
   d2 = 1;
   d3 = 1;
