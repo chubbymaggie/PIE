@@ -19,25 +19,6 @@ void copyTests(const string loopId) {
 }
 
 PredicateNode getAbductionResultFor(const PredicateNode pred) {
-  /* See if the abduction query has no variable */
-  string mcf = "(" + PredicateNode2MCF(pred) + ")";
-  string var = "";
-  bool novar = true;
-  for (auto c : mcf) {
-    if (c == '_' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9' && var.length() > 0)) {
-      var += c;
-    } else {
-      if (var.length() > 0 && var != "true" && var != "false") {
-        novar = false;
-        break;
-      }
-      var = "";
-    }
-  }
-  if (novar) {
-    return chkVALID(pred, false) ? PredicateNode {"true", {}} : PredicateNode {"false", {}};
-  }
-
   string target = WORKING_PATH + "/" + to_string(++COUNT) + "A" + to_string(++ABDUCTION_COUNT) + ".mcf";
   {
     ofstream mcf_file(target);
