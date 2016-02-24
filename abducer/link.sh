@@ -21,11 +21,9 @@ ln -fs "$ROOT/../base/testGen.ml"     testGen.ml
 ln -fs "$ROOT/../base/preprocess.py"  preprocess
 
 # Solvers:
-#
-#  Z3             : (z3)
-#  CVC4           : (cvc4)
-#  Z3-Str2 + CVC4 : (hybrid)
 
+#SOLVER="z3"
+#SOLVER="cvc4"
 SOLVER="hybrid"
 
 ln -fs "$ROOT/../$SOLVER/chkSAT.py"      chkSAT

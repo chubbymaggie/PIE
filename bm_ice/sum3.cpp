@@ -9,7 +9,7 @@ int main(int argc, char * argv[]) {
   INIT_n1(unknown);
   INIT_loop1(unknown);
 
-  while(1){
+  while(true) {
     PRINT_VARS();
     sn = sn + 1;
     x++;

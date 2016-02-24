@@ -50,12 +50,12 @@ class InvariantGenerator : public MatchFinder::MatchCallback {
           StringRef main_path = Result.SourceManager->getFilename(fd->getLocation());
           MAIN_FILENAME = main_path.drop_front(main_path.rfind('/') + 1).str();
 
-          CFG *cfg = mgr.getCFG(fd);
+          CFG *cfg = mgr.getAnalysisDeclContext(fd)->getUnoptimizedCFG();
           CFGReverseBlockReachabilityAnalysis *reachables =
               mgr.getAnalysisDeclContext(fd)->getCFGReachablityAnalysis();
 
           DominatorTree dom_tree;
-          dom_tree.buildDominatorTree(*mgr.getAnalysisDeclContext(fd));
+          dom_tree.DT->recalculate(*cfg);
 
           checkValidity(cfg, &dom_tree, reachables);
 

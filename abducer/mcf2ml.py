@@ -145,7 +145,7 @@ if __name__ == "__main__":
     print("open TestGen")
     print("\n\nlet index_of = fun s0 s1 -> try (BatString.find s0 s1) with Not_found -> (-1)")
     print("\n\nlet n_arg_gen %s = (fun rand -> (%s))" % (' '.join('g%d' % i for i in range(len(uvars))), ', '.join('g%d rand' % i for i in range(len(uvars)))))
-    print("\n\nlet n_arg_dumper %s (%s) = \"(\" ^ %s ^ \")\"" % (' '.join('d%d' % i for i in range(len(uvars))), ', '.join('v%d' % i for i in range(len(uvars))), ' ^ ", " ^ '.join('(d%d v%d)' % (i, i) for i in range(len(uvars)))))
+    print("\n\nlet n_arg_dumper %s (%s) = \"(\" ^ %s %s\")\"" % (' '.join('d%d' % i for i in range(len(uvars))), ', '.join('v%d' % i for i in range(len(uvars))), ' ^ ", " ^ '.join('(d%d v%d)' % (i, i) for i in range(len(uvars))), "^" if len(uvars) > 0 else ""))
     print("\n\nlet f = fun (%s) -> %s" % (','.join(uvars), ml))
     print("\nlet f_tests () = generate ~n:%d (n_arg_gen %s)" % (RAND_TEST_COUNT, ' '.join(('string' if v in string_vars else 'sint') for v in uvars)))
     print("\nlet f_dumper = n_arg_dumper %s" % (' '.join(('string_dumper' if v in string_vars else 'int_dumper') for v in uvars)))
@@ -162,7 +162,7 @@ if __name__ == "__main__":
         print("\nlet tests = %s" % genTests())
     print("\n\nlet typo = [ %s ]" % (' ; '.join(('TString' if v in string_vars else 'TInt') for v in uvars)))
     print("\nlet trans = fun (%s) -> [ %s ]" % (','.join(uvars), ' ; '.join(('of_string ' if v in string_vars else 'of_int ') + v for v in uvars)))
-    print("\nlet test_trans = fun (l) -> List.(%s)" % ' , '.join(('(%s (nth l %d))' % (('from_string' if v in string_vars else 'from_int'), i)) for (i,v) in enumerate(uvars)))
+    print("\nlet test_trans = fun (l) -> (%s)" % ' , '.join(('(%s (List.nth l %d))' % (('from_string' if v in string_vars else 'from_int'), i)) for (i,v) in enumerate(uvars)))
     if ESCHER_MODE:
         print("\n\n\nlet () = output_string stdout (snd (escherSynthAndVerify ~dump:(\"%s\", f_dumper) ~record:\"%s\" ~consts:consts f tests post_cond (typo, trans) test_trans \"%s\"))" % (sys.argv[1], sys.argv[2], sys.argv[1]))
     else:
