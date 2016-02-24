@@ -146,13 +146,13 @@ PredicateNode wpOfBlock(PredicateNode pred,
 
       PredicateNode verif = {"|", {guard, pred}};
       PredicateNode inv = simplify(abduce(verif, currentLoopId));
-      errs() << "\n   # Invariant@Postcondition: " << PredicateNode2MCF(inv) << "\n";
+      errs() << "\n   # Loop_" << currentLoopId << " | Invariant @ Postcondition: " << PredicateNode2MCF(inv) << "\n";
 
       CFGBlock* start_loop = *(loop_head->succ_begin());
       while (1) {
         PredicateNode wp = wpOfSubgraph(inv, *end_loop, start_loop, cfg, dom_tree, reachables);
         verif = {"|", {{"!", {inv}}, nguard, wp}};
-        errs() << "\n   # Verification@Inductivecondition: " << PredicateNode2MCF(verif);
+        errs() << "\n   # Loop_" << currentLoopId <<" | Inductive Check: " << PredicateNode2MCF(verif);
 
         if (chkVALID(verif, false)) {
           errs() << " is valid!\n";
@@ -161,7 +161,7 @@ PredicateNode wpOfBlock(PredicateNode pred,
         errs() << " is not valid!\n";
 
         inv = simplify({"&", {abduce(verif, currentLoopId), inv}});
-        errs() << "\n   # Invariant@Inductivecondition: " << PredicateNode2MCF(inv) << "\n";
+        errs() << "\n   # Loop_" << currentLoopId << " | Invariant @ Inductive Condition: " << PredicateNode2MCF(inv) << "\n";
       }
 
       guesses[currentLoopId] = inv;

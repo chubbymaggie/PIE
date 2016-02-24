@@ -111,7 +111,7 @@ void checkValidity(CFG *cfg,
     guesses.clear();
 
     PredicateNode wp = wpOfSubgraph({"true", {}}, &(cfg->getExit()), &(cfg->getEntry()), cfg, dom_tree, reachables);
-    errs() << "\n   # Verification@Precondition: " << PredicateNode2MCF(wp);
+    errs() << "\n   # Precondition Check: " << PredicateNode2MCF(wp);
 
     if (chkVALID(wp, true)) {
       errs() << " is valid!\n";
