@@ -21,6 +21,7 @@ type truthAssignment = (int, bool) BatHashtbl.t
 exception NoSuchFunction
 exception BadCounterExample
 
+let good_tests = ref 0
 let conflict_counter = ref 0
 let record_file = ref ""
 
@@ -432,25 +433,27 @@ let missingFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features 
     ~postcondition:((postcond, desc) : ('a -> 'b result -> bool) * 'c) =
   (* map each test input to its vector of feature booleans *)
   let examples =
-    BatList.map
-      (fun arg ->
+    BatList.mapi
+      (fun index arg ->
 	 (* if a feature throws an exception treat it as if the feature returns false *)
-	 (arg, (BatList.mapi (fun index (p,_) -> (index + 1, try p arg with _ -> false)) features))) tests in
+	 (index, arg, (BatList.mapi (fun index (p,_) -> (index + 1, try p arg with _ -> false)) features))) tests in
 
-  let grouped = BatList.group (fun (arg1,ex1) (arg2,ex2) -> compare ex1 ex2) examples in
+  let grouped = BatList.group (fun (i1, arg1,ex1) (i2, arg2,ex2) -> compare ex1 ex2) examples in
 
   (* filter out groups of size 1 *)
   let grouped = BatList.filter (fun l -> (BatList.length l) > 1) grouped in
 
   (* compute the result value and associated postcondition truth value for each argument in a group *)
   let addPost = BatList.map (fun group ->
-    BatList.map (fun (arg, ex) -> let res = BatResult.catch f arg in
+    BatList.map (fun (i, arg, ex) ->
+      (if (i >= (List.length tests - (!good_tests))) then (arg, (BatResult.catch f arg), ex, true) else
+      let res = BatResult.catch f arg in
 				  try
 				    let post = postcond arg res in
 				    (arg, res, ex, post)
 				  with
 				      _ ->
-					(arg, res, ex, false)) group) grouped in
+					(arg, res, ex, false))) group) grouped in
 
   (* only keep the groups that have a conflict on the postcondition's truth value *)
   let filtered =
@@ -581,14 +584,18 @@ let pacLearnSpec ?(k=3) ?(strengthen=false) (f : 'a -> 'b) ~tests:(tests : 'a li
 	 BatList.mapi (fun index (p,_) -> (index + 1, try p arg with _ -> false)) features) tests in
 
   (* run all the tests to get their outputs *)
-  let testResults = BatList.map (fun test -> (test, BatResult.catch f test)) tests in
+  let testResults = BatList.mapi (fun i test -> (i, test, BatResult.catch f test)) tests in
 
 
   let pacLearnOne (postcond, str) =
 
   (* separate the tests into positive and negative examples *)
     let (pos, neg) =
-      BatList.fold_left2 (fun (l1,l2) (arg, res) ex -> try if postcond arg res then (ex::l1,l2) else (l1,ex::l2) with IgnoreTest -> (l1,l2) | _ -> (l1,ex::l2))
+      BatList.fold_left2 (fun (l1,l2) (i, arg, res) ex ->
+        try if ((i >= (List.length tests - (!good_tests))) || postcond arg res)
+            then (ex::l1,l2)
+            else (l1,ex::l2)
+        with IgnoreTest -> (l1,l2) | _ -> (l1,ex::l2))
         ([],[]) testResults examples in
       
     (* remove duplicates *)
@@ -696,6 +703,7 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
 
     (* We would never have IgnoreTest exception in this case *)
 
+  (if (!good_tests < 1) then (good_tests := List.length tests) else ());
   record_file := record;
   (if fst dump = "" then () else (
     conflict_counter := 0;
