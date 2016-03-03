@@ -3,8 +3,8 @@
 int main(int argc, char * argv[]) {
   RECORD(4, x, y, i, j);
 
-  INIT_i(unknown);
-  INIT_j(unknown);
+  INIT_i(unknownu);
+  INIT_j(unknownu);
   assume(i >= 0 && j >= 0);
 
   x = i;

@@ -3,9 +3,9 @@
 int main(int argc, char * argv[]) {
   RECORD(8, x1, x2, x3, d1, d2, d3, c1, c2);
 
-  INIT_x1(unknown);
-  INIT_x2(unknown);
-  INIT_x3(unknown);
+  INIT_x1(unknownu);
+  INIT_x2(unknownu);
+  INIT_x3(unknownu);
 
   assume(x1 >= 0 && x2 >= 0 && x3 >= 0);
 

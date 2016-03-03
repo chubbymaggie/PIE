@@ -14,7 +14,7 @@ using namespace std;
 StringMap<PredicateNode> guesses;
 
 void copyTests(const string loopId) {
-  string command = "cp " + WORKING_PATH + "/tests_" + loopId + " " + WORKING_PATH + "/final_tests";
+  string command = "ln -fs " + WORKING_PATH + "/tests_" + loopId + " " + WORKING_PATH + "/final_tests";
   system(command.c_str());
 }
 

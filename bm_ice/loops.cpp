@@ -4,7 +4,7 @@ int main(int argc, char* argv[])
 {
   RECORD(3, s, x, y);
 
-  INIT_x(unknown);
+  INIT_x(unknownu);
   assume(x >= 0);
 
   INIT_y(unknown);

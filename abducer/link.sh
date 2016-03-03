@@ -31,8 +31,9 @@ ln -fs "$ROOT/../$SOLVER/chkVALID.py"    chkVALID
 ln -fs "$ROOT/../$SOLVER/simplify.py"    simplify
 ln -fs "$ROOT/../$SOLVER/verify.py"      verify
 
-ln -fs "$ROOT/mcf2ml.py"          mcf2ml
-ln -fs "$ROOT/mcf2xml.py"         mcf2xml
-ln -fs "$ROOT/var_repl.py"        var_replace
-ln -fs "$ROOT/add_counter.py"     add_counter
-ln -fs "$ROOT/separate_tests.py"  separate_tests
+ln -fs "$ROOT/mcf2ml.py"           mcf2ml
+ln -fs "$ROOT/mcf2xml.py"          mcf2xml
+ln -fs "$ROOT/var_repl.py"         var_replace
+ln -fs "$ROOT/add_counter.py"      add_counter
+ln -fs "$ROOT/remove_ambiguous.py" remove_ambiguous
+ln -fs "$ROOT/separate_tests.py"   separate_tests

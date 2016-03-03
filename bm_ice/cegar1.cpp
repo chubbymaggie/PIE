@@ -3,14 +3,15 @@
 int main(int argc, char * argv[]) {
   RECORD(3, x, y, input);
 
-  INIT_x(unknown);
+  INIT_x(unknownu);
   assume(0 <= x && x <= 2);
 
-  INIT_y(unknown);
+  INIT_y(unknownu);
   assume(0 <= y && y <= 2);
 
   INIT_input(unknown1);
 
+  printf("1\n");
   while (input != 0) {
     PRINT_VARS();
     x = x + 2;

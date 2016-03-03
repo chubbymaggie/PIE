@@ -6,7 +6,7 @@ int main(int argc, char * argv[]) {
   i = 0;
   j = 0;
 
-  INIT_n(unknown1);
+  INIT_n(unknownu);
   assume(n >= 0);
 
   while (i < n) {

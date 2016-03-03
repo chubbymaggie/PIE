@@ -3,10 +3,10 @@
 int main(int argc, char * argv[]) {
   RECORD(4, x, y, n, m);
 
-  INIT_n(unknown1);
+  INIT_n(unknownu);
   assume(n >= 0);
 
-  INIT_m(unknown1);
+  INIT_m(unknownu);
   assume(m >= 0 && m < n);
 
   x = 0;

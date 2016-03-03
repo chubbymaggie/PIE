@@ -3,7 +3,7 @@
 int main(int argc, char * argv[]) {
   RECORD(2, n, x);
 
-  INIT_n(unknown);
+  INIT_n(unknownu);
   assume(n >= 0);
 
   x = 0;

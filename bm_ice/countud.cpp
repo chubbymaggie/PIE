@@ -3,8 +3,8 @@
 int main(int argc, char * argv[]) {
   RECORD(3, n, x, y);
 
-  INIT_n(unknown);
-  assume(n >= 0); // unsigned
+  INIT_n(unknownu);
+  assume(n >= 0);
 
   x = n;
   y = 0;

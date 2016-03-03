@@ -3,10 +3,11 @@
 int main(int argc, char * argv[]) {
   RECORD(4, i, j, k, n);
 
-  INIT_i(unknown);
-  INIT_k(unknown);
-  INIT_n(unknown);
+  INIT_k(unknownu);
+  INIT_n(unknownu);
   assume(k >= n && n >= 1);
+
+  INIT_i(unknown1);
 
   j = 0;
   while (j <= n - 1) {

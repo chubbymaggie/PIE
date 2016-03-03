@@ -44,6 +44,7 @@ int unknown() {
 int unknown1() { return unknown(); }
 int unknown2() { return unknown(); }
 int unknown3() { return unknown(); }
+int unknownu() { return uni_rand_interval(0, RAND_HIGH); }
 
 // A boolean unknown function
 int unknown4() { return uni_rand_interval(0, 1); }

@@ -465,6 +465,9 @@ let missingFeatures (f : 'a -> 'b) ~tests:(tests : 'a list) ~features:(features 
   filtered
 
 
+exception Ambiguous_test of value list
+
+
 let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -> 'b)
                   (missing_features : ('a * ('b, exn) BatResult.t * (int * bool) list * bool) list)
                   (postcond: ('a -> 'b result -> bool) * 'c) (trans: typ list * ('a -> value list))
@@ -473,7 +476,10 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -
     if missing_features = [] then []
     else (
         let tab = BatHashtbl.create (List.length missing_features) in
-            BatList.iter (fun (i, _, _, b) -> BatHashtbl.add tab ((snd trans) i) (VBool b)) missing_features;
+            BatList.iter (fun (i, _, _, b) ->
+              try (if (BatHashtbl.find tab ((snd trans) i)) <> (VBool b) then raise (Ambiguous_test ((snd trans) i)))
+              with Not_found -> BatHashtbl.add tab ((snd trans) i) (VBool b)) missing_features;
+            prerr_string "\r    [%] Removing conflicts ... "; flush_all();
             if fname = "" then () else (
               let conflict_log = open_out (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
                 output_string conflict_log "\nData::\n";
@@ -713,9 +719,14 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
       close_out test_file));
 
   let rec helper k unsats tests features = (
-    prerr_string "\r    [%] Removing conflicts ... "; flush_all();
-    let features = if fst trans = [] then features
-                   else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps f tests features post trans in
+    let features =
+      if fst trans = [] then features
+      else (try convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps f tests features post trans
+            with Ambiguous_test(value_list) ->
+              let ambiguous_out = open_out("ambiguous") in
+              print_data ambiguous_out (VList(value_list));
+              close_out ambiguous_out; [])
+    in
 
     if missingFeatures f tests features post <> [] then None else (
       let res = fst (pacLearnSpec ~k:k f ~tests:tests ~features:features post) in
