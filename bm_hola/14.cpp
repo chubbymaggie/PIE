@@ -9,7 +9,7 @@ int main(int argc, char * argv[]) {
   a = 0;
   for (j = 1; j <= m; j++) {
     PRINT_VARS();
-    if (unknown1())
+    if (unknown4())
       a++;
     else
       a--;

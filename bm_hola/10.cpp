@@ -17,7 +17,7 @@ int main(int argc, char * argv[]) {
     };
     if (z == 0) {
       y++;
-      z = 0;
+      z = 1;
     };
   }
   PRINT_VARS();

@@ -8,6 +8,9 @@ int main(int argc, char * argv[]) {
   INIT_y(unknown);
   assume((x + y) == k);
 
+  INIT_i(unknown);
+  INIT_n(unknown);
+
   m = 0;
   j = 0;
   while (j < n) {

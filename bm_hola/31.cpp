@@ -13,7 +13,7 @@ int main(int argc, char * argv[]) {
 
     for (j = i; j < m;) {
       PRINT_VARS();
-      PRINT_BAR(1);
+      PRINT_BAR(2);
 
       if (unknown1()) {
         assert(j >= 0);
@@ -21,8 +21,6 @@ int main(int argc, char * argv[]) {
         k = 0;
         while (k < j) {
           PRINT_VARS();
-          PRINT_BAR(3);
-
           k++;
         }
         PRINT_VARS();

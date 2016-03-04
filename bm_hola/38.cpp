@@ -6,6 +6,7 @@ int main(int argc, char * argv[]) {
   x = 0;
   y = 0;
   i = 0;
+  INIT_n(unknown);
 
   while (i < n) {
     PRINT_VARS();
