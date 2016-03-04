@@ -1,3 +1,5 @@
+#include <assert.h>
+
 int unknown1();
 int unknown2();
 int unknown3();
@@ -38,7 +40,7 @@ void main(){
     } else {
       break;
     }
-  }
+    }
   return 0;
 
 }

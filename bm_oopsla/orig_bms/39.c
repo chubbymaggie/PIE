@@ -1,3 +1,4 @@
+//#include <assert.h>
 int __BLAST_NONDET;
 int MAXPATHLEN;
 int unknown();

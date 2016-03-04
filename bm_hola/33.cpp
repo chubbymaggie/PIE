@@ -1,9 +1,9 @@
 #include "bm_oopsla.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char * argv[]) {
   RECORD(5, c, k, x, y, z);
 
-  INIT_k(unknown1);
+  INIT_k(unknown);
 
   z = k;
   x = 0;
@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
 
     while (unknown3()) {
       PRINT_VARS();
+
       x--;
       y--;
     }
@@ -44,5 +45,4 @@ int main(int argc, char* argv[]) {
   PRINT_BAR(1);
 
   assert(x == y);
-  return 0;
 }
