@@ -718,48 +718,21 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
       List.iter (fun t -> output_string test_file (((snd dump) t) ^ "\n")) tests;
       close_out test_file));
 
-  let rec helper k unsats tests features = (
-    let features =
+  let rec helper unsats tests = (
+    let nfeatures =
       if fst trans = [] then features
       else (try convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps f tests features post trans
             with Ambiguous_test(value_list) ->
               let ambiguous_out = open_out("ambiguous") in
               print_data ambiguous_out (VList(value_list));
               close_out ambiguous_out; [])
-    in
-
-    if missingFeatures f tests features post <> [] then None else (
-      let res = fst (pacLearnSpec ~k:k f ~tests:tests ~features:features post) in
-      if res = None then (
-        helper (k + 1) unsats tests features
-      (* TODO: res is FALSE, add new model ::
-        let mtests = missingTests tests features ~incompatible:unsats in
-          if mtests = None then res
-          else (
-            let Some missing = mtests in
-            let our_output = open_out (smtfile ^ ".xour") in
-              output_string our_output (fst missing) ;
-              close_out our_output ;
-              Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
-              Sys.command ("./chkSAT " ^ smtfile ^ ".your > " ^ smtfile ^ ".zour ") ;
-              let res_file = open_in (smtfile ^ ".zour") in
-                if input_line res_file = "UNSAT"
-                then (close_in res_file ;
-                      let fvector = Array.mapi (fun i _ -> (i+1, false)) (Array.create (List.length features) (0, false)) in
-                        BatList.fold_left (fun _ f -> match f with Pos i -> fvector.(i-1) <- (i, true) | _ -> ()) () (snd missing);
-                        pacLearnSpecAndVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:((Array.to_list fvector)::unsats))
-                else (close_in res_file ;
-                      Sys.command("./var_replace revVals " ^ smtfile ^ ".tml " ^ (string_of_int (List.length (fst trans))) ^ " < " ^ smtfile ^ ".zour > " ^ smtfile ^ ".our") ;
-                      let res_file = open_in (smtfile ^ ".our") in
-                        let tests = (trans_test (List.map (fun _ -> int_of_string (input_line res_file)) (fst trans))) :: tests in
-                          (close_in res_file ;
-                           pacLearnSpecAndVerify ~k:k f tests features post trans iconsts trans_test smtfile ~unsats:unsats))) *)
-      ) else (
+    in if missingFeatures f tests nfeatures post <> [] then None else (
+      let res = fst (pacLearnSpecIncrK ~k:k f tests nfeatures post) in
         let our_output = open_out (smtfile ^ ".xour") in
           print_cnf our_output res ;
           close_out our_output ;
           Sys.command ("./var_replace " ^ smtfile ^ ".tml < " ^ smtfile ^ ".xour > " ^ smtfile ^ ".your") ;
-          prerr_string ("\r    [?] Verifying [k = " ^ (string_of_int k) ^ "] --- ");
+          prerr_string ("\r    [?] Verifying --- ");
           let candidate = open_in (smtfile ^ ".your") in (prerr_string (input_line candidate) ; close_in candidate);
           prerr_string "                            \n" ; flush_all();
           Sys.command ("./verify " ^ smtfile ^ ".your " ^ smtfile ^ " 1 0 " ^ !record_file ^ " > " ^ smtfile ^ ".zour") ;
@@ -771,5 +744,5 @@ let rec pacLearnSpecAndVerify ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(
                   let args = (List.map (fun vtyp -> let data = input_line res_file in match vtyp with TInt -> VInt(int_of_string data) | TString -> VString(data)) (fst trans)) in
                   prerr_string "      [+] Added test ... "; print_data stderr (VList(args)); prerr_string "\n";
                   close_in res_file;
-                  if f (trans_test args) then raise BadCounterExample else (helper 1 unsats ((trans_test args) :: tests) features)))))
-  in helper k unsats tests features
+                  if f (trans_test args) then raise BadCounterExample else (helper unsats ((trans_test args) :: tests)))))
+  in helper unsats tests
