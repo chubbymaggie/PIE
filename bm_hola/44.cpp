@@ -7,7 +7,7 @@ int main(int argc, char * argv[]) {
   j = 0;
 
   INIT_k(unknown);
-  INIT_flag(unknown4);
+  INIT_flag(unknown);
 
   if (flag == 1) {
     n = 1;

@@ -10,7 +10,9 @@ int main(int argc, char * argv[]) {
   c = 0;
   d = 1;
 
-  INIT_flag(unknown4);
+  INIT_w(unknown);
+  INIT_z(unknown);
+  INIT_flag(unknown);
 
   while (unknown1()) {
     PRINT_VARS();

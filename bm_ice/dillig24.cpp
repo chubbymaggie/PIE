@@ -3,6 +3,8 @@
 int main(int argc, char* argv[]) {
   RECORD(4, i, j, k, n);
 
+  INIT_j(unknown);
+  INIT_k(unknown);
   INIT_n(unknown);
 
   for (i = 0; i < n; i++) {

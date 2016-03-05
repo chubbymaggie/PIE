@@ -5,13 +5,17 @@ int main(int argc, char * argv[]) {
 
   a = 0;
   b = 0;
+  j = 0;
+  w = 0;
   x = 0;
   y = 0;
   z = 0;
-  j = 0;
-  w = 0;
 
-  INIT_flag(unknown4);
+  INIT_c(unknown);
+  INIT_d(unknown);
+  INIT_i(unknown);
+  INIT_k(unknown);
+  INIT_flag(unknown);
 
   while (unknown1()) {
     PRINT_VARS();

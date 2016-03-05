@@ -3,7 +3,9 @@
 int main(int argc, char * argv[]) {
   RECORD(7, a, b, x, y, s, t, flag);
 
-  INIT_flag(unknown4);
+  INIT_x(unknown);
+  INIT_y(unknown);
+  INIT_flag(unknown);
 
   t = 0;
   s = 0;

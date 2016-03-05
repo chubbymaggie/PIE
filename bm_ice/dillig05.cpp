@@ -8,7 +8,7 @@ int main(int argc, char * argv[]) {
   j = 0;
   i = 0;
 
-  INIT_flag(unknown4);
+  INIT_flag(unknown);
 
   while (unknown1()) {
     PRINT_VARS();
@@ -16,7 +16,7 @@ int main(int argc, char * argv[]) {
     y++;
     i += x;
     j += y;
-    if (flag == 1) j += 1;
+    if (flag != 0) j += 1;
     j = j;
   }
   PRINT_VARS();

@@ -3,8 +3,10 @@
 int main(int argc, char * argv[]) {
   RECORD(6, a, b, i, j, k, flag);
 
+  INIT_a(unknown);
+  INIT_b(unknown);
   INIT_k(unknown);
-  INIT_flag(unknown4);
+  INIT_flag(unknown);
 
   j = 1;
   if (flag != 0) {

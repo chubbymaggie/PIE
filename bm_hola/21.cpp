@@ -8,7 +8,6 @@ int main(int argc, char * argv[]) {
   assume(n < 10);
 
   INIT_j(unknown);
-  INIT_n(unknown);
   INIT_v(unknown);
 
   c1 = 4000;

@@ -1,16 +1,18 @@
 #include "bm_oopsla.h"
 
 int main(int argc, char * argv[]) {
-  RECORD(3, x, m, N);
+  RECORD(4, x, m, input, N);
 
   x = 0;
   m = 0;
 
   INIT_N(unknown);
+  INIT_input(unknown);
 
   while (x < N) {
     PRINT_VARS();
-    if (unknown()) {
+    input = unknown();
+    if (input != 0) {
       m = x;
     }
     x = x + 1;

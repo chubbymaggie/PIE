@@ -6,7 +6,7 @@ int main(int argc, char * argv[]) {
   x = 1;
   y = 1;
 
-  INIT_flag(unknown4);
+  INIT_flag(unknown);
 
   if (flag != 0)
     a = 0;

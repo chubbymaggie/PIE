@@ -7,6 +7,9 @@ int main(int argc, char * argv[]) {
   INIT_n(unknown);
   assume(m + 1 < n);
 
+  INIT_j(unknown);
+  INIT_k(unknown);
+
   for (i = 0; i < n; i += 4) {
     PRINT_VARS();
     PRINT_BAR(1);

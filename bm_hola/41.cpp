@@ -6,7 +6,8 @@ int main(int argc, char * argv[]) {
   INIT_n(unknownu);
   assume(n >= 0);
 
-  INIT_flag(unknown4);
+  INIT_z(unknown);
+  INIT_flag(unknown);
 
   k = 1;
   if (flag != 0) {

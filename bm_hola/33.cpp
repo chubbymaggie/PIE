@@ -3,6 +3,7 @@
 int main(int argc, char * argv[]) {
   RECORD(5, c, k, x, y, z);
 
+  INIT_c(unknown);
   INIT_k(unknown);
 
   z = k;
