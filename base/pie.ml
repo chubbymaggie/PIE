@@ -361,7 +361,7 @@ let print_specs chan specs =
   BatList.iter (fun s -> (print_spec chan s); output_string chan "\n") specs
 
 let print_cnf chan cnfopt = match cnfopt with
-    None -> output_string chan "Impossible"
+    None -> output_string chan "false"
   | Some cnf -> output_string chan (string_of_cnf cnf)
 
 (* the result of evaluating the function whose spec we are learning *)    
@@ -475,19 +475,19 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -
 
     if missing_features = [] then []
     else (
+        if fname = "" then () else (
+          let conflict_log = open_out (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
+            output_string conflict_log "\nData::\n";
+            List.iter (fun (d,_,_,b) -> output_string conflict_log ((string_of_bool b) ^ " <= ");
+                                        print_data conflict_log (VList ((snd trans) d));
+                                        output_string conflict_log "\n")
+                      missing_features;
+            close_out(conflict_log));
         let tab = BatHashtbl.create (List.length missing_features) in
             BatList.iter (fun (i, _, _, b) ->
               try (if (BatHashtbl.find tab ((snd trans) i)) <> (VBool b) then raise (Ambiguous_test ((snd trans) i)))
               with Not_found -> BatHashtbl.add tab ((snd trans) i) (VBool b)) missing_features;
             prerr_string "\r    [%] Removing conflicts ... "; flush_all();
-            if fname = "" then () else (
-              let conflict_log = open_out (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
-                output_string conflict_log "\nData::\n";
-                List.iter (fun (d,_,_,b) -> output_string conflict_log ((string_of_bool b) ^ " <= ");
-                                            print_data conflict_log (VList ((snd trans) d));
-                                            output_string conflict_log "\n")
-                          missing_features;
-                close_out(conflict_log));
             let xtask = {
                 target = {
                     domain = (fst trans);

@@ -31,28 +31,30 @@ mv f "$FILE"
 
 echo -ne "   [#] Simplified query: $SIM_QUERY\n" >&2
 
-while : ; do
-  # MCF Query to OCaml code
-  ./mcf2ml "$FILE" "$RECORD_PREFIX" "$USE_TOOL" "$CONFLICT_SIZE" > "$FILE.tml"
-  if [[ $? != 0 ]]; then
-    echo "false" > "$FILE.sinf"
-    exit 1
-  fi
+# MCF Query to OCaml code
+./mcf2ml "$FILE" "$RECORD_PREFIX" "$USE_TOOL" "$CONFLICT_SIZE" > "$FILE.tml"
+if [[ $? != 0 ]]; then
+  echo "false" > "$FILE.sinf"
+  exit 1
+fi
 
-  ./preprocess "$FILE.tml" > "T$FILE.ml" 2> /dev/null
+./preprocess "$FILE.tml" > "T$FILE.ml" 2> /dev/null
 
-  # Compile OCaml code to binary
-  OCAMLRUNPARAM=l=512M ocamlfind ocamlopt -package qcheck -package batteries -c "T$FILE.ml" 2>/dev/null
-  OCAMLRUNPARAM=l=512M ocamlfind ocamlopt -o "$FILE.e" -linkpkg -package qcheck -package batteries            \
-                                           testGen.cmx escher_types.cmx escher_core.cmx  \
-                                           escher_components.cmx escher_synth.cmx        \
-                                           pie.cmx "T$FILE.cmx" 2> /dev/null
+# Compile OCaml code to binary
+OCAMLRUNPARAM=l=2048M ocamlfind ocamlopt -package qcheck -package batteries -c "T$FILE.ml" 2>/dev/null
+OCAMLRUNPARAM=l=2048M ocamlfind ocamlopt -o "$FILE.e" -linkpkg -package qcheck -package batteries            \
+                                         testGen.cmx escher_types.cmx escher_core.cmx  \
+                                         escher_components.cmx escher_synth.cmx        \
+                                         pie.cmx "T$FILE.cmx" 2> /dev/null
 
-  # Replace variables & simplify
-  echo -ne "-\n-\n" > "$FILE.inf"
-  OCAMLRUNPARAM=l=512M "./$FILE.e" > "./$FILE.exe_out"
-  [ -f ./ambiguous ] || break
+# Replace variables & simplify
+echo -ne "-\n-\n" > "$FILE.inf"
+OCAMLRUNPARAM=l=2048M "./$FILE.e" > "./$FILE.exe_out"
+
+if [ -f ./ambiguous ]; then
   ./remove_ambiguous "$FILE.tml"
-done
-cat "$FILE.exe_out" | ./var_replace "$FILE.tml" >> "$FILE.inf"
-./simplify "$FILE.inf" > "$FILE.sinf"
+  echo "false" > "$FILE.sinf"
+else
+  cat "$FILE.exe_out" | ./var_replace "$FILE.tml" >> "$FILE.inf"
+  ./simplify "$FILE.inf" > "$FILE.sinf"
+fi

@@ -11,14 +11,20 @@ def has_state(d, s, h):
 
 file = 'ambiguous'
 if __name__ == "__main__":
+    os.remove(file)
+    sys.exit(0)
+
+
+
+    # DISABLED ---
     if os.path.isfile(file):
         with open(file, 'r') as f:
             state = [v.strip() for v in f.readline()[1:-1].split(',')]
-        os.remove(file)
+            os.remove(file)
 
         with open(sys.argv[1], 'r') as f:
             vars = [x.strip() for (x,y,z) in (l[3:-3].partition(' =+=> ') for l in f.readlines() if ' =+=> ' in l)]
-        state = zip(vars, state)
+            state = zip(vars, state)
 
         # assuming final_tests is sym-linked to loopId tests file
         with open('final_tests', 'r') as f:
