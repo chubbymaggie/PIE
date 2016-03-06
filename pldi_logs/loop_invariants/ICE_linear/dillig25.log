@@ -1,0 +1,388 @@
+ ==>
+6400 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B12 for loop #1
+
+     - post_1 : (true & (i > (j - 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (i > (j - 1))))
+   [#] Simplified query: (false | (true & (i > (j - 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (i > 1)                            
+      [+] Added test ... [ 2, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (i > 1) & (j = 0)                            
+
+     - Result = ((i > 1) & (j = 0))
+
+   # Loop_1 | Invariant @ Postcondition: ((i > 1) & (j = 0))
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : ((((i > 1) & (j = 0)) | (!(i >= j))) & (((i > 1) & (j = 0)) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q2] Abduction query = (false | ((((i > 1) & (j = 0)) | (!(i >= j))) & (((i > 1) & (j = 0)) | (i >= j))))
+   [#] Simplified query: (false | ((((i > 1) & (j = 0)) | (!(i >= j))) & (((i > 1) & (j = 0)) | (i >= j))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (i > 1)                            
+      [+] Added test ... [ 2, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (i > 1) & (0 = j)                            
+
+     - Result = ((i > 1) & (0 = j))
+
+   # Loop_2 | Invariant @ Postcondition: ((i > 1) & (0 = j))
+
+   # Loop_2 | Inductive Check: ((!((i > 1) & (0 = j))) | false | (((((i + 1) > 1) & (0 = j)) | (!(x = y))) & (((i > 1) & (0 = (j + 1))) | (x = y)))) is not valid!
+
+   [Q3] Abduction query = ((!((i > 1) & (0 = j))) | false | (((((i + 1) > 1) & (0 = j)) | (!(x = y))) & (((i > 1) & (0 = (j + 1))) | (x = y))))
+   [#] Simplified query: ((!((i > 1) & (0 = j))) | false | (((((i + 1) > 1) & (0 = j)) | (!(x = y))) & (((i > 1) & (0 = (j + 1))) | (x = y))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 2, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((x = y) & ((i > 1) & (0 = j)))
+
+   # Loop_2 | Inductive Check: ((!((x = y) & ((i > 1) & (0 = j)))) | false | ((((x = y) & (((i + 1) > 1) & (0 = j))) | (!(x = y))) & (((x = y) & ((i > 1) & (0 = (j + 1)))) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((i > 1) & (j = 0))) | false | ((x = y) & ((i > 1) & (0 = j)))) is not valid!
+
+   [Q4] Abduction query = ((!((i > 1) & (j = 0))) | false | ((x = y) & ((i > 1) & (0 = j))))
+   [#] Simplified query: ((!((i > 1) & (j = 0))) | false | ((x = y) & ((i > 1) & (0 = j))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 2, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = y) & ((i > 1) & (j = 0)))
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : (((((x + 1) = (y + 1)) & ((i > 1) & (j = 0))) | (!(i >= j))) & (((x = (y + 1)) & ((i > 1) & (j = 0))) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q5] Abduction query = (false | (((((x + 1) = (y + 1)) & ((i > 1) & (j = 0))) | (!(i >= j))) & (((x = (y + 1)) & ((i > 1) & (j = 0))) | (i >= j))))
+   [#] Simplified query: (false | (((((x + 1) = (y + 1)) & ((i > 1) & (j = 0))) | (!(i >= j))) & (((x = (y + 1)) & ((i > 1) & (j = 0))) | (i >= j))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (x = y) & (i > y)                            
+      [+] Added test ... [ -1, -1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6403t) ...                                     
+    [?] Verifying [k = 1] --- (i > 1)                            
+      [+] Added test ... [ 0, -1, 2, 0 ]
+
+    [%] Inferring {true} [k = 1] (3f x 6404t) ...                                     
+    [?] Verifying [k = 1] --- (x = y) & (i > 1)                            
+      [+] Added test ... [ 0, 0, 2, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6405t) ...                                     
+    [?] Verifying [k = 1] --- (x = y) & (0 = j) & (i > 1)                            
+
+     - Result = (((x = y) & (0 = j)) & (i > 1))
+
+   # Loop_2 | Invariant @ Postcondition: (((x = y) & (0 = j)) & (i > 1))
+
+   # Loop_2 | Inductive Check: ((!(((x = y) & (0 = j)) & (i > 1))) | false | (((((x = y) & (0 = j)) & ((i + 1) > 1)) | (!(x = y))) & ((((x = y) & (0 = (j + 1))) & (i > 1)) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((x = y) & ((i > 1) & (j = 0)))) | false | (((x = y) & (0 = j)) & (i > 1))) is valid!
+
+   # Precondition Check: ((0 = 0) & ((0 > 1) & (0 = 0)))    [+] Root state for counter-examples : {'i': '-', 'x': '-', 'j': '-', 'y': '-'}
+ is not valid!
+
+----------------------------------< RESTART >-----------------------------------
+
+   + Found guard in B12 for loop #1
+
+     - post_1 : (true & (i > (j - 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q6] Abduction query = (false | (true & (i > (j - 1))))
+   [#] Simplified query: (false | (true & (i > (j - 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 6414t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6415t) ...                                     
+    [?] Verifying [k = 1] --- (j <= i)                            
+
+     - Result = (j <= i)
+
+   # Loop_1 | Invariant @ Postcondition: (j <= i)
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q7] Abduction query = (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
+   [#] Simplified query: (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
+
+    [%] Inferring {true} [k = 1] (0f x 8449t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 8450t) ...                                     
+    [?] Verifying [k = 1] --- (j <= i)                            
+
+     - Result = (j <= i)
+
+   # Loop_2 | Invariant @ Postcondition: (j <= i)
+
+   # Loop_2 | Inductive Check: ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y)))) is not valid!
+
+   [Q8] Abduction query = ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y))))
+   [#] Simplified query: ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y))))
+
+    [%] Inferring {true} [k = 1] (0f x 8449t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 8450t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((x = y) & (j <= i))
+
+   # Loop_2 | Inductive Check: ((!((x = y) & (j <= i))) | false | ((((x = y) & (j <= (i + 1))) | (!(x = y))) & (((x = y) & ((j + 1) <= i)) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(j <= i)) | false | ((x = y) & (j <= i))) is not valid!
+
+   [Q9] Abduction query = ((!(j <= i)) | false | ((x = y) & (j <= i)))
+   [#] Simplified query: ((!(j <= i)) | false | ((x = y) & (j <= i)))
+
+    [%] Inferring {true} [k = 1] (0f x 6414t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6415t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = y) & (j <= i))
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q10] Abduction query = (false | (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j))))
+   [#] Simplified query: (false | (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j))))
+
+    [%] Inferring {true} [k = 1] (0f x 8449t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 8450t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 8451t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 8451t) ...                                     
+    [?] Verifying [k = 2] --- ((i > y) | (y = i)) & (x = y)                            
+      [+] Added test ... [ -1, -1, 1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 8452t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 8452t) ...                                     
+    [?] Verifying [k = 2] --- ((i > y) | (y = i)) & (x = y) & (j = 0)                            
+      [+] Added test ... [ -2, -2, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 8453t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 8453t) ...                                     
+    [%] Inferring {true} [k = 3] (6f x 8453t) ...                                     
+    [?] Verifying [k = 3] --- ((y = i) | (i > 1) | (1 = i))                            
+      [+] Added test ... [ 1, 0, 0, 1 ]
+
+    [%] Inferring {true} [k = 1] (6f x 8454t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 8454t) ...                                     
+    [%] Inferring {true} [k = 3] (6f x 8454t) ...                                     
+    [?] Verifying [k = 3] --- (x = y) & ((y = i) | (i > 1) | (1 = i))                            
+      [+] Added test ... [ 0, 0, 2, 1 ]
+
+    [%] Inferring {true} [k = 1] (6f x 8455t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 8455t) ...                                     
+    [%] Inferring {true} [k = 3] (6f x 8455t) ...                                     
+    [?] Verifying [k = 3] --- (x = y) & (j = 0) & ((y = i) | (i > 1) | (1 = i))                            
+      [+] Added test ... [ -1, -1, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (7f x 8456t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 8456t) ...                                     
+    [%] Inferring {true} [k = 3] (7f x 8456t) ...                                     
+    [?] Verifying [k = 3] --- (j = 0) & (x = y) & ((i > 1) | (1 = i) | (j = i))                            
+
+     - Result = (((j = 0) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+
+   # Loop_2 | Invariant @ Postcondition: (((j = 0) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+
+   # Loop_2 | Inductive Check: ((!(((j = 0) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))) | false | (((((j = 0) & (x = y)) & ((((i + 1) > 1) | (1 = (i + 1))) | (j = (i + 1)))) | (!(x = y))) & (((((j + 1) = 0) & (x = y)) & (((i > 1) | (1 = i)) | ((j + 1) = i))) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((x = y) & (j <= i))) | false | (((j = 0) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))) is not valid!
+
+   [Q11] Abduction query = ((!((x = y) & (j <= i))) | false | (((j = 0) & (x = y)) & (((i > 1) | (1 = i)) | (j = i))))
+   [#] Simplified query: ((!((x = y) & (j <= i))) | false | (((j = 0) & (x = y)) & (((i > 1) | (1 = i)) | (j = i))))
+
+    [%] Inferring {true} [k = 1] (0f x 6414t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6415t) ...                                     
+    [?] Verifying [k = 1] --- (0 = j)                            
+
+     - Result = (0 = j)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((0 = j) & ((x = y) & (j <= i)))
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : ((((0 = j) & (((x + 1) = (y + 1)) & (j <= i))) | (!(i >= j))) & (((0 = j) & ((x = (y + 1)) & (j <= i))) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q12] Abduction query = (false | ((((0 = j) & (((x + 1) = (y + 1)) & (j <= i))) | (!(i >= j))) & (((0 = j) & ((x = (y + 1)) & (j <= i))) | (i >= j))))
+   [#] Simplified query: (false | ((((0 = j) & (((x + 1) = (y + 1)) & (j <= i))) | (!(i >= j))) & (((0 = j) & ((x = (y + 1)) & (j <= i))) | (i >= j))))
+
+    [%] Inferring {true} [k = 1] (0f x 8449t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, 0, -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 8450t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+      [+] Added test ... [ -1, 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 8451t) ...                                     
+    [?] Verifying [k = 1] --- (0 = j)                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (2f x 8452t) ...                                     
+    [?] Verifying [k = 1] --- (x = y) & (0 = j)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 8453t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 8453t) ...                                     
+    [?] Verifying [k = 2] --- ((i > y) | (y = i)) & (x = y) & (0 = j)                            
+      [+] Added test ... [ 0, -2, -2, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 8454t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 8454t) ...                                     
+    [%] Inferring {true} [k = 3] (6f x 8454t) ...                                     
+    [?] Verifying [k = 3] --- (0 = j) & ((y = i) | (i > 1) | (1 = i))                            
+      [+] Added test ... [ 0, 1, 0, 1 ]
+
+    [%] Inferring {true} [k = 1] (6f x 8455t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 8455t) ...                                     
+    [%] Inferring {true} [k = 3] (6f x 8455t) ...                                     
+    [?] Verifying [k = 3] --- (x = y) & (0 = j) & ((y = i) | (i > 1) | (1 = i))                            
+      [+] Added test ... [ 0, -1, -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (7f x 8456t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 8456t) ...                                     
+    [%] Inferring {true} [k = 3] (7f x 8456t) ...                                     
+    [?] Verifying [k = 3] --- (x = y) & ((i > 1) | (1 = i) | (j = i))                            
+      [+] Added test ... [ -1, 0, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (7f x 8457t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 8457t) ...                                     
+    [%] Inferring {true} [k = 3] (7f x 8457t) ...                                     
+    [?] Verifying [k = 3] --- (0 = j) & (x = y) & ((i > 1) | (1 = i) | (j = i))                            
+
+     - Result = (((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+
+   # Loop_2 | Invariant @ Postcondition: (((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+
+   # Loop_2 | Inductive Check: ((!(((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))) | false | (((((0 = j) & (x = y)) & ((((i + 1) > 1) | (1 = (i + 1))) | (j = (i + 1)))) | (!(x = y))) & ((((0 = (j + 1)) & (x = y)) & (((i > 1) | (1 = i)) | ((j + 1) = i))) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((0 = j) & ((x = y) & (j <= i)))) | false | (((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))) is valid!
+
+   # Precondition Check: ((0 = 0) & ((0 = 0) & (0 <= 0))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((0 = j) & ((x = y) & (j <= i)))
+Loop #2: (((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+================================================================================
+checker_exec.sh: line 1:  4774 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/dillig25.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig25.cpp --
+
+real	1m13.747s
+user	1m7.340s
+sys	0m1.668s
+
+
+--- Processed dillig25.cpp ---
+sat: 37
+unsat: 20
+unk: 0
+escher: 31
+
+[$] OOM Count = 0
+[$] MAX Usage = 187

@@ -1,0 +1,52 @@
+ ==>
+2078 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (x = N))
+     - guard : (x < N)
+
+   [Q1] Abduction query = ((x < N) | (true & (x = N)))
+   [#] Simplified query: ((x < N) | (true & (x = N)))
+
+    [%] Inferring {true} [k = 1] (0f x 2078t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 2079t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 2079t) ...                                     
+    [?] Verifying [k = 2] --- ((N > x) | (x = N))                            
+
+     - Result = ((N > x) | (x = N))
+
+   # Loop_1 | Invariant @ Postcondition: ((N > x) | (x = N))
+
+   # Loop_1 | Inductive Check: ((!((N > x) | (x = N))) | (!(x < N)) | ((N > (x + 1)) | ((x + 1) = N))) is valid!
+
+   # Precondition Check: ((!(N >= 0)) | ((N > 0) | (0 = N))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((N > x) | (x = N))
+================================================================================
+checker_exec.sh: line 1: 24233 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/inc2.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/inc2.cpp --
+
+real	0m16.667s
+user	0m15.316s
+sys	0m0.156s
+
+
+--- Processed inc2.cpp ---
+sat: 1
+unsat: 3
+unk: 0
+escher: 2
+
+[$] OOM Count = 0
+[$] MAX Usage = 105

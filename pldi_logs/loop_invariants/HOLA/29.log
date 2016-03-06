@@ -1,0 +1,348 @@
+ ==>
+6400 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B10 for loop #1
+
+     - post_1 : (true & ((a + c) = (b + d)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & ((a + c) = (b + d))))
+   [#] Simplified query: (false | (true & ((a + c) = (b + d))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6402t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 6402t) ...                                     
+    [?] Verifying [k = 2] --- ((a > 1) | (d = c)) & (d > 1)                            
+      [+] Added test ... [ 2, 0, 1, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6403t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 6403t) ...                                     
+    [?] Verifying [k = 2] --- ((a > 1) | (d = c)) & (d > 1) & (d > a)                            
+      [+] Added test ... [ 2, 0, 0, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 6404t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 6404t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & ((d = c) | (0 > c))                            
+      [+] Added test ... [ -1, 2, 0, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 6405t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 6405t) ...                                     
+    [?] Verifying [k = 2] --- (d > a) & ((0 > c) | (1 = b))                            
+      [+] Added test ... [ -1, -1, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6406t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 6406t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & (d > a) & ((0 > c) | (1 = b))                            
+      [+] Added test ... [ 0, -1, 0, 2 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6407t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 6407t) ...                                     
+    [?] Verifying [k = 2] --- ((d = c) | (0 > c)) & ((a > 1) | (1 = b))                            
+      [+] Added test ... [ 2, 0, 3, 0 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6408t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 6408t) ...                                     
+    [?] Verifying [k = 2] --- (d > a) & ((a > 1) | (1 = b)) & ((0 > c) | (1 = b))                            
+      [+] Added test ... [ 2, -1, 0, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (7f x 6409t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 6409t) ...                                     
+    [?] Verifying [k = 2] --- (d > a) & ((1 = b) | (0 > b))                            
+      [+] Added test ... [ -1, 0, 1, 0 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6410t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 6410t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & (d > a) & ((1 = b) | (0 > b))                            
+      [+] Added test ... [ 0, 0, 1, 2 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6411t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 6411t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & ((d = c) | (0 > b)) & ((1 = b) | (0 > b))                            
+      [+] Added test ... [ 0, 2, 1, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (8f x 6412t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 6412t) ...                                     
+    [?] Verifying [k = 2] --- ((1 = b) | !((b = a))) & ((0 > b) | (b = a))                            
+      [+] Added test ... [ 1, -1, 1, 0 ]
+
+    [%] Inferring {true} [k = 1] (8f x 6413t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 6413t) ...                                     
+    [?] Verifying [k = 2] --- ((d = c) | !((b = a))) & ((0 > b) | (b = a))                            
+      [+] Added test ... [ -2, 0, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (8f x 6414t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 6414t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & ((d = c) | !((b = a))) & ((0 > b) | (b = a))                            
+      [+] Added test ... [ 0, 2, -1, 2 ]
+
+    [%] Inferring {true} [k = 1] (8f x 6415t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 6415t) ...                                     
+    [?] Verifying [k = 2] --- (d > a) & ((a > 1) | (1 = b)) & ((0 > b) | (b = a))                            
+      [+] Added test ... [ 2, -1, -1, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (9f x 6416t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 6416t) ...                                     
+    [?] Verifying [k = 2] --- ((0 > c) | (b = a)) & (c > b)                            
+      [+] Added test ... [ 0, -1, -2, 2 ]
+
+    [%] Inferring {true} [k = 1] (9f x 6417t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 6417t) ...                                     
+    [?] Verifying [k = 2] --- ((a > 1) | (b = a)) & (c > b)                            
+      [+] Added test ... [ 2, 1, 0, 4 ]
+
+    [%] Inferring {true} [k = 1] (9f x 6418t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 6418t) ...                                     
+    [?] Verifying [k = 2] --- ((a > 1) | (b = a)) & ((0 > c) | (b = a)) & (c > b)                            
+      [+] Added test ... [ 2, -1, -2, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (10f x 6419t) ...                                     
+    [?] Verifying [k = 1] --- (c > b) & (d = (a + 1))                            
+      [+] Added test ... [ -1, 2, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (10f x 6420t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (c > b) & (d = (a + 1))                            
+      [+] Added test ... [ 1, 2, 0, 2 ]
+
+    [%] Inferring {true} [k = 1] (10f x 6421t) ...                                     
+    [%] Inferring {true} [k = 2] (10f x 6421t) ...                                     
+    [?] Verifying [k = 2] --- (c > b) & ((0 > b) | (b = a)) & (d = (a + 1))                            
+      [+] Added test ... [ -1, 1, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (10f x 6422t) ...                                     
+    [%] Inferring {true} [k = 2] (10f x 6422t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & (c > b) & ((0 > b) | (b = a)) & (d = (a + 1))                            
+      [+] Added test ... [ 1, 1, -1, 2 ]
+
+    [%] Inferring {true} [k = 1] (10f x 6423t) ...                                     
+    [%] Inferring {true} [k = 2] (10f x 6423t) ...                                     
+    [?] Verifying [k = 2] --- (d > 1) & (d = (a + 1)) & (c > b) & ((0 > c) | (b = a))                            
+      [+] Added test ... [ 1, -1, -3, 2 ]
+
+    [%] Inferring {true} [k = 1] (10f x 6424t) ...                                     
+    [%] Inferring {true} [k = 2] (10f x 6424t) ...                                     
+    [?] Verifying [k = 2] --- (d = (a + 1)) & (c > b) & ((a > 1) | (d = c)) & ((0 > c) | (b = a))                            
+      [+] Added test ... [ 2, -1, -3, 3 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (11f x 6425t) ...                                     
+    [?] Verifying [k = 1] --- (d = (a + 1)) & (c = (b + 1))                            
+
+     - Result = ((d = (a + 1)) & (c = (b + 1)))
+
+   # Loop_1 | Invariant @ Postcondition: ((d = (a + 1)) & (c = (b + 1)))
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : ((d = (a + 1)) & (c = (b + 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q2] Abduction query = (false | ((d = (a + 1)) & (c = (b + 1))))
+   [#] Simplified query: (false | ((d = (a + 1)) & (c = (b + 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (d > a)                            
+      [+] Added test ... [ 0, -2, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1)                            
+      [+] Added test ... [ 2, 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6403t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1)                            
+      [+] Added test ... [ 0, 2, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (3f x 6404t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (a > 1)                            
+      [+] Added test ... [ 2, 2, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (3f x 6405t) ...                                     
+    [?] Verifying [k = 1] --- (d > a) & (a > 1)                            
+      [+] Added test ... [ 4, 2, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6406t) ...                                     
+    [?] Verifying [k = 1] --- (0 > c)                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (4f x 6407t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c)                            
+      [+] Added test ... [ 0, 2, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (4f x 6408t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (0 > c)                            
+      [+] Added test ... [ 2, 0, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (4f x 6409t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (a > 1) & (0 > c)                            
+      [+] Added test ... [ 2, 2, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (4f x 6410t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (d > a) & (0 > c)                            
+      [+] Added test ... [ 4, 2, -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 6411t) ...                                     
+    [?] Verifying [k = 1] --- (0 > b)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6412t) ...                                     
+    [?] Verifying [k = 1] --- (0 > c) & (0 > b)                            
+      [+] Added test ... [ 0, 0, -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6413t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > b)                            
+      [+] Added test ... [ 0, 2, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6414t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (0 > b)                            
+      [+] Added test ... [ 2, 0, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6415t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c) & (0 > b)                            
+      [+] Added test ... [ 0, 2, -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6416t) ...                                     
+    [?] Verifying [k = 1] --- (0 > c) & (d > 1) & (0 > b)                            
+      [+] Added test ... [ 2, 0, -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6417t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (a > 1) & (0 > b)                            
+      [+] Added test ... [ 2, 2, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6418t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (d > a) & (0 > b)                            
+      [+] Added test ... [ 4, 2, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6419t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (a > 1) & (0 > c) & (0 > b)                            
+      [+] Added test ... [ 2, 2, -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6420t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c) & (0 > b) & (d > a)                            
+      [+] Added test ... [ 4, 2, -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 6421t) ...                                     
+    [?] Verifying [k = 1] --- (0 > c) & (c > b)                            
+      [+] Added test ... [ 0, 0, -1, -2 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6422t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c) & (c > b)                            
+      [+] Added test ... [ 0, 2, -1, -2 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6423t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (0 > c) & (c > b)                            
+      [+] Added test ... [ 2, 0, -1, -2 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6424t) ...                                     
+    [?] Verifying [k = 1] --- (d > 1) & (a > 1) & (0 > c) & (c > b)                            
+      [+] Added test ... [ 2, 2, -1, -2 ]
+
+    [%] Inferring {true} [k = 1] (6f x 6425t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c) & (d > a) & (c > b)                            
+      [+] Added test ... [ 4, 2, -1, -2 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (7f x 6426t) ...                                     
+    [?] Verifying [k = 1] --- (d = (a + 1))                            
+      [+] Added test ... [ 0, -1, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6427t) ...                                     
+    [?] Verifying [k = 1] --- (c > b) & (d = (a + 1))                            
+      [+] Added test ... [ 0, -1, 2, 0 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6428t) ...                                     
+    [?] Verifying [k = 1] --- (0 > b) & (d = (a + 1))                            
+      [+] Added test ... [ 0, -1, -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6429t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (d = (a + 1))                            
+      [+] Added test ... [ 3, 2, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6430t) ...                                     
+    [?] Verifying [k = 1] --- (0 > b) & (c > b) & (d = (a + 1))                            
+      [+] Added test ... [ 0, -1, 1, -1 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6431t) ...                                     
+    [?] Verifying [k = 1] --- (c > b) & (0 > c) & (d = (a + 1))                            
+      [+] Added test ... [ 0, -1, -1, -3 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6432t) ...                                     
+    [?] Verifying [k = 1] --- (c > b) & (a > 1) & (d = (a + 1))                            
+      [+] Added test ... [ 3, 2, 2, 0 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6433t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c) & (d = (a + 1))                            
+      [+] Added test ... [ 3, 2, -1, 0 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6434t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > b) & (d = (a + 1))                            
+      [+] Added test ... [ 3, 2, -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (7f x 6435t) ...                                     
+    [?] Verifying [k = 1] --- (a > 1) & (0 > c) & (c > b) & (d = (a + 1))                            
+      [+] Added test ... [ 3, 2, -1, -3 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (8f x 6436t) ...                                     
+    [?] Verifying [k = 1] --- (d = (a + 1)) & (c = (b + 1))                            
+
+     - Result = ((d = (a + 1)) & (c = (b + 1)))
+
+   # Loop_2 | Invariant @ Postcondition: ((d = (a + 1)) & (c = (b + 1)))
+
+   # Loop_2 | Inductive Check: ((!((d = (a + 1)) & (c = (b + 1)))) | false | ((d = (a + 1)) & ((c - 1) = ((b - 1) + 1)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((d = (a + 1)) & (c = (b + 1)))) | false | (((((d + 1) = ((a + 1) + 1)) & (c = (b + 1))) | (!((((a + c) + (b + d)) % 2) = 0))) & (((d = ((a - 1) + 1)) & (c = (b + 1))) | ((((a + c) + (b + d)) % 2) = 0)))) is valid!
+
+   # Precondition Check: ((2 = (1 + 1)) & (2 = (1 + 1))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((d = (a + 1)) & (c = (b + 1)))
+Loop #2: ((d = (a + 1)) & (c = (b + 1)))
+================================================================================
+checker_exec.sh: line 1: 10084 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/29.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_oopsla/29.cpp --
+
+real	0m47.298s
+user	0m42.624s
+sys	0m1.232s
+
+
+--- Processed 29.cpp ---
+sat: 61
+unsat: 5
+unk: 0
+escher: 19
+
+[$] OOM Count = 0
+[$] MAX Usage = 132

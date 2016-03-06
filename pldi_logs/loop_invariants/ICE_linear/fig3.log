@@ -1,0 +1,72 @@
+ ==>
+228 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B5 for loop #1
+
+     - post_1 : (true & (lock = 1))
+     - guard : (x != y)
+
+   [Q1] Abduction query = ((x != y) | (true & (lock = 1)))
+   [#] Simplified query: ((x != y) | (true & (lock = 1)))
+
+    [%] Inferring {true} [k = 1] (0f x 228t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (2f x 229t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 229t) ...                                     
+    [?] Verifying [k = 2] --- ((! (y = lock)) | (! (0 = x)))                            
+      [+] Added test ... [ -1, -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 230t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 230t) ...                                     
+    [%] Inferring {true} [k = 3] (4f x 230t) ...                                     
+    [?] Verifying [k = 3] --- (!((! (0 = x))) | (! (y = (lock - 1))) | (y > x)) & ((! (y = lock)) | (! (0 = x)))                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [%] Inferring {true} [k = 1] (4f x 231t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 231t) ...                                     
+    [%] Inferring {true} [k = 3] (4f x 231t) ...                                     
+    [?] Verifying [k = 3] --- (!((! (0 = x))) | (! (y = (lock - 1))) | (y > x)) & ((! (0 = x)) | !((! (y = (lock - 1)))) | (y > x))                            
+      [+] Added test ... [ -1, -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 232t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 232t) ...                                     
+    [?] Verifying [k = 2] --- ((y > x) | (1 = lock))                            
+
+     - Result = ((y > x) | (1 = lock))
+
+   # Loop_1 | Invariant @ Postcondition: ((y > x) | (1 = lock))
+
+   # Loop_1 | Inductive Check: ((!((y > x) | (1 = lock))) | (!(x != y)) | (((((y + 1) > y) | (1 = 0)) | false) & (((y > y) | (1 = 1)) | false))) is valid!
+
+   # Precondition Check: (((((y + 1) > y) | (1 = 0)) | false) & (((y > y) | (1 = 1)) | false)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((y > x) | (1 = lock))
+================================================================================
+checker_exec.sh: line 1: 14516 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/fig3.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/fig3.cpp --
+
+real	0m17.286s
+user	0m15.456s
+sys	0m0.136s
+
+
+--- Processed fig3.cpp ---
+sat: 4
+unsat: 3
+unk: 0
+escher: 5
+
+[$] OOM Count = 0
+[$] MAX Usage = 105

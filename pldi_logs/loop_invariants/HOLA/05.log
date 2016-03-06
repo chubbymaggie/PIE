@@ -1,0 +1,69 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B5 for loop #1
+
+     - post_1 : (true & (j >= i))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (j >= i)))
+   [#] Simplified query: (false | (true & (j >= i)))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((j > i) | (i = j))                            
+
+     - Result = ((j > i) | (i = j))
+
+   # Loop_1 | Invariant @ Postcondition: ((j > i) | (i = j))
+
+   # Loop_1 | Inductive Check: ((!((j > i) | (i = j))) | false | ((((((j + (y + 1)) + 1) > (i + (x + 1))) | ((i + (x + 1)) = ((j + (y + 1)) + 1))) | (!(flag != 0))) & ((((j + (y + 1)) > (i + (x + 1))) | ((i + (x + 1)) = (j + (y + 1)))) | (flag != 0)))) is not valid!
+
+   [Q2] Abduction query = ((!((j > i) | (i = j))) | false | ((((((j + (y + 1)) + 1) > (i + (x + 1))) | ((i + (x + 1)) = ((j + (y + 1)) + 1))) | (!(flag != 0))) & ((((j + (y + 1)) > (i + (x + 1))) | ((i + (x + 1)) = (j + (y + 1)))) | (flag != 0))))
+   [#] Simplified query: ((!((j > i) | (i = j))) | false | ((((((j + (y + 1)) + 1) > (i + (x + 1))) | ((i + (x + 1)) = ((j + (y + 1)) + 1))) | (!(flag != 0))) & ((((j + (y + 1)) > (i + (x + 1))) | ((i + (x + 1)) = (j + (y + 1)))) | (flag != 0))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1, -3, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = y) & ((j > i) | (i = j)))
+
+   # Loop_1 | Inductive Check: ((!((x = y) & ((j > i) | (i = j)))) | false | (((((x + 1) = (y + 1)) & ((((j + (y + 1)) + 1) > (i + (x + 1))) | ((i + (x + 1)) = ((j + (y + 1)) + 1)))) | (!(flag != 0))) & ((((x + 1) = (y + 1)) & (((j + (y + 1)) > (i + (x + 1))) | ((i + (x + 1)) = (j + (y + 1))))) | (flag != 0)))) is valid!
+
+   # Precondition Check: ((0 = 0) & ((0 > 0) | (0 = 0))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((x = y) & ((j > i) | (i = j)))
+================================================================================
+checker_exec.sh: line 1:  8017 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/05.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_oopsla/05.cpp --
+
+real	0m22.697s
+user	0m20.584s
+sys	0m0.312s
+
+
+--- Processed 05.cpp ---
+sat: 3
+unsat: 4
+unk: 0
+escher: 3
+
+[$] OOM Count = 0
+[$] MAX Usage = 135

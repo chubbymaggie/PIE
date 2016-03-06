@@ -1,0 +1,62 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & false)
+     - guard : true
+
+   [Q1] Abduction query = (true | (true & false))
+   [#] Simplified query: (true | (true & false))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+
+     - Result = true
+
+   # Loop_1 | Invariant @ Postcondition: true
+
+   # Loop_1 | Inductive Check: ((!true) | (!true) | (((true & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | (!((sn + 1) = ((x + 1) * 1)))) & ((true & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | ((sn + 1) = ((x + 1) * 1))))) is not valid!
+
+   [Q2] Abduction query = ((!true) | (!true) | (((true & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | (!((sn + 1) = ((x + 1) * 1)))) & ((true & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | ((sn + 1) = ((x + 1) * 1)))))
+   [#] Simplified query: ((!true) | (!true) | (((true & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | (!((sn + 1) = ((x + 1) * 1)))) & ((true & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | ((sn + 1) = ((x + 1) * 1)))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -2, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (x = sn)                            
+
+     - Result = (x = sn)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = sn) & true)
+
+   # Loop_1 | Inductive Check: ((!((x = sn) & true)) | (!true) | ((((((x + 1) = (sn + 1)) & true) & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | (!((sn + 1) = ((x + 1) * 1)))) & (((((x + 1) = (sn + 1)) & true) & (((sn + 1) = ((x + 1) * 1)) | ((sn + 1) = 0))) | ((sn + 1) = ((x + 1) * 1))))) is valid!
+
+   # Precondition Check: ((0 = 0) & true) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((x = sn) & true)
+================================================================================
+checker_exec.sh: line 1: 32228 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/sum3.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/sum3.cpp --
+
+real	0m20.198s
+user	0m18.500s
+sys	0m0.316s
+
+
+--- Processed sum3.cpp ---
+sat: 2
+unsat: 4
+unk: 0
+escher: 1
+
+[$] OOM Count = 0
+[$] MAX Usage = 127

@@ -1,104 +1,0 @@
- ==>
-47 tests for loop #1.
-60 tests for loop #2.
-
-(*) Checking loop invariant:
-================================================================================
-[#] Starting Loop Invariant Generation ...
-
-   + Found guard in B12 for loop #1
-     - guard : NON-DETERMINISTIC
-
-   Post condition of loop #1: (true & (i >= j))
-
-   [Q1] Abduction query = (false | (true & (i >= j)))
-   [#] Simplified query: (false | (true & (i >= j)))
-    [%] Removing conflicts ...     [%] Inferring {true} [k = 1] (0f x 47t) ...                                         [?] Verifying [k = 1] --- true                            
-      [+] Added test ... [ -1, 0 ]
-    [%] Removing conflicts ...  @2 @3    [%] Inferring {true} [k = 1] (1f x 48t) ...                                         [?] Verifying [k = 1] --- (j <= i)                            
-
-     - Result = (j <= i)
-
-   # Invariant@Postcondition: (j <= i)
-
-   + Found guard in B10 for loop #2
-     - guard : NON-DETERMINISTIC
-
-   Post condition of loop #2: (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j)))
-
-   [Q2] Abduction query = (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
-   [#] Simplified query: (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
-    [%] Removing conflicts ...     [%] Inferring {true} [k = 1] (0f x 60t) ...                                         [?] Verifying [k = 1] --- true                            
-      [+] Added test ... [ 0, -1 ]
-    [%] Removing conflicts ...  @2 @3    [%] Inferring {true} [k = 1] (1f x 61t) ...                                         [?] Verifying [k = 1] --- (j <= i)                            
-
-     - Result = (j <= i)
-
-   # Invariant@Postcondition: (j <= i)
-
-   # Verification@Inductivecondition: ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y)))) is not valid!
-
-   [Q3] Abduction query = ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y))))
-   [#] Simplified query: ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y))))
-    [%] Removing conflicts ...     [%] Inferring {true} [k = 1] (0f x 60t) ...                                         [?] Verifying [k = 1] --- true                            
-      [+] Added test ... [ 0, 0, 0, -1 ]
-    [%] Removing conflicts ...  @2 @3    [%] Inferring {true} [k = 1] (1f x 61t) ...                                         [?] Verifying [k = 1] --- (x = y)                            
-
-     - Result = (x = y)
-
-   # Invariant@Inductivecondition: ((x = y) & (j <= i))
-
-   # Verification@Inductivecondition: ((!((x = y) & (j <= i))) | false | ((((x = y) & (j <= (i + 1))) | (!(x = y))) & (((x = y) & ((j + 1) <= i)) | (x = y)))) is valid!
-
-   # Verification@Inductivecondition: ((!(j <= i)) | false | ((x = y) & (j <= i))) is not valid!
-
-   [Q4] Abduction query = ((!(j <= i)) | false | ((x = y) & (j <= i)))
-   [#] Simplified query: ((!(j <= i)) | false | ((x = y) & (j <= i)))
-    [%] Removing conflicts ...     [%] Inferring {true} [k = 1] (0f x 47t) ...                                         [?] Verifying [k = 1] --- true                            
-      [+] Added test ... [ 0, 0, 0, -1 ]
-    [%] Removing conflicts ...  @2 @3    [%] Inferring {true} [k = 1] (1f x 48t) ...                                         [?] Verifying [k = 1] --- (x = y)                            
-
-     - Result = (x = y)
-
-   # Invariant@Inductivecondition: ((x = y) & (j <= i))
-
-   + Found guard in B10 for loop #2
-     - guard : NON-DETERMINISTIC
-
-   Post condition of loop #2: (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j)))
-
-   [Q5] Abduction query = (false | (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j))))
-   [#] Simplified query: (false | (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j))))
-    [%] Removing conflicts ...     [%] Inferring {true} [k = 1] (0f x 60t) ...                                         [?] Verifying [k = 1] --- true                            
-      [+] Added test ... [ 0, -1, 0, 0 ]
-    [%] Removing conflicts ...  @2 @3    [%] Inferring {true} [k = 1] (1f x 61t) ...                                         [?] Verifying [k = 1] --- (x = y)                            
-      [+] Added test ... [ 0, 0, 0, -1 ]
-    [%] Removing conflicts ...  @2 @3    [%] Inferring {true} [k = 1] (2f x 62t) ...                                         [?] Verifying [k = 1] --- (x = y) & (j <= i)                            
-
-     - Result = ((x = y) & (j <= i))
-
-   # Invariant@Postcondition: ((x = y) & (j <= i))
-
-   # Verification@Inductivecondition: ((!((x = y) & (j <= i))) | false | ((((x = y) & (j <= (i + 1))) | (!(x = y))) & (((x = y) & ((j + 1) <= i)) | (x = y)))) is valid!
-
-   # Verification@Inductivecondition: ((!((x = y) & (j <= i))) | false | ((x = y) & (j <= i))) is valid!
-
-   # Verification@Precondition: ((0 = 0) & (0 <= 0)) is valid!
-
-
-[###] Final invariants: [###]
-Loop #1: ((x = y) & (j <= i))
-Loop #2: ((x = y) & (j <= i))
-================================================================================
-checker_exec.sh: line 1: 27223 Aborted                 (core dumped) bin/pinvgen -wpath /home/osboxes/PIE/logs/6400/pie/16/30.cpp -abducer /home/osboxes/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/osboxes/PIE/bm_oopsla/30.cpp --
-
-real	0m58.229s
-user	0m49.956s
-sys	0m2.160s
-
-
---- Processed 30.cpp ---
-sat: 8
-unsat: 9
-unk: 0
-escher: 6

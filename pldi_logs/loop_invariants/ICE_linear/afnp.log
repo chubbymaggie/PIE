@@ -1,0 +1,97 @@
+ ==>
+15 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : (true & (x >= y))
+     - guard : (flag != 0)
+
+   [Q1] Abduction query = ((flag != 0) | (true & (x >= y)))
+   [#] Simplified query: ((flag != 0) | (true & (x >= y)))
+
+    [%] Inferring {true} [k = 1] (0f x 15t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 16t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 16t) ...                                     
+    [?] Verifying [k = 2] --- ((x > flag) | (1 = x))                            
+      [+] Added test ... [ 0, 1, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 17t) ...                                     
+    [?] Verifying [k = 1] --- (y <= x)                            
+
+     - Result = (y <= x)
+
+   # Loop_1 | Invariant @ Postcondition: (y <= x)
+
+   # Loop_1 | Inductive Check: ((!(y <= x)) | (!(flag != 0)) | ((((y + 1) <= (x + y)) | (!((y + 1) < 1000))) & (((y + 1) <= (x + y)) | ((y + 1) < 1000)))) is not valid!
+
+   [Q2] Abduction query = ((!(y <= x)) | (!(flag != 0)) | ((((y + 1) <= (x + y)) | (!((y + 1) < 1000))) & (((y + 1) <= (x + y)) | ((y + 1) < 1000))))
+   [#] Simplified query: ((!(y <= x)) | (!(flag != 0)) | ((((y + 1) <= (x + y)) | (!((y + 1) < 1000))) & (((y + 1) <= (x + y)) | ((y + 1) < 1000))))
+
+    [%] Inferring {true} [k = 1] (0f x 15t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 16t) ...                                     
+    [?] Verifying [k = 1] --- (x > 0)                            
+
+     - Result = (x > 0)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x > 0) & (y <= x))
+
+   # Loop_1 | Inductive Check: ((!((x > 0) & (y <= x))) | (!(flag != 0)) | (((((x + y) > 0) & ((y + 1) <= (x + y))) | (!((y + 1) < 1000))) & ((((x + y) > 0) & ((y + 1) <= (x + y))) | ((y + 1) < 1000)))) is not valid!
+
+   [Q3] Abduction query = ((!((x > 0) & (y <= x))) | (!(flag != 0)) | (((((x + y) > 0) & ((y + 1) <= (x + y))) | (!((y + 1) < 1000))) & ((((x + y) > 0) & ((y + 1) <= (x + y))) | ((y + 1) < 1000))))
+   [#] Simplified query: ((!((x > 0) & (y <= x))) | (!(flag != 0)) | (((((x + y) > 0) & ((y + 1) <= (x + y))) | (!((y + 1) < 1000))) & ((((x + y) > 0) & ((y + 1) <= (x + y))) | ((y + 1) < 1000))))
+
+    [%] Inferring {true} [k = 1] (0f x 15t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 1, -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 16t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= flag)                            
+      [+] Added test ... [ 1, -1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 17t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= y)                            
+
+     - Result = (0 <= y)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((0 <= y) & ((x > 0) & (y <= x)))
+
+   # Loop_1 | Inductive Check: ((!((0 <= y) & ((x > 0) & (y <= x)))) | (!(flag != 0)) | ((((0 <= (y + 1)) & (((x + y) > 0) & ((y + 1) <= (x + y)))) | (!((y + 1) < 1000))) & (((0 <= (y + 1)) & (((x + y) > 0) & ((y + 1) <= (x + y)))) | ((y + 1) < 1000)))) is valid!
+
+   # Precondition Check: ((0 <= 0) & ((1 > 0) & (0 <= 1))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((0 <= y) & ((x > 0) & (y <= x)))
+================================================================================
+checker_exec.sh: line 1:  7319 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/afnp.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_ice/afnp.cpp --
+
+real	0m21.830s
+user	0m19.700s
+sys	0m0.408s
+
+
+--- Processed afnp.cpp ---
+sat: 7
+unsat: 5
+unk: 0
+escher: 7
+
+[$] OOM Count = 0
+[$] MAX Usage = 125

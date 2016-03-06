@@ -1,0 +1,138 @@
+ ==>
+1001 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (c >= 0))
+     - guard : (i < 1000)
+
+   [Q1] Abduction query = ((i < 1000) | (true & (c >= 0)))
+   [#] Simplified query: ((i < 1000) | (true & (c >= 0)))
+
+    [%] Inferring {true} [k = 1] (0f x 1001t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 1000, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 1002t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 1002t) ...                                     
+    [?] Verifying [k = 2] --- ((1000 > i) | (c > i))                            
+
+     - Result = ((1000 > i) | (c > i))
+
+   # Loop_1 | Invariant @ Postcondition: ((1000 > i) | (c > i))
+
+   # Loop_1 | Inductive Check: ((!((1000 > i) | (c > i))) | (!(i < 1000)) | ((1000 > (i + 1)) | ((c + i) > (i + 1)))) is not valid!
+
+   [Q2] Abduction query = ((!((1000 > i) | (c > i))) | (!(i < 1000)) | ((1000 > (i + 1)) | ((c + i) > (i + 1))))
+   [#] Simplified query: ((!((1000 > i) | (c > i))) | (!(i < 1000)) | ((1000 > (i + 1)) | ((c + i) > (i + 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 1001t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 999, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (2f x 1002t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 1002t) ...                                     
+    [?] Verifying [k = 2] --- ((c > i) | (1000 > (i + 1)))                            
+
+     - Result = ((c > i) | (1000 > (i + 1)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))
+
+   # Loop_1 | Inductive Check: ((!(((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))) | (!(i < 1000)) | ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1))))) is not valid!
+
+   [Q3] Abduction query = ((!(((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))) | (!(i < 1000)) | ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1)))))
+   [#] Simplified query: ((!(((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))) | (!(i < 1000)) | ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1)))))
+
+    [%] Inferring {true} [k = 1] (0f x 1001t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 998 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (2f x 1002t) ...                                     
+    [?] Verifying [k = 1] --- (i <= (c + 1))                            
+
+     - Result = (i <= (c + 1))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))
+
+   # Loop_1 | Inductive Check: ((!((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))) | (!(i < 1000)) | (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1)))))) is not valid!
+
+   [Q4] Abduction query = ((!((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))) | (!(i < 1000)) | (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1))))))
+   [#] Simplified query: ((!((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))) | (!(i < 1000)) | (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1))))))
+
+    [%] Inferring {true} [k = 1] (0f x 1001t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -2, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 1002t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 1002t) ...                                     
+    [?] Verifying [k = 2] --- ((c > 1) | (c <= i))                            
+      [+] Added test ... [ 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 1003t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= c)                            
+
+     - Result = (0 <= c)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))))
+
+   # Loop_1 | Inductive Check: ((!((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))))) | (!(i < 1000)) | ((0 <= (c + i)) & (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1))))))) is not valid!
+
+   [Q5] Abduction query = ((!((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))))) | (!(i < 1000)) | ((0 <= (c + i)) & (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1)))))))
+   [#] Simplified query: ((!((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i)))))) | (!(i < 1000)) | ((0 <= (c + i)) & (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1)))))))
+
+    [%] Inferring {true} [k = 1] (0f x 1001t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 1002t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 1002t) ...                                     
+    [?] Verifying [k = 2] --- ((c > 1) | (c <= i))                            
+      [+] Added test ... [ 2, -3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 1003t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 1003t) ...                                     
+    [?] Verifying [k = 2] --- ((c <= i) | (i > 1))                            
+
+     - Result = ((c <= i) | (i > 1))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((c <= i) | (i > 1)) & ((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))))
+
+   # Loop_1 | Inductive Check: ((!(((c <= i) | (i > 1)) & ((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))))) | (!(i < 1000)) | ((((c + i) <= (i + 1)) | ((i + 1) > 1)) & ((0 <= (c + i)) & (((i + 1) <= ((c + i) + 1)) & ((((c + i) > (i + 1)) | (1000 > ((i + 1) + 1))) & ((1000 > (i + 1)) | ((c + i) > (i + 1)))))))) is valid!
+
+   # Precondition Check: (((0 <= 0) | (0 > 1)) & ((0 <= 0) & ((0 <= (0 + 1)) & (((0 > 0) | (1000 > (0 + 1))) & ((1000 > 0) | (0 > 0)))))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((c <= i) | (i > 1)) & ((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))))
+================================================================================
+checker_exec.sh: line 1: 14389 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/30.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_oopsla/30.cpp --
+
+real	0m29.242s
+user	0m25.868s
+sys	0m0.732s
+
+
+--- Processed 30.cpp ---
+sat: 11
+unsat: 7
+unk: 0
+escher: 12
+
+[$] OOM Count = 0
+[$] MAX Usage = 132

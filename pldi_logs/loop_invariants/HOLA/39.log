@@ -1,0 +1,86 @@
+ ==>
+132 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : true
+     - guard : (flag != 0)
+
+   [Q1] Abduction query = ((flag != 0) | true)
+   [#] Simplified query: ((flag != 0) | true)
+
+    [%] Inferring {true} [k = 1] (0f x 132t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+
+     - Result = true
+
+   # Loop_1 | Invariant @ Postcondition: true
+
+   # Loop_1 | Inductive Check: ((!true) | (!(flag != 0)) | ((((true | false) & (true | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1)))) is not valid!
+
+   [Q2] Abduction query = ((!true) | (!(flag != 0)) | ((((true | false) & (true | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1))))
+   [#] Simplified query: ((!true) | (!(flag != 0)) | ((((true | false) & (true | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 132t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, -2, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 133t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 133t) ...                                     
+    [?] Verifying [k = 2] --- ((MAXPATHLEN > 1) | (1 = MAXPATHLEN))                            
+      [+] Added test ... [ -1, -2, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 134t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= glob3_dc)                            
+      [+] Added test ... [ -1, 0, 0 ]
+
+    [%] Inferring {true} [k = 1] (3f x 135t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 135t) ...                                     
+    [?] Verifying [k = 2] --- ((MAXPATHLEN > 1) | (1 = MAXPATHLEN)) & (0 <= glob3_dc)                            
+      [+] Added test ... [ -1, 2, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 136t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 136t) ...                                     
+    [?] Verifying [k = 2] --- ((1 = MAXPATHLEN) | (MAXPATHLEN > glob3_dc)) & (0 <= glob3_dc)                            
+      [+] Added test ... [ -1, 1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 137t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 137t) ...                                     
+    [?] Verifying [k = 2] --- (0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (0 = flag))                            
+
+     - Result = ((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (0 = flag)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (0 = flag))) & true)
+
+   # Loop_1 | Inductive Check: ((!(((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (0 = flag))) & true)) | (!(flag != 0)) | (((((((0 <= (glob3_dc + 1)) & ((MAXPATHLEN > (glob3_dc + 1)) | (0 = 0))) & true) | false) & ((((0 <= (glob3_dc + 1)) & ((MAXPATHLEN > (glob3_dc + 1)) | (0 = 0))) & true) | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1)))) is valid!
+
+   # Precondition Check: ((!(MAXPATHLEN > 0)) | (((((0 <= 0) & ((MAXPATHLEN > 0) | (0 = 0))) & true) | (!((0 + 0) >= ((0 + (MAXPATHLEN + 1)) - 1)))) & ((((0 <= 0) & ((MAXPATHLEN > 0) | (0 = 1))) & true) | ((0 + 0) >= ((0 + (MAXPATHLEN + 1)) - 1))))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (0 = flag))) & true)
+================================================================================
+checker_exec.sh: line 1:  1436 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/39.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_hola/39.cpp --
+
+real	0m19.939s
+user	0m17.820s
+sys	0m0.304s
+
+
+--- Processed 39.cpp ---
+sat: 6
+unsat: 4
+unk: 0
+escher: 5
+
+[$] OOM Count = 0
+[$] MAX Usage = 120

@@ -1,0 +1,138 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & (y < (n + 1)))
+     - guard : (x < n)
+
+   [Q1] Abduction query = ((x < n) | (true & (y < (n + 1))))
+   [#] Simplified query: ((x < n) | (true & (y < (n + 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((n > y) | (y = n))                            
+
+     - Result = ((n > y) | (y = n))
+
+   # Loop_1 | Invariant @ Postcondition: ((n > y) | (y = n))
+
+   # Loop_1 | Inductive Check: ((!((n > y) | (y = n))) | (!(x < n)) | ((((n > (y + 1)) | ((y + 1) = n)) | (!((x + 1) >= (m + 1)))) & (((n > y) | (y = n)) | ((x + 1) >= (m + 1))))) is not valid!
+
+   [Q2] Abduction query = ((!((n > y) | (y = n))) | (!(x < n)) | ((((n > (y + 1)) | ((y + 1) = n)) | (!((x + 1) >= (m + 1)))) & (((n > y) | (y = n)) | ((x + 1) >= (m + 1)))))
+   [#] Simplified query: ((!((n > y) | (y = n))) | (!(x < n)) | ((((n > (y + 1)) | ((y + 1) = n)) | (!((x + 1) >= (m + 1)))) & (((n > y) | (y = n)) | ((x + 1) >= (m + 1)))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((n > y) | (y = x))                            
+
+     - Result = ((n > y) | (y = x))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((n > y) | (y = x)) & ((n > y) | (y = n)))
+
+   # Loop_1 | Inductive Check: ((!(((n > y) | (y = x)) & ((n > y) | (y = n)))) | (!(x < n)) | (((((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n))) | (!((x + 1) >= (m + 1)))) & ((((n > y) | (y = (x + 1))) & ((n > y) | (y = n))) | ((x + 1) >= (m + 1))))) is not valid!
+
+   [Q3] Abduction query = ((!(((n > y) | (y = x)) & ((n > y) | (y = n)))) | (!(x < n)) | (((((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n))) | (!((x + 1) >= (m + 1)))) & ((((n > y) | (y = (x + 1))) & ((n > y) | (y = n))) | ((x + 1) >= (m + 1)))))
+   [#] Simplified query: ((!(((n > y) | (y = x)) & ((n > y) | (y = n)))) | (!(x < n)) | (((((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n))) | (!((x + 1) >= (m + 1)))) & ((((n > y) | (y = (x + 1))) & ((n > y) | (y = n))) | ((x + 1) >= (m + 1)))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 2, 1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((n > (1 + 1)) | (y = m))                            
+      [+] Added test ... [ 3, 2, 1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6402t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 6402t) ...                                     
+    [?] Verifying [k = 2] --- ((y = m) | (y = x))                            
+
+     - Result = ((y = m) | (y = x))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n))))
+
+   # Loop_1 | Inductive Check: ((!(((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n))))) | (!(x < n)) | ((((((y + 1) = m) | ((y + 1) = (x + 1))) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n)))) | (!((x + 1) >= (m + 1)))) & ((((y = m) | (y = (x + 1))) & (((n > y) | (y = (x + 1))) & ((n > y) | (y = n)))) | ((x + 1) >= (m + 1))))) is not valid!
+
+   [Q4] Abduction query = ((!(((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n))))) | (!(x < n)) | ((((((y + 1) = m) | ((y + 1) = (x + 1))) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n)))) | (!((x + 1) >= (m + 1)))) & ((((y = m) | (y = (x + 1))) & (((n > y) | (y = (x + 1))) & ((n > y) | (y = n)))) | ((x + 1) >= (m + 1)))))
+   [#] Simplified query: ((!(((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n))))) | (!(x < n)) | ((((((y + 1) = m) | ((y + 1) = (x + 1))) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n)))) | (!((x + 1) >= (m + 1)))) & ((((y = m) | (y = (x + 1))) & (((n > y) | (y = (x + 1))) & ((n > y) | (y = n)))) | ((x + 1) >= (m + 1)))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, -1, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (n > 1)                            
+      [+] Added test ... [ 0, 0, 1, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (x <= y)                            
+      [+] Added test ... [ 0, 2, 0, 1 ]
+
+    [%] Inferring {true} [k = 1] (3f x 6403t) ...                                     
+    [?] Verifying [k = 1] --- (n > 1) & (x <= y)                            
+      [+] Added test ... [ 1, 3, 1, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6404t) ...                                     
+    [?] Verifying [k = 1] --- (x <= y) & (n > m)                            
+      [+] Added test ... [ -3, -1, -3, 0 ]
+
+    [%] Inferring {true} [k = 1] (4f x 6405t) ...                                     
+    [?] Verifying [k = 1] --- (x <= y) & (n > m) & (n > 1)                            
+      [+] Added test ... [ -1, 1, -1, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 6406t) ...                                     
+    [?] Verifying [k = 1] --- (x <= y) & (m <= y)                            
+
+     - Result = ((x <= y) & (m <= y))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((x <= y) & (m <= y)) & (((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n)))))
+
+   # Loop_1 | Inductive Check: ((!(((x <= y) & (m <= y)) & (((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n)))))) | (!(x < n)) | ((((((x + 1) <= (y + 1)) & (m <= (y + 1))) & ((((y + 1) = m) | ((y + 1) = (x + 1))) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((n > (y + 1)) | ((y + 1) = n))))) | (!((x + 1) >= (m + 1)))) & (((((x + 1) <= y) & (m <= y)) & (((y = m) | (y = (x + 1))) & (((n > y) | (y = (x + 1))) & ((n > y) | (y = n))))) | ((x + 1) >= (m + 1))))) is valid!
+
+   # Precondition Check: ((!(n >= 0)) | ((((!((m >= 0) & (m < n))) | (((0 <= m) & (m <= m)) & (((m = m) | (m = 0)) & (((n > m) | (m = 0)) & ((n > m) | (m = n)))))) | (!(m >= 0))) & (((!((m >= 0) & (m < n))) | (((0 <= m) & (m <= m)) & (((m = m) | (m = 0)) & (((n > m) | (m = 0)) & ((n > m) | (m = n)))))) | (m >= 0)))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((x <= y) & (m <= y)) & (((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n)))))
+================================================================================
+checker_exec.sh: line 1: 30614 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/dillig19.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig19.cpp --
+
+real	0m32.351s
+user	0m29.504s
+sys	0m0.696s
+
+
+--- Processed dillig19.cpp ---
+sat: 13
+unsat: 6
+unk: 0
+escher: 13
+
+[$] OOM Count = 0
+[$] MAX Usage = 141

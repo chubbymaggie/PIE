@@ -1,0 +1,65 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7 for loop #1
+
+     - post_1 : (((true & (j = 100)) | (!(flag != 0))) & (true | (flag != 0)))
+     - guard : (b < 100)
+
+   [Q1] Abduction query = ((b < 100) | (((true & (j = 100)) | (!(flag != 0))) & (true | (flag != 0))))
+   [#] Simplified query: ((b < 100) | (((true & (j = 100)) | (!(flag != 0))) & (true | (flag != 0))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 100, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((b = j) | (j = flag))                            
+      [+] Added test ... [ 101, 101, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6402t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 6402t) ...                                     
+    [?] Verifying [k = 2] --- ((b = j) | (j = flag)) & ((100 > j) | (j = 100))                            
+      [+] Added test ... [ 100, -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 6403t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 6403t) ...                                     
+    [?] Verifying [k = 2] --- ((100 > j) | (j = 100)) & ((b = j) | (0 = flag))                            
+
+     - Result = (((100 > j) | (j = 100)) & ((b = j) | (0 = flag)))
+
+   # Loop_1 | Invariant @ Postcondition: (((100 > j) | (j = 100)) & ((b = j) | (0 = flag)))
+
+   # Loop_1 | Inductive Check: ((!(((100 > j) | (j = 100)) & ((b = j) | (0 = flag)))) | (!(b < 100)) | (((((100 > (j + 1)) | ((j + 1) = 100)) & (((b + 1) = (j + 1)) | (0 = flag))) | (!(flag != 0))) & ((((100 > j) | (j = 100)) & (((b + 1) = j) | (0 = flag))) | (flag != 0)))) is valid!
+
+   # Precondition Check: (((100 > 0) | (0 = 100)) & ((0 = 0) | (0 = flag))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((100 > j) | (j = 100)) & ((b = j) | (0 = flag)))
+================================================================================
+checker_exec.sh: line 1: 24189 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/18.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_oopsla/18.cpp --
+
+real	0m19.865s
+user	0m18.376s
+sys	0m0.224s
+
+
+--- Processed 18.cpp ---
+sat: 3
+unsat: 3
+unk: 0
+escher: 5
+
+[$] OOM Count = 0
+[$] MAX Usage = 115

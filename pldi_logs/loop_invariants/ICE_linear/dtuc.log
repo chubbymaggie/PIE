@@ -1,0 +1,86 @@
+ ==>
+4063 tests for loop #1.
+1838 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #2
+
+     - post_2 : (true & true)
+     - guard : (j > 0)
+
+   [Q1] Abduction query = ((j > 0) | (true & true))
+   [#] Simplified query: ((j > 0) | (true & true))
+
+    [%] Inferring {true} [k = 1] (0f x 1838t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+
+     - Result = true
+
+   # Loop_2 | Invariant @ Postcondition: true
+
+   # Loop_2 | Inductive Check: ((!true) | (!(j > 0)) | (true & (k > 0))) is not valid!
+
+   [Q2] Abduction query = ((!true) | (!(j > 0)) | (true & (k > 0)))
+   [#] Simplified query: ((!true) | (!(j > 0)) | (true & (k > 0)))
+
+    [%] Inferring {true} [k = 1] (0f x 1838t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 1839t) ...                                     
+    [?] Verifying [k = 1] --- (j <= k)                            
+
+     - Result = (j <= k)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((j <= k) & true)
+
+   # Loop_2 | Inductive Check: ((!((j <= k) & true)) | (!(j > 0)) | ((((j - 1) <= (k - 1)) & true) & (k > 0))) is valid!
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : ((n <= k) & true)
+     - guard : (i < n)
+
+   [Q3] Abduction query = ((i < n) | ((n <= k) & true))
+   [#] Simplified query: ((i < n) | ((n <= k) & true))
+
+    [%] Inferring {true} [k = 1] (0f x 4063t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 4064t) ...                                     
+    [?] Verifying [k = 1] --- (i = k)                            
+
+     - Result = (i = k)
+
+   # Loop_1 | Invariant @ Postcondition: (i = k)
+
+   # Loop_1 | Inductive Check: ((!(i = k)) | (!(i < n)) | ((i + 1) = (k + 1))) is valid!
+
+   # Precondition Check: (0 = 0) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (i = k)
+Loop #2: ((j <= k) & true)
+================================================================================
+checker_exec.sh: line 1: 10603 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/dtuc.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dtuc.cpp --
+
+real	0m21.807s
+user	0m19.836s
+sys	0m0.404s
+
+
+--- Processed dtuc.cpp ---
+sat: 3
+unsat: 6
+unk: 0
+escher: 2
+
+[$] OOM Count = 0
+[$] MAX Usage = 125

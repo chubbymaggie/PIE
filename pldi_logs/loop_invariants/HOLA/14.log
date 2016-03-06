@@ -1,0 +1,88 @@
+ ==>
+6378 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : ((true & (a <= m)) & (a >= (0 - m)))
+     - guard : (j <= m)
+
+   [Q1] Abduction query = ((j <= m) | ((true & (a <= m)) & (a >= (0 - m))))
+   [#] Simplified query: ((j <= m) | ((true & (a <= m)) & (a >= (0 - m))))
+
+    [%] Inferring {true} [k = 1] (0f x 6378t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 1, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6379t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 6379t) ...                                     
+    [%] Inferring {true} [k = 3] (3f x 6379t) ...                                     
+    [?] Verifying [k = 3] --- ((m > j) | (j > 1) | (j = m))                            
+      [+] Added test ... [ 2, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 6380t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 6380t) ...                                     
+    [?] Verifying [k = 2] --- ((m > 1) | (1 = m))                            
+      [+] Added test ... [ 3, 2, -3 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (7f x 6381t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 6381t) ...                                     
+    [?] Verifying [k = 2] --- ((m > 1) | (1 = m)) & (j > (0 - a))                            
+      [+] Added test ... [ 4, 2, -3 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (8f x 6382t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 6382t) ...                                     
+    [%] Inferring {true} [k = 3] (8f x 6382t) ...                                     
+    [?] Verifying [k = 3] --- ((m > j) | (j = m) | (j = (m + 1))) & (j > (0 - a))                            
+      [+] Added test ... [ 0, -1, 1 ]
+
+    [%] Inferring {true} [k = 1] (8f x 6383t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 6383t) ...                                     
+    [%] Inferring {true} [k = 3] (8f x 6383t) ...                                     
+    [?] Verifying [k = 3] --- ((m > j) | (j = m) | (j = (m + 1))) & (j > (0 - a)) & ((m > 1) | (1 = m))                            
+      [+] Added test ... [ 3, 2, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (9f x 6384t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 6384t) ...                                     
+    [%] Inferring {true} [k = 3] (9f x 6384t) ...                                     
+    [?] Verifying [k = 3] --- ((m > j) | (j = m) | (j = (m + 1))) & (j > (0 - a)) & (j > a) & ((m > 1) | (1 = m))                            
+
+     - Result = ((((((m > j) | (j = m)) | (j = (m + 1))) & (j > (0 - a))) & (j > a)) & ((m > 1) | (1 = m)))
+
+   # Loop_1 | Invariant @ Postcondition: ((((((m > j) | (j = m)) | (j = (m + 1))) & (j > (0 - a))) & (j > a)) & ((m > 1) | (1 = m)))
+
+   # Loop_1 | Inductive Check: ((!((((((m > j) | (j = m)) | (j = (m + 1))) & (j > (0 - a))) & (j > a)) & ((m > 1) | (1 = m)))) | (!(j <= m)) | ((((((((m > (j + 1)) | ((j + 1) = m)) | ((j + 1) = (m + 1))) & ((j + 1) > (0 - (a + 1)))) & ((j + 1) > (a + 1))) & ((m > 1) | (1 = m))) | false) & (((((((m > (j + 1)) | ((j + 1) = m)) | ((j + 1) = (m + 1))) & ((j + 1) > (0 - (a - 1)))) & ((j + 1) > (a - 1))) & ((m > 1) | (1 = m))) | false))) is valid!
+
+   # Precondition Check: ((!(m > 0)) | ((((((m > 1) | (1 = m)) | (1 = (m + 1))) & (1 > (0 - 0))) & (1 > 0)) & ((m > 1) | (1 = m)))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((((((m > j) | (j = m)) | (j = (m + 1))) & (j > (0 - a))) & (j > a)) & ((m > 1) | (1 = m)))
+================================================================================
+checker_exec.sh: line 1: 16223 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/14.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_hola/14.cpp --
+
+real	0m22.388s
+user	0m20.524s
+sys	0m0.304s
+
+
+--- Processed 14.cpp ---
+sat: 6
+unsat: 3
+unk: 0
+escher: 9
+
+[$] OOM Count = 0
+[$] MAX Usage = 114

@@ -1,0 +1,100 @@
+ ==>
+2 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7 for loop #1
+
+     - post_1 : (true & (x = y))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (x = y)))
+   [#] Simplified query: (false | (true & (x = y)))
+
+    [%] Inferring {true} [k = 1] (0f x 2t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 3t) ...                                     
+    [?] Verifying [k = 1] --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Postcondition: (x = y)
+
+   # Loop_1 | Inductive Check: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!(z = 0))) & (((x + 1) = y) | (z = 0))) | (!(w = 1))) & ((((x = (y + 1)) | (!(z = 0))) & ((x = y) | (z = 0))) | (w = 1)))) is not valid!
+
+   [Q2] Abduction query = ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!(z = 0))) & (((x + 1) = y) | (z = 0))) | (!(w = 1))) & ((((x = (y + 1)) | (!(z = 0))) & ((x = y) | (z = 0))) | (w = 1))))
+   [#] Simplified query: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!(z = 0))) & (((x + 1) = y) | (z = 0))) | (!(w = 1))) & ((((x = (y + 1)) | (!(z = 0))) & ((x = y) | (z = 0))) | (w = 1))))
+
+    [%] Inferring {true} [k = 1] (0f x 2t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 3t) ...                                     
+    [?] Verifying [k = 1] --- (y = z)                            
+      [+] Added test ... [ -1, -1, -1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 4t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= z)                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [%] Inferring {true} [k = 1] (2f x 5t) ...                                     
+    [?] Verifying [k = 1] --- (y = z) & (0 <= z)                            
+      [+] Added test ... [ 1, 1, 1, 1 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (3f x 6t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= z) & (! (w = z))                            
+      [+] Added test ... [ 0, 0, 2, 1 ]
+
+    [%] Inferring {true} [k = 1] (3f x 7t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= z) & (! (w = z)) & (y = z)                            
+      [+] Added test ... [ 2, 2, 2, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 8t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= z) & (! (w = z)) & (z <= 1) & (y = z)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 9t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= z) & (! (w = z)) & (z <= 1) & (0 <= w) & (y = z)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 10t) ...                                     
+    [?] Verifying [k = 1] --- (0 <= z) & (! (w = z)) & (z <= 1) & (0 <= w) & (w <= 1) & (y = z)                            
+
+     - Result = ((((((0 <= z) & (!(w = z))) & (z <= 1)) & (0 <= w)) & (w <= 1)) & (y = z))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((((((0 <= z) & (!(w = z))) & (z <= 1)) & (0 <= w)) & (w <= 1)) & (y = z)) & (x = y))
+
+   # Loop_1 | Inductive Check: ((!(((((((0 <= z) & (!(w = z))) & (z <= 1)) & (0 <= w)) & (w <= 1)) & (y = z)) & (x = y))) | false | (((((((((((0 <= 1) & (!(0 = 1))) & (1 <= 1)) & (0 <= 0)) & (0 <= 1)) & ((y + 1) = 1)) & ((x + 1) = (y + 1))) | (!(z = 0))) & ((((((((0 <= z) & (!(0 = z))) & (z <= 1)) & (0 <= 0)) & (0 <= 1)) & (y = z)) & ((x + 1) = y)) | (z = 0))) | (!(w = 1))) & ((((((((((0 <= 1) & (!(w = 1))) & (1 <= 1)) & (0 <= w)) & (w <= 1)) & ((y + 1) = 1)) & (x = (y + 1))) | (!(z = 0))) & ((((((((0 <= z) & (!(w = z))) & (z <= 1)) & (0 <= w)) & (w <= 1)) & (y = z)) & (x = y)) | (z = 0))) | (w = 1)))) is valid!
+
+   # Precondition Check: (((((((0 <= 0) & (!(1 = 0))) & (0 <= 1)) & (0 <= 1)) & (1 <= 1)) & (0 = 0)) & (0 = 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((((((0 <= z) & (!(w = z))) & (z <= 1)) & (0 <= w)) & (w <= 1)) & (y = z)) & (x = y))
+================================================================================
+checker_exec.sh: line 1:  1501 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/10.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_hola/10.cpp --
+
+real	0m20.929s
+user	0m18.736s
+sys	0m0.456s
+
+
+--- Processed 10.cpp ---
+sat: 10
+unsat: 4
+unk: 0
+escher: 7
+
+[$] OOM Count = 0
+[$] MAX Usage = 120

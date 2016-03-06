@@ -1,0 +1,202 @@
+ ==>
+1895 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7 for loop #1
+
+     - post_1 : (((true & (x = (2 * y))) | (!(i = m))) & (true | (i = m)))
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | (((true & (x = (2 * y))) | (!(i = m))) & (true | (i = m))))
+   [#] Simplified query: ((i < n) | (((true & (x = (2 * y))) | (!(i = m))) & (true | (i = m))))
+
+    [%] Inferring {true} [k = 1] (0f x 1895t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, -1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 1896t) ...                                     
+    [?] Verifying [k = 1] --- (i = x)                            
+      [+] Added test ... [ -1, -1, -1, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 1897t) ...                                     
+    [?] Verifying [k = 1] --- (m > 2)                            
+      [+] Added test ... [ 3, 0, -1, 0, 3 ]
+
+    [%] Inferring {true} [k = 1] (3f x 1898t) ...                                     
+    [?] Verifying [k = 1] --- (i = x) & (m > 2)                            
+      [+] Added test ... [ 3, 0, 3, 0, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 1899t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 1899t) ...                                     
+    [%] Inferring {true} [k = 3] (5f x 1899t) ...                                     
+    [?] Verifying [k = 3] --- ((n > m) | (m > x) | (m = n)) & (i = x) & (m > 2)                            
+      [+] Added test ... [ 3, 3, 3, 0, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 1900t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 1900t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & ((m > x) | (y > 2))                            
+      [+] Added test ... [ 0, 0, 0, 3, 0 ]
+
+    [%] Inferring {true} [k = 1] (6f x 1901t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 1901t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & ((m > x) | (y > 2)) & (m > 2)                            
+      [+] Added test ... [ 3, 0, 3, 3, 3 ]
+
+    [%] Inferring {true} [k = 1] (6f x 1902t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 1902t) ...                                     
+    [%] Inferring {true} [k = 3] (6f x 1902t) ...                                     
+    [?] Verifying [k = 3] --- ((n > m) | (m > x) | (m = n)) & (i = x) & ((m > x) | (y > 2)) & (m > 2)                            
+      [+] Added test ... [ 3, 3, 3, 3, 3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (7f x 1903t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 1903t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & ((m > x) | (y > 2)) & ((n > m) | (m > y))                            
+      [+] Added test ... [ 4, 0, 4, 3, 4 ]
+
+    [%] Inferring {true} [k = 1] (7f x 1904t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 1904t) ...                                     
+    [%] Inferring {true} [k = 3] (7f x 1904t) ...                                     
+    [?] Verifying [k = 3] --- ((n > m) | (m > x) | (m = n)) & (i = x) & ((m > x) | (y > 2)) & ((n > m) | (m > y))                            
+      [+] Added test ... [ 4, 4, 4, 3, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (8f x 1905t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 1905t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & ((m > x) | (y > 2)) & ((n > m) | (m > (y + 1)))                            
+      [+] Added test ... [ 5, 0, 5, 3, 5 ]
+
+    [%] Inferring {true} [k = 1] (8f x 1906t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 1906t) ...                                     
+    [%] Inferring {true} [k = 3] (8f x 1906t) ...                                     
+    [?] Verifying [k = 3] --- ((n > m) | (m > x) | (m = n)) & (i = x) & ((m > x) | (y > 2)) & ((n > m) | (m > (y + 1)))                            
+      [+] Added test ... [ 5, 5, 5, 3, 5 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (9f x 1907t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 1907t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & ((m > x) | (y > (2 + 1)))                            
+      [+] Added test ... [ 0, 0, 0, 4, 0 ]
+
+    [%] Inferring {true} [k = 1] (9f x 1908t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 1908t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & (m > 2) & ((m > x) | (y > (2 + 1)))                            
+      [+] Added test ... [ 3, 0, 3, 4, 3 ]
+
+    [%] Inferring {true} [k = 1] (9f x 1909t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 1909t) ...                                     
+    [?] Verifying [k = 2] --- (i = x) & ((n > m) | (m > (y + 1))) & ((m > x) | (y > (2 + 1)))                            
+      [+] Added test ... [ 6, 0, 6, 4, 6 ]
+
+    [%] Inferring {true} [k = 1] (9f x 1910t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 1910t) ...                                     
+    [%] Inferring {true} [k = 3] (9f x 1910t) ...                                     
+    [?] Verifying [k = 3] --- ((n > m) | (m > x) | (m = n)) & (i = x) & ((n > m) | (m > (y + 1))) & ((m > x) | (y > (2 + 1)))                            
+      [+] Added test ... [ 6, 6, 6, 4, 6 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (10f x 1911t) ...                                     
+    [%] Inferring {true} [k = 2] (10f x 1911t) ...                                     
+    [%] Inferring {true} [k = 3] (10f x 1911t) ...                                     
+    [?] Verifying [k = 3] --- (i = x) & ((n > m) | (m > x) | (m = (y * 2)))                            
+
+     - Result = ((i = x) & (((n > m) | (m > x)) | (m = (y * 2))))
+
+   # Loop_1 | Invariant @ Postcondition: ((i = x) & (((n > m) | (m > x)) | (m = (y * 2))))
+
+   # Loop_1 | Inductive Check: ((!((i = x) & (((n > m) | (m > x)) | (m = (y * 2))))) | (!(i < n)) | (((((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = ((y + 1) * 2)))) | (!(((i + 1) % 2) = 0))) & ((((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = (y * 2)))) | (((i + 1) % 2) = 0)))) is not valid!
+
+   [Q2] Abduction query = ((!((i = x) & (((n > m) | (m > x)) | (m = (y * 2))))) | (!(i < n)) | (((((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = ((y + 1) * 2)))) | (!(((i + 1) % 2) = 0))) & ((((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = (y * 2)))) | (((i + 1) % 2) = 0))))
+   [#] Simplified query: ((!((i = x) & (((n > m) | (m > x)) | (m = (y * 2))))) | (!(i < n)) | (((((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = ((y + 1) * 2)))) | (!(((i + 1) % 2) = 0))) & ((((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = (y * 2)))) | (((i + 1) % 2) = 0))))
+
+    [%] Inferring {true} [k = 1] (0f x 1895t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ -1, -1, 0, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 1896t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 1896t) ...                                     
+    [?] Verifying [k = 2] --- ((n > y) | (y = x))                            
+      [+] Added test ... [ 1, 1, 2, 2, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 1897t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 1897t) ...                                     
+    [?] Verifying [k = 2] --- ((n > y) | (y = x)) & (!((y = x)) | (y = 0))                            
+      [+] Added test ... [ 3, 3, 4, 4, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (6f x 1898t) ...                                     
+    [%] Inferring {true} [k = 2] (6f x 1898t) ...                                     
+    [?] Verifying [k = 2] --- ((m > (x + 1)) | (y > 2))                            
+      [+] Added test ... [ 5, 5, 6, 6, 3 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (7f x 1899t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 1899t) ...                                     
+    [?] Verifying [k = 2] --- ((m > (x + 1)) | (y > (2 + 1)))                            
+      [+] Added test ... [ 7, 7, 8, 8, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (8f x 1900t) ...                                     
+    [?] Verifying [k = 1] --- (y <= (x - y))                            
+      [+] Added test ... [ -1, -1, 0, 0, -2 ]
+
+    [%] Inferring {true} [k = 1] (8f x 1901t) ...                                     
+    [%] Inferring {true} [k = 2] (8f x 1901t) ...                                     
+    [?] Verifying [k = 2] --- ((m > (x + 1)) | (y > (2 + 1))) & (y <= (x - y))                            
+      [+] Added test ... [ 11, 11, 12, 12, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5 @6
+    [%] Inferring {true} [k = 1] (9f x 1902t) ...                                     
+    [?] Verifying [k = 1] --- ((2 * (y + 1)) > x) & (y <= (x - y))                            
+      [+] Added test ... [ 0, 0, 1, 1, 0 ]
+
+    [%] Inferring {true} [k = 1] (9f x 1903t) ...                                     
+    [%] Inferring {true} [k = 2] (9f x 1903t) ...                                     
+    [?] Verifying [k = 2] --- (y <= (x - y)) & ((2 * (y + 1)) > x) & ((m > (x + 1)) | (y > (2 + 1)))                            
+      [+] Added test ... [ 8, 8, 9, 9, 4 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (10f x 1904t) ...                                     
+    [?] Verifying [k = 1] --- ((2 * (y + 1)) > x) & (0 = (m % 2)) & (y <= (x - y))                            
+
+     - Result = ((((2 * (y + 1)) > x) & (0 = (m % 2))) & (y <= (x - y)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((((2 * (y + 1)) > x) & (0 = (m % 2))) & (y <= (x - y))) & ((i = x) & (((n > m) | (m > x)) | (m = (y * 2)))))
+
+   # Loop_1 | Inductive Check: ((!(((((2 * (y + 1)) > x) & (0 = (m % 2))) & (y <= (x - y))) & ((i = x) & (((n > m) | (m > x)) | (m = (y * 2)))))) | (!(i < n)) | (((((((2 * ((y + 1) + 1)) > (x + 1)) & (0 = (m % 2))) & ((y + 1) <= ((x + 1) - (y + 1)))) & (((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = ((y + 1) * 2))))) | (!(((i + 1) % 2) = 0))) & ((((((2 * (y + 1)) > (x + 1)) & (0 = (m % 2))) & (y <= ((x + 1) - y))) & (((i + 1) = (x + 1)) & (((n > m) | (m > (x + 1))) | (m = (y * 2))))) | (((i + 1) % 2) = 0)))) is valid!
+
+   # Precondition Check: (((((2 * (0 + 1)) > 0) & (0 = (10 % 2))) & (0 <= (0 - 0))) & ((0 = 0) & (((n > 10) | (10 > 0)) | (10 = (0 * 2))))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((((2 * (y + 1)) > x) & (0 = (m % 2))) & (y <= (x - y))) & ((i = x) & (((n > m) | (m > x)) | (m = (y * 2)))))
+================================================================================
+checker_exec.sh: line 1: 27071 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/34.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_hola/34.cpp --
+
+real	0m24.661s
+user	0m22.008s
+sys	0m0.496s
+
+
+--- Processed 34.cpp ---
+sat: 26
+unsat: 4
+unk: 0
+escher: 20
+
+[$] OOM Count = 0
+[$] MAX Usage = 121

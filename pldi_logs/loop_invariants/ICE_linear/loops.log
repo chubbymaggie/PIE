@@ -1,0 +1,155 @@
+ ==>
+6400 tests for loop #1.
+2145 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #2
+
+     - post_2 : (true & (x = y))
+     - guard : (y < s)
+
+   [Q1] Abduction query = ((y < s) | (true & (x = y)))
+   [#] Simplified query: ((y < s) | (true & (x = y)))
+
+    [%] Inferring {true} [k = 1] (0f x 2145t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 2146t) ...                                     
+    [?] Verifying [k = 1] --- (x = s)                            
+      [+] Added test ... [ 1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 2147t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 2147t) ...                                     
+    [?] Verifying [k = 2] --- ((x > y) | (y = x)) & (x = s)                            
+
+     - Result = (((x > y) | (y = x)) & (x = s))
+
+   # Loop_2 | Invariant @ Postcondition: (((x > y) | (y = x)) & (x = s))
+
+   # Loop_2 | Inductive Check: ((!(((x > y) | (y = x)) & (x = s))) | (!(y < s)) | (((x > (y + 1)) | ((y + 1) = x)) & (x = s))) is valid!
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : (((x > 0) | (0 = x)) & (x = s))
+     - guard : (s < x)
+
+   [Q2] Abduction query = ((s < x) | (((x > 0) | (0 = x)) & (x = s)))
+   [#] Simplified query: ((s < x) | (((x > 0) | (0 = x)) & (x = s)))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((x > 1) | (1 = x))                            
+      [+] Added test ... [ 3, 2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (5f x 6402t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 6402t) ...                                     
+    [?] Verifying [k = 2] --- ((x > s) | (s = x))                            
+      [+] Added test ... [ -1, -1 ]
+
+    [%] Inferring {true} [k = 1] (5f x 6403t) ...                                     
+    [%] Inferring {true} [k = 2] (5f x 6403t) ...                                     
+    [?] Verifying [k = 2] --- ((x > 1) | (1 = x)) & ((x > s) | (s = x))                            
+
+     - Result = (((x > 1) | (1 = x)) & ((x > s) | (s = x)))
+
+   # Loop_1 | Invariant @ Postcondition: (((x > 1) | (1 = x)) & ((x > s) | (s = x)))
+
+   # Loop_1 | Inductive Check: ((!(((x > 1) | (1 = x)) & ((x > s) | (s = x)))) | (!(s < x)) | (((x > 1) | (1 = x)) & ((x > (s + 1)) | ((s + 1) = x)))) is valid!
+
+   # Precondition Check: ((!(x >= 0)) | (((x > 1) | (1 = x)) & ((x > 0) | (0 = x))))    [+] Root state for counter-examples : {'y': '-', 'x': '0', 's': '-'}
+ is not valid!
+
+----------------------------------< RESTART >-----------------------------------
+
+   + Found guard in B4 for loop #2
+
+     - post_2 : (true & (x = y))
+     - guard : (y < s)
+
+   [Q3] Abduction query = ((y < s) | (true & (x = y)))
+   [#] Simplified query: ((y < s) | (true & (x = y)))
+
+    [%] Inferring {true} [k = 1] (0f x 2146t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 2147t) ...                                     
+    [?] Verifying [k = 1] --- (x = s)                            
+      [+] Added test ... [ 1, 0, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 2148t) ...                                     
+    [?] Verifying [k = 1] --- (x = s) & (y <= x)                            
+
+     - Result = ((x = s) & (y <= x))
+
+   # Loop_2 | Invariant @ Postcondition: ((x = s) & (y <= x))
+
+   # Loop_2 | Inductive Check: ((!((x = s) & (y <= x))) | (!(y < s)) | ((x = s) & ((y + 1) <= x))) is valid!
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : ((x = s) & (0 <= x))
+     - guard : (s < x)
+
+   [Q4] Abduction query = ((s < x) | ((x = s) & (0 <= x)))
+   [#] Simplified query: ((s < x) | ((x = s) & (0 <= x)))
+
+    [%] Inferring {true} [k = 1] (0f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (s <= x)                            
+      [+] Added test ... [ -1, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6403t) ...                                     
+    [?] Verifying [k = 1] --- (s <= x) & (0 <= x)                            
+
+     - Result = ((s <= x) & (0 <= x))
+
+   # Loop_1 | Invariant @ Postcondition: ((s <= x) & (0 <= x))
+
+   # Loop_1 | Inductive Check: ((!((s <= x) & (0 <= x))) | (!(s < x)) | (((s + 1) <= x) & (0 <= x))) is valid!
+
+   # Precondition Check: ((!(x >= 0)) | ((0 <= x) & (0 <= x))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((s <= x) & (0 <= x))
+Loop #2: ((x = s) & (y <= x))
+================================================================================
+checker_exec.sh: line 1: 27793 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/loops.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/loops.cpp --
+
+real	0m28.303s
+user	0m25.664s
+sys	0m0.560s
+
+
+--- Processed loops.cpp ---
+sat: 10
+unsat: 9
+unk: 0
+escher: 12
+
+[$] OOM Count = 0
+[$] MAX Usage = 135

@@ -1,0 +1,117 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & (k > 0))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (k > 0)))
+   [#] Simplified query: (false | (true & (k > 0)))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (k > 1)                            
+
+     - Result = (k > 1)
+
+   # Loop_1 | Invariant @ Postcondition: (k > 1)
+
+   # Loop_1 | Inductive Check: ((!(k > 1)) | false | ((((k + (w + 1)) > 1) | false) & (((k + w) > 1) | false))) is not valid!
+
+   [Q2] Abduction query = ((!(k > 1)) | false | ((((k + (w + 1)) > 1) | false) & (((k + w) > 1) | false)))
+   [#] Simplified query: ((!(k > 1)) | false | ((((k + (w + 1)) > 1) | false) & (((k + w) > 1) | false)))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 2, -2 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((w > 1) | (1 = w))                            
+
+     - Result = ((w > 1) | (1 = w))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((w > 1) | (1 = w)) & (k > 1))
+
+   # Loop_1 | Inductive Check: ((!(((w > 1) | (1 = w)) & (k > 1))) | false | ((((((w + 1) > 1) | (1 = (w + 1))) & ((k + (w + 1)) > 1)) | false) & ((((w > 1) | (1 = w)) & ((k + w) > 1)) | false))) is valid!
+
+   # Precondition Check: (((1 > 1) | (1 = 1)) & (1 > 1))    [+] Root state for counter-examples : {'k': '-', 'w': '-'}
+ is not valid!
+
+----------------------------------< RESTART >-----------------------------------
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & (k > 0))
+     - guard : NON-DETERMINISTIC
+
+   [Q3] Abduction query = (false | (true & (k > 0)))
+   [#] Simplified query: (false | (true & (k > 0)))
+
+    [%] Inferring {true} [k = 1] (0f x 6620t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6621t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6621t) ...                                     
+    [?] Verifying [k = 2] --- ((k > 1) | (1 = k))                            
+
+     - Result = ((k > 1) | (1 = k))
+
+   # Loop_1 | Invariant @ Postcondition: ((k > 1) | (1 = k))
+
+   # Loop_1 | Inductive Check: ((!((k > 1) | (1 = k))) | false | (((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) | false) & ((((k + w) > 1) | (1 = (k + w))) | false))) is not valid!
+
+   [Q4] Abduction query = ((!((k > 1) | (1 = k))) | false | (((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) | false) & ((((k + w) > 1) | (1 = (k + w))) | false)))
+   [#] Simplified query: ((!((k > 1) | (1 = k))) | false | (((((k + (w + 1)) > 1) | (1 = (k + (w + 1)))) | false) & ((((k + w) > 1) | (1 = (k + w))) | false)))
+
+    [%] Inferring {true} [k = 1] (0f x 6620t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 2, -3 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6621t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6621t) ...                                     
+    [?] Verifying [k = 2] --- ((w > 1) | (1 = w))                            
+
+     - Result = ((w > 1) | (1 = w))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((w > 1) | (1 = w)) & ((k > 1) | (1 = k)))
+
+   # Loop_1 | Inductive Check: ((!(((w > 1) | (1 = w)) & ((k > 1) | (1 = k)))) | false | ((((((w + 1) > 1) | (1 = (w + 1))) & (((k + (w + 1)) > 1) | (1 = (k + (w + 1))))) | false) & ((((w > 1) | (1 = w)) & (((k + w) > 1) | (1 = (k + w)))) | false))) is valid!
+
+   # Precondition Check: (((1 > 1) | (1 = 1)) & ((1 > 1) | (1 = 1))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((w > 1) | (1 = w)) & ((k > 1) | (1 = k)))
+================================================================================
+checker_exec.sh: line 1: 12243 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/dillig03.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_ice/dillig03.cpp --
+
+real	0m29.254s
+user	0m25.060s
+sys	0m0.540s
+
+
+--- Processed dillig03.cpp ---
+sat: 7
+unsat: 7
+unk: 0
+escher: 7
+
+[$] OOM Count = 0
+[$] MAX Usage = 136
