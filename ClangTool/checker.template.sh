@@ -91,12 +91,13 @@ EXEC_CMD="time bin/pinvgen -wpath $WORKING_PATH -abducer $ABDUCER_PATH/abduce.sh
 echo "$EXEC_CMD" > checker_exec.sh
 
 if [[ "$CGROUP" != "" ]]; then
-    echo 0 > "$CG_LOCATION/memory.force_empty"
-    echo 0 > "$CG_LOCATION/memory.memsw.failcnt"
-    echo 0 > "$CG_LOCATION/memory.memsw.max_usage_in_bytes"
-    cgexec -g memory,cpu:$CGROUP bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
+  bash kill_on_oom.sh "$CGROUP" &
+  echo 0 > "$CG_LOCATION/memory.force_empty"
+  echo 0 > "$CG_LOCATION/memory.memsw.failcnt"
+  echo 0 > "$CG_LOCATION/memory.memsw.max_usage_in_bytes"
+  cgexec -g memory,cpu:$CGROUP bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
 else
-    bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
+  bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
 fi
 rm checker_exec.sh
 
@@ -113,4 +114,4 @@ if [[ "$CGROUP" != "" ]]; then
     aterrcho -ne "[$] MAX Usage = " ; aterrcho $(( $(cat "$CG_LOCATION/memory.memsw.max_usage_in_bytes") / ( 1024 * 1024 ) ))
 fi
 
-sed -i s//\\\n/g "$TOTAL_LOG"
+sed -i 's//\n/g' "$TOTAL_LOG"

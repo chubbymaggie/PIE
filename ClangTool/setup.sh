@@ -22,6 +22,8 @@ fi
 cp -Rf "$OWN_ROOT/pinvgen" .
 cd "$LLVM_ROOT" ; mkdir build ; cd build
 
+cp -f "$OWN_ROOT/kill_on_oom.sh" .
+
 perl -pe 's#__WORKING_PATH_BASE_FROM_SETUP_SCRIPT__#'"$WORKING_ROOT"'#g' < "$OWN_ROOT/checker.template.sh" > checker
 perl -pi -e 's#__ABDUCER_PATH_FROM_SETUP_SCRIPT__#'"$ABDUCER_ROOT"'#g' checker
 chmod +x checker

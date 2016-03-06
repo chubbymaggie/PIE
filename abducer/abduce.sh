@@ -41,15 +41,15 @@ fi
 ./preprocess "$FILE.tml" > "T$FILE.ml" 2> /dev/null
 
 # Compile OCaml code to binary
-OCAMLRUNPARAM=l=2048M ocamlfind ocamlopt -package qcheck -package batteries -c "T$FILE.ml" 2>/dev/null
-OCAMLRUNPARAM=l=2048M ocamlfind ocamlopt -o "$FILE.e" -linkpkg -package qcheck -package batteries            \
+OCAMLRUNPARAM=l=1024M ocamlfind ocamlopt -package qcheck -package batteries -c "T$FILE.ml" 2>/dev/null
+OCAMLRUNPARAM=l=1024M ocamlfind ocamlopt -o "$FILE.e" -linkpkg -package qcheck -package batteries            \
                                          testGen.cmx escher_types.cmx escher_core.cmx  \
                                          escher_components.cmx escher_synth.cmx        \
                                          pie.cmx "T$FILE.cmx" 2> /dev/null
 
 # Replace variables & simplify
 echo -ne "-\n-\n" > "$FILE.inf"
-OCAMLRUNPARAM=l=2048M "./$FILE.e" > "./$FILE.exe_out"
+OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
 
 if [ -f ./ambiguous ]; then
   ./remove_ambiguous "$FILE.tml"
