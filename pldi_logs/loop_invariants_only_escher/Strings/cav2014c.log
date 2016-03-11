@@ -1,0 +1,65 @@
+ ==>
+841 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (#len(r) > i))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (#len(r) > i)))
+   [#] Simplified query: (false | (true & (#len(r) > i)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ "", 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- ((#len(r)) > i)                            
+
+     - Result = (#len(r) > i)
+
+   # Loop_1 | Invariant @ Postcondition: (#len(r) > i)
+
+   # Loop_1 | Inductive Check: ((!(#len(r) > i)) | false | (#len(#rep(r, "a", "aa")) > (i + 1))) is not valid!
+
+   [Q2] Abduction query = ((!(#len(r) > i)) | false | (#len(#rep(r, "a", "aa")) > (i + 1)))
+   [#] Simplified query: ((!(#len(r) > i)) | false | (#len(#rep(r, "a", "aa")) > (i + 1)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ "", -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (#has(r, "a"))                            
+
+     - Result = #has(r, "a")
+
+   # Loop_1 | Invariant @ Inductive Condition: (#has(r, "a") & (#len(r) > i))
+
+   # Loop_1 | Inductive Check: ((!(#has(r, "a") & (#len(r) > i))) | false | (#has(#rep(r, "a", "aa"), "a") & (#len(#rep(r, "a", "aa")) > (i + 1)))) is valid!
+
+   # Precondition Check: (#has("a", "a") & (#len("a") > 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (#has(r, "a") & (#len(r) > i))
+================================================================================
+checker_exec.sh: line 1: 24474 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/cav2014c.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_strings/cav2014c.cpp --
+
+real	0m11.353s
+user	0m9.084s
+sys	0m0.264s
+
+
+--- Processed cav2014c.cpp ---
+sat: 3
+unsat: 4
+unk: 0
+escher: 4
+
+[$] OOM Count = 0
+[$] MAX Usage = 87

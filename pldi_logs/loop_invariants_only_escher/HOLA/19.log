@@ -1,0 +1,117 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B5 for loop #1
+
+     - post_1 : (true & (y = n))
+     - guard : (x < n)
+
+   [Q1] Abduction query = ((x < n) | (true & (y = n)))
+   [#] Simplified query: ((x < n) | (true & (y = n)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x <= y)                            
+      [+] Added test ... [ 1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (n > (1 + 1))                            
+      [+] Added test ... [ 3, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > ((1 + 1) + 1))                            
+      [+] Added test ... [ 4, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (x - y))                            
+      [+] Added test ... [ 2, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (n > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 5, 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (n > ((x - y) + 1))                            
+      [+] Added test ... [ 3, 3, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= n) & (x <= y))                            
+      [+] Added test ... [ -1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (y <= n))                            
+
+     - Result = ((x <= y) & (y <= n))
+
+   # Loop_1 | Invariant @ Postcondition: ((x <= y) & (y <= n))
+
+   # Loop_1 | Inductive Check: ((!((x <= y) & (y <= n))) | (!(x < n)) | (((((x + 1) <= (y + 1)) & ((y + 1) <= n)) | (!((x + 1) > m))) & ((((x + 1) <= y) & (y <= n)) | ((x + 1) > m)))) is not valid!
+
+   [Q2] Abduction query = ((!((x <= y) & (y <= n))) | (!(x < n)) | (((((x + 1) <= (y + 1)) & ((y + 1) <= n)) | (!((x + 1) > m))) & ((((x + 1) <= y) & (y <= n)) | ((x + 1) > m))))
+   [#] Simplified query: ((!((x <= y) & (y <= n))) | (!(x < n)) | (((((x + 1) <= (y + 1)) & ((y + 1) <= n)) | (!((x + 1) > m))) & ((((x + 1) <= y) & (y <= n)) | ((x + 1) > m))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 0, 2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (n > (1 + 1))                            
+      [+] Added test ... [ 0, 3, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, 4, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (y - x))                            
+      [+] Added test ... [ 1, 2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (y <= (x + m))                            
+      [+] Added test ... [ 1, 2, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (n > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 5, 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > y) | (x > 1))                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9/home/saswat/Repos/PIE/abducer/abduce.sh: line 52:  2292 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/19.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1: 29626 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/19.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/19.cpp --
+
+real	27m13.294s
+user	27m4.416s
+sys	0m5.636s
+
+
+--- Processed 19.cpp ---
+sat: 18
+unsat: 1
+unk: 0
+escher: 18
+
+[$] OOM Count = 4930
+[$] MAX Usage = 8192

@@ -1,0 +1,69 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B14 for loop #1
+
+     - post_1 : (((((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (!(x1 = 0))) & ((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (x1 = 0))) | (!(x1 > 0))) & ((((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (!(x1 = 0))) & ((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (x1 = 0))) | (x1 > 0)))
+     - guard : (x1 > 0)
+
+   [Q1] Abduction query = ((x1 > 0) | (((((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (!(x1 = 0))) & ((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (x1 = 0))) | (!(x1 > 0))) & ((((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (!(x1 = 0))) & ((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (x1 = 0))) | (x1 > 0))))
+   [#] Simplified query: ((x1 > 0) | (((((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (!(x1 = 0))) & ((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (x1 = 0))) | (!(x1 > 0))) & ((((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (!(x1 = 0))) & ((true & (((x1 = 0) | (x2 = 0)) | (x3 = 0))) | (x1 = 0))) | (x1 > 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, -1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= x2)                            
+      [+] Added test ... [ -1, 1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= x1)                            
+
+     - Result = (0 <= x1)
+
+   # Loop_1 | Invariant @ Postcondition: (0 <= x1)
+
+   # Loop_1 | Inductive Check: ((!(0 <= x1)) | (!(x1 > 0)) | (((0 <= (x1 - d1)) | (!(c1 = 1))) & ((0 <= x1) | (c1 = 1)))) is not valid!
+
+   [Q2] Abduction query = ((!(0 <= x1)) | (!(x1 > 0)) | (((0 <= (x1 - d1)) | (!(c1 = 1))) & ((0 <= x1) | (c1 = 1))))
+   [#] Simplified query: ((!(0 <= x1)) | (!(x1 > 0)) | (((0 <= (x1 - d1)) | (!(c1 = 1))) & ((0 <= x1) | (c1 = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (d1 = 1)                            
+
+     - Result = (d1 = 1)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((d1 = 1) & (0 <= x1))
+
+   # Loop_1 | Inductive Check: ((!((d1 = 1) & (0 <= x1))) | (!(x1 > 0)) | ((((d1 = 1) & (0 <= (x1 - d1))) | (!(c1 = 1))) & (((d1 = 1) & (0 <= x1)) | (c1 = 1)))) is valid!
+
+   # Precondition Check: ((((!(((x1 >= 0) & (x2 >= 0)) & (x3 >= 0))) | ((1 = 1) & (0 <= x1))) | (!(x1 >= 0))) & (((!(((x1 >= 0) & (x2 >= 0)) & (x3 >= 0))) | ((1 = 1) & (0 <= x1))) | (x1 >= 0))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((d1 = 1) & (0 <= x1))
+================================================================================
+checker_exec.sh: line 1: 18960 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/trex3.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/trex3.cpp --
+
+real	0m23.013s
+user	0m20.652s
+sys	0m0.416s
+
+
+--- Processed trex3.cpp ---
+sat: 4
+unsat: 4
+unk: 0
+escher: 5
+
+[$] OOM Count = 0
+[$] MAX Usage = 196

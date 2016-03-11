@@ -1,0 +1,109 @@
+ ==>
+128 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : true
+     - guard : (flag != 0)
+
+   [Q1] Abduction query = ((flag != 0) | true)
+   [#] Simplified query: ((flag != 0) | true)
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_1 | Invariant @ Postcondition: true
+
+   # Loop_1 | Inductive Check: ((!true) | (!(flag != 0)) | ((((true | false) & (true | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1)))) is not valid!
+
+   [Q2] Abduction query = ((!true) | (!(flag != 0)) | ((((true | false) & (true | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1))))
+   [#] Simplified query: ((!true) | (!(flag != 0)) | ((((true | false) & (true | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (MAXPATHLEN > 0)                            
+      [+] Added test ... [ -1, -2, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= flag)                            
+      [+] Added test ... [ 1, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= glob3_dc)                            
+      [+] Added test ... [ -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (MAXPATHLEN > (0 - glob3_dc))                            
+      [+] Added test ... [ -1, -2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (flag > (0 - glob3_dc))                            
+      [+] Added test ... [ 3, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= flag) & (flag <= MAXPATHLEN))                            
+      [+] Added test ... [ 1, -2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= flag) & (0 <= glob3_dc))                            
+      [+] Added test ... [ 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= glob3_dc) & (MAXPATHLEN > 0))                            
+      [+] Added test ... [ -1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (MAXPATHLEN > (1 - (glob3_dc + flag)))                            
+      [+] Added test ... [ -1, -2, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((flag <= MAXPATHLEN) & (flag > (0 - glob3_dc)))                            
+      [+] Added test ... [ 3, -2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((0 <= flag) & (flag <= (MAXPATHLEN + glob3_dc)))                            
+      [+] Added test ... [ 1, -2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9 @10 @11
+    [?] Verifying --- ((flag <= MAXPATHLEN) & ((0 <= flag) & (0 <= glob3_dc)))                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9 @10 @11
+    [?] Verifying --- ((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (flag = 0)))                            
+
+     - Result = ((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (flag = 0)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (flag = 0))) & true)
+
+   # Loop_1 | Inductive Check: ((!(((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (flag = 0))) & true)) | (!(flag != 0)) | (((((((0 <= (glob3_dc + 1)) & ((MAXPATHLEN > (glob3_dc + 1)) | (0 = 0))) & true) | false) & ((((0 <= (glob3_dc + 1)) & ((MAXPATHLEN > (glob3_dc + 1)) | (0 = 0))) & true) | false)) & ((glob3_dc + 1) < (MAXPATHLEN + 1))) & (0 <= (glob3_dc + 1)))) is valid!
+
+   # Precondition Check: ((!(MAXPATHLEN > 0)) | (((((0 <= 0) & ((MAXPATHLEN > 0) | (0 = 0))) & true) | (!((0 + 0) >= ((0 + (MAXPATHLEN + 1)) - 1)))) & ((((0 <= 0) & ((MAXPATHLEN > 0) | (1 = 0))) & true) | ((0 + 0) >= ((0 + (MAXPATHLEN + 1)) - 1))))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (flag = 0))) & true)
+================================================================================
+checker_exec.sh: line 1: 31508 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/39.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/39.cpp --
+
+real	2m34.822s
+user	2m31.884s
+sys	0m0.716s
+
+
+--- Processed 39.cpp ---
+sat: 14
+unsat: 4
+unk: 0
+escher: 15
+
+[$] OOM Count = 0
+[$] MAX Usage = 481

@@ -1,0 +1,216 @@
+ ==>
+6400 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B10 for loop #1
+
+     - post_1 : (true & ((a + c) = (b + d)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & ((a + c) = (b + d))))
+   [#] Simplified query: (false | (true & ((a + c) = (b + d))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (d > 1)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 > c)                            
+      [+] Added test ... [ 0, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 > b)                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (a > 1)                            
+      [+] Added test ... [ 2, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (d > (1 + 1))                            
+      [+] Added test ... [ 0, 0, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (0 > (c + 1))                            
+      [+] Added test ... [ 0, -2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (0 > (b + 1))                            
+      [+] Added test ... [ 0, 0, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (a > ((c + 1) + 1))                            
+      [+] Added test ... [ 3, 0, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (a > ((b + 1) + 1))                            
+      [+] Added test ... [ 3, -4, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (0 > ((b + 1) + 1))                            
+      [+] Added test ... [ 0, 0, -3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (a > (((b + 1) + 1) + 1))                            
+      [+] Added test ... [ 4, -5, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (d > (((b + 1) + 1) + 1))                            
+      [+] Added test ... [ -5, 0, -4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a <= d) & (a > 1))                            
+      [+] Added test ... [ 2, -1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a > b) & (d > a))                            
+      [+] Added test ... [ -1, -2, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a > c) & (c > b))                            
+      [+] Added test ... [ 1, 0, -1, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 > b) & (a > 1))                            
+      [+] Added test ... [ 2, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c > b) & (0 > c))                            
+      [+] Added test ... [ 0, -1, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a > 1) & (d > a))                            
+      [+] Added test ... [ 2, 0, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (d = (a - (b - c)))                            
+
+     - Result = (d = (a - (b - c)))
+
+   # Loop_1 | Invariant @ Postcondition: (d = (a - (b - c)))
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : (d = (a - (b - c)))
+     - guard : NON-DETERMINISTIC
+
+   [Q2] Abduction query = (false | (d = (a - (b - c))))
+   [#] Simplified query: (false | (d = (a - (b - c))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (d > 1)                            
+      [+] Added test ... [ 2, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 > c)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 > b)                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (a > 1)                            
+      [+] Added test ... [ 0, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (d > (1 + 1))                            
+      [+] Added test ... [ 3, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (0 > (c + 1))                            
+      [+] Added test ... [ 0, 0, 0, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (0 > (b + 1))                            
+      [+] Added test ... [ 0, 0, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (a > ((c + 1) + 1))                            
+      [+] Added test ... [ 0, 3, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (a > ((b + 1) + 1))                            
+      [+] Added test ... [ 0, 3, 0, -4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (0 > ((b + 1) + 1))                            
+      [+] Added test ... [ 0, 0, -3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (a > (((b + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 4, 0, -5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (d > (((b + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -5, -4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a <= d) & (a > 1))                            
+      [+] Added test ... [ 2, 2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a > b) & (d > a))                            
+      [+] Added test ... [ 0, -1, -2, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a > c) & (c > b))                            
+      [+] Added test ... [ 3, 1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 > b) & (a > 1))                            
+      [+] Added test ... [ 0, 2, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c > b) & (0 > c))                            
+      [+] Added test ... [ 0, 0, -2, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a > 1) & (d > a))                            
+      [+] Added test ... [ 3, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (d = (a - (b - c)))                            
+
+     - Result = (d = (a - (b - c)))
+
+   # Loop_2 | Invariant @ Postcondition: (d = (a - (b - c)))
+
+   # Loop_2 | Inductive Check: ((!(d = (a - (b - c)))) | false | (d = (a - ((b - 1) - (c - 1))))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(d = (a - (b - c)))) | false | ((((d + 1) = ((a + 1) - (b - c))) | (!((((a + c) + (b + d)) % 2) = 0))) & ((d = ((a - 1) - (b - c))) | ((((a + c) + (b + d)) % 2) = 0)))) is valid!
+
+   # Precondition Check: (2 = (1 - (1 - 2))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (d = (a - (b - c)))
+Loop #2: (d = (a - (b - c)))
+================================================================================
+checker_exec.sh: line 1: 23247 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/29.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/29.cpp --
+
+real	64m34.136s
+user	64m14.452s
+sys	0m14.940s
+
+
+--- Processed 29.cpp ---
+sat: 38
+unsat: 5
+unk: 0
+escher: 40
+
+[$] OOM Count = 0
+[$] MAX Usage = 3183

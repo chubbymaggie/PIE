@@ -1,0 +1,65 @@
+ ==>
+1001 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (c >= 0))
+     - guard : (i < 1000)
+
+   [Q1] Abduction query = ((i < 1000) | (true & (c >= 0)))
+   [#] Simplified query: ((i < 1000) | (true & (c >= 0)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1000, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= c)                            
+
+     - Result = (0 <= c)
+
+   # Loop_1 | Invariant @ Postcondition: (0 <= c)
+
+   # Loop_1 | Inductive Check: ((!(0 <= c)) | (!(i < 1000)) | (0 <= (c + i))) is not valid!
+
+   [Q2] Abduction query = ((!(0 <= c)) | (!(i < 1000)) | (0 <= (c + i)))
+   [#] Simplified query: ((!(0 <= c)) | (!(i < 1000)) | (0 <= (c + i)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= i)                            
+
+     - Result = (0 <= i)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((0 <= i) & (0 <= c))
+
+   # Loop_1 | Inductive Check: ((!((0 <= i) & (0 <= c))) | (!(i < 1000)) | ((0 <= (i + 1)) & (0 <= (c + i)))) is valid!
+
+   # Precondition Check: ((0 <= 0) & (0 <= 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((0 <= i) & (0 <= c))
+================================================================================
+checker_exec.sh: line 1: 27748 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/30.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/30.cpp --
+
+real	0m19.458s
+user	0m17.456s
+sys	0m0.232s
+
+
+--- Processed 30.cpp ---
+sat: 3
+unsat: 4
+unk: 0
+escher: 4
+
+[$] OOM Count = 0
+[$] MAX Usage = 119

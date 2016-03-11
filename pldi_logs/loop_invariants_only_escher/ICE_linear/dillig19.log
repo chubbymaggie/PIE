@@ -1,0 +1,145 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & (y < (n + 1)))
+     - guard : (x < n)
+
+   [Q1] Abduction query = ((x < n) | (true & (y < (n + 1))))
+   [#] Simplified query: ((x < n) | (true & (y < (n + 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 2, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y <= n)                            
+
+     - Result = (y <= n)
+
+   # Loop_1 | Invariant @ Postcondition: (y <= n)
+
+   # Loop_1 | Inductive Check: ((!(y <= n)) | (!(x < n)) | ((((y + 1) <= n) | (!((x + 1) >= (m + 1)))) & ((y <= n) | ((x + 1) >= (m + 1))))) is not valid!
+
+   [Q2] Abduction query = ((!(y <= n)) | (!(x < n)) | ((((y + 1) <= n) | (!((x + 1) >= (m + 1)))) & ((y <= n) | ((x + 1) >= (m + 1)))))
+   [#] Simplified query: ((!(y <= n)) | (!(x < n)) | ((((y + 1) <= n) | (!((x + 1) >= (m + 1)))) & ((y <= n) | ((x + 1) >= (m + 1)))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 2, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (n > (1 + 1))                            
+      [+] Added test ... [ 3, 3, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (y - x))                            
+      [+] Added test ... [ 2, 2, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (y <= (x + m))                            
+      [+] Added test ... [ 2, 2, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 1) | (n > y))                            
+      [+] Added test ... [ 3, 3, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > y) | (y = x))                            
+
+     - Result = ((n > y) | (y = x))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((n > y) | (y = x)) & (y <= n))
+
+   # Loop_1 | Inductive Check: ((!(((n > y) | (y = x)) & (y <= n))) | (!(x < n)) | (((((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n)) | (!((x + 1) >= (m + 1)))) & ((((n > y) | (y = (x + 1))) & (y <= n)) | ((x + 1) >= (m + 1))))) is not valid!
+
+   [Q3] Abduction query = ((!(((n > y) | (y = x)) & (y <= n))) | (!(x < n)) | (((((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n)) | (!((x + 1) >= (m + 1)))) & ((((n > y) | (y = (x + 1))) & (y <= n)) | ((x + 1) >= (m + 1)))))
+   [#] Simplified query: ((!(((n > y) | (y = x)) & (y <= n))) | (!(x < n)) | (((((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n)) | (!((x + 1) >= (m + 1)))) & ((((n > y) | (y = (x + 1))) & (y <= n)) | ((x + 1) >= (m + 1)))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 2, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (n > (1 + 1))                            
+      [+] Added test ... [ 3, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (y <= (x + m))                            
+      [+] Added test ... [ 3, 2, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y = x) | (y = m))                            
+
+     - Result = ((y = x) | (y = m))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n)))
+
+   # Loop_1 | Inductive Check: ((!(((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n)))) | (!(x < n)) | ((((((y + 1) = (x + 1)) | ((y + 1) = m)) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n))) | (!((x + 1) >= (m + 1)))) & ((((y = (x + 1)) | (y = m)) & (((n > y) | (y = (x + 1))) & (y <= n))) | ((x + 1) >= (m + 1))))) is not valid!
+
+   [Q4] Abduction query = ((!(((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n)))) | (!(x < n)) | ((((((y + 1) = (x + 1)) | ((y + 1) = m)) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n))) | (!((x + 1) >= (m + 1)))) & ((((y = (x + 1)) | (y = m)) & (((n > y) | (y = (x + 1))) & (y <= n))) | ((x + 1) >= (m + 1)))))
+   [#] Simplified query: ((!(((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n)))) | (!(x < n)) | ((((((y + 1) = (x + 1)) | ((y + 1) = m)) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n))) | (!((x + 1) >= (m + 1)))) & ((((y = (x + 1)) | (y = m)) & (((n > y) | (y = (x + 1))) & (y <= n))) | ((x + 1) >= (m + 1)))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0, -1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 0, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x <= y)                            
+      [+] Added test ... [ 0, 0, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (n > (1 + 1))                            
+      [+] Added test ... [ 1, 2, 1, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > m) & (x <= y))                            
+      [+] Added test ... [ -3, -3, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (m <= y))                            
+
+     - Result = ((x <= y) & (m <= y))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((x <= y) & (m <= y)) & (((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n))))
+
+   # Loop_1 | Inductive Check: ((!(((x <= y) & (m <= y)) & (((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n))))) | (!(x < n)) | ((((((x + 1) <= (y + 1)) & (m <= (y + 1))) & ((((y + 1) = (x + 1)) | ((y + 1) = m)) & (((n > (y + 1)) | ((y + 1) = (x + 1))) & ((y + 1) <= n)))) | (!((x + 1) >= (m + 1)))) & (((((x + 1) <= y) & (m <= y)) & (((y = (x + 1)) | (y = m)) & (((n > y) | (y = (x + 1))) & (y <= n)))) | ((x + 1) >= (m + 1))))) is valid!
+
+   # Precondition Check: ((!(n >= 0)) | ((((!((m >= 0) & (m < n))) | (((0 <= m) & (m <= m)) & (((m = 0) | (m = m)) & (((n > m) | (m = 0)) & (m <= n))))) | (!(m >= 0))) & (((!((m >= 0) & (m < n))) | (((0 <= m) & (m <= m)) & (((m = 0) | (m = m)) & (((n > m) | (m = 0)) & (m <= n))))) | (m >= 0)))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((x <= y) & (m <= y)) & (((y = x) | (y = m)) & (((n > y) | (y = x)) & (y <= n))))
+================================================================================
+checker_exec.sh: line 1: 24862 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig19.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig19.cpp --
+
+real	21m57.595s
+user	21m49.088s
+sys	0m5.124s
+
+
+--- Processed dillig19.cpp ---
+sat: 19
+unsat: 6
+unk: 0
+escher: 20
+
+[$] OOM Count = 0
+[$] MAX Usage = 3085

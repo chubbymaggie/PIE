@@ -1,0 +1,241 @@
+ ==>
+1546 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B9 for loop #1
+
+     - post_1 : (true & (k > n))
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | (true & (k > n)))
+   [#] Simplified query: ((i < n) | (true & (k > n)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (i - k))                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > i) | (k > 1))                            
+      [+] Added test ... [ 2, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > i) | (k > n))                            
+
+     - Result = ((n > i) | (k > n))
+
+   # Loop_1 | Invariant @ Postcondition: ((n > i) | (k > n))
+
+   # Loop_1 | Inductive Check: ((!((n > i) | (k > n))) | (!(i < n)) | ((((((n > (i + 1)) | ((k + c1) > n)) | (!(0 = 0))) & (((n > (i + 1)) | ((k + c2) > n)) | (0 = 0))) | false) & (((((n > (i + 1)) | ((k + c1) > n)) | (!(1 = 0))) & (((n > (i + 1)) | ((k + c2) > n)) | (1 = 0))) | false))) is not valid!
+
+   [Q2] Abduction query = ((!((n > i) | (k > n))) | (!(i < n)) | ((((((n > (i + 1)) | ((k + c1) > n)) | (!(0 = 0))) & (((n > (i + 1)) | ((k + c2) > n)) | (0 = 0))) | false) & (((((n > (i + 1)) | ((k + c1) > n)) | (!(1 = 0))) & (((n > (i + 1)) | ((k + c2) > n)) | (1 = 0))) | false)))
+   [#] Simplified query: ((!((n > i) | (k > n))) | (!(i < n)) | ((((((n > (i + 1)) | ((k + c1) > n)) | (!(0 = 0))) & (((n > (i + 1)) | ((k + c2) > n)) | (0 = 0))) | false) & (((((n > (i + 1)) | ((k + c1) > n)) | (!(1 = 0))) & (((n > (i + 1)) | ((k + c2) > n)) | (1 = 0))) | false)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (c1 > 1)                            
+      [+] Added test ... [ 0, -1, -2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (c2 > 1)                            
+      [+] Added test ... [ 0, -1, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 1, 0, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (c2 > (1 + 1))                            
+      [+] Added test ... [ 0, -1, 0, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (c1 > (1 + 1))                            
+      [+] Added test ... [ 0, -1, -3, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (c1 > (1 - k))                            
+      [+] Added test ... [ 2, 1, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (c1 > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, -1, -4, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (c1 > (n - k))                            
+      [+] Added test ... [ 0, -1, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (c2 > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 0, 4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (c2 > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 0, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (c1 > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, -5, 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (c1 > ((1 - k) + 1))                            
+      [+] Added test ... [ 3, 2, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (c1 > ((n - k) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c2 <= c1) & (c2 > 1))                            
+      [+] Added test ... [ 0, -1, -2, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c2 > i) & (n > 0))                            
+      [+] Added test ... [ 1, 0, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c2 > 0) & (c1 > c2))                            
+      [+] Added test ... [ 0, -1, -2, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c1 > n) & (n > 0))                            
+      [+] Added test ... [ 1, 0, -1, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c1 > c2) & (c2 > 1))                            
+      [+] Added test ... [ 0, -1, -3, 3, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((c2 > n) & (n > 0))                            
+      [+] Added test ... [ 1, 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (c2 > ((((1 + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 0, 6 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (c1 > ((((1 + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, -6, 6, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (c1 > (((1 - k) + 1) + 1))                            
+      [+] Added test ... [ 4, 3, 0, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (c1 > (((n - k) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((c2 <= c1) & (c2 > (1 + 1)))                            
+      [+] Added test ... [ 0, -1, -3, 3, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((c2 > 0) & (c1 > (c2 + 1)))                            
+      [+] Added test ... [ 0, -1, -3, 3, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((c1 > c2) & (c2 > (1 + 1)))                            
+      [+] Added test ... [ 0, -1, -4, 4, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((c2 > 1) & (c1 > (c2 + 1)))                            
+      [+] Added test ... [ 0, -1, -4, 4, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((n > 0) & (c1 > (n + 1)))                            
+      [+] Added test ... [ 1, 0, -2, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((n > 0) & (c2 > (n + 1)))                            
+      [+] Added test ... [ 1, 0, 0, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (c2 > (((((1 + 1) + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 0, 7 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (c1 > (((((1 + 1) + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, -7, 7, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (c1 > ((((1 - k) + 1) + 1) + 1))                            
+      [+] Added test ... [ 5, 4, 0, 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (c1 > ((((n - k) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 0, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((c2 <= c1) & (c2 > (0 - k)))                            
+      [+] Added test ... [ 1, 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((c2 <= c1) & (c2 > (1 - k)))                            
+      [+] Added test ... [ 2, 1, 0, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((c2 <= c1) & (c2 > (n - k)))                            
+
+     - Result = ((c2 <= c1) & (c2 > (n - k)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n)))
+
+   # Loop_1 | Inductive Check: ((!(((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n)))) | (!(i < n)) | (((((((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n))) | (!(0 = 0))) & ((((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n))) | (0 = 0))) | false) & ((((((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n))) | (!(1 = 0))) & ((((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n))) | (1 = 0))) | false))) is not valid!
+
+   [Q3] Abduction query = ((!(((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n)))) | (!(i < n)) | (((((((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n))) | (!(0 = 0))) & ((((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n))) | (0 = 0))) | false) & ((((((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n))) | (!(1 = 0))) & ((((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n))) | (1 = 0))) | false)))
+   [#] Simplified query: ((!(((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n)))) | (!(i < n)) | (((((((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n))) | (!(0 = 0))) & ((((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n))) | (0 = 0))) | false) & ((((((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n))) | (!(1 = 0))) & ((((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n))) | (1 = 0))) | false)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, -1, 0, 2, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ -1, -1, 1, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (c1 > 1)                            
+      [+] Added test ... [ -1, 2, 0, 2, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (c2 > 1)                            
+
+     - Result = (c2 > 1)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((c2 > 1) & (((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n))))
+
+   # Loop_1 | Inductive Check: ((!((c2 > 1) & (((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n))))) | (!(i < n)) | ((((((c2 > 1) & (((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n)))) | (!(0 = 0))) & (((c2 > 1) & (((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n)))) | (0 = 0))) | false) & (((((c2 > 1) & (((c2 <= c1) & (c2 > (n - (k + c1)))) & ((n > (i + 1)) | ((k + c1) > n)))) | (!(1 = 0))) & (((c2 > 1) & (((c2 <= c1) & (c2 > (n - (k + c2)))) & ((n > (i + 1)) | ((k + c2) > n)))) | (1 = 0))) | false))) is valid!
+
+   # Precondition Check: ((!(n > 0)) | ((!(n < 10)) | ((2000 > 1) & (((2000 <= 4000) & (2000 > (n - 0))) & ((n > 0) | (0 > n)))))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((c2 > 1) & (((c2 <= c1) & (c2 > (n - k))) & ((n > i) | (k > n))))
+================================================================================
+checker_exec.sh: line 1: 14929 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/21.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/21.cpp --
+
+real	124m38.524s
+user	124m13.424s
+sys	0m18.356s
+
+
+--- Processed 21.cpp ---
+sat: 45
+unsat: 5
+unk: 0
+escher: 46
+
+[$] OOM Count = 0
+[$] MAX Usage = 6683

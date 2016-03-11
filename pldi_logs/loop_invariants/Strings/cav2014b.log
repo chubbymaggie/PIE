@@ -1,0 +1,65 @@
+ ==>
+2908 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : ((true & (!#has(r, "aa"))) & (#len(r) = i))
+     - guard : (#ind(r, "aa") >= 0)
+
+   [Q1] Abduction query = ((#ind(r, "aa") >= 0) | ((true & (!#has(r, "aa"))) & (#len(r) = i)))
+   [#] Simplified query: ((#ind(r, "aa") >= 0) | ((true & (!#has(r, "aa"))) & (#len(r) = i)))
+
+    [%] Inferring {true} [k = 1] (0f x 2908t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ "", -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 2909t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 2909t) ...                                     
+    [?] Verifying [k = 2] --- ((i > 1) | (1 = i))                            
+      [+] Added test ... [ "", 2 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (4f x 2910t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 2910t) ...                                     
+    [%] Inferring {true} [k = 3] (4f x 2910t) ...                                     
+    [?] Verifying [k = 3] --- ((#has(r, "aa")) | (1 = i) | (! (#has("aa", r))))                            
+      [+] Added test ... [ "", 1 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Inferring {true} [k = 1] (5f x 2911t) ...                                     
+    [?] Verifying [k = 1] --- (i = (#len(r)))                            
+
+     - Result = (i = #len(r))
+
+   # Loop_1 | Invariant @ Postcondition: (i = #len(r))
+
+   # Loop_1 | Inductive Check: ((!(i = #len(r))) | (!(#ind(r, "aa") >= 0)) | (i = #len(#cat(#rep(r, "aa", ")"), "a")))) is valid!
+
+   # Precondition Check: (#len(r) = #len(r)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (i = #len(r))
+================================================================================
+checker_exec.sh: line 1: 20738 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/cav2014b.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_strings/cav2014b.cpp --
+
+real	0m9.565s
+user	0m7.516s
+sys	0m0.180s
+
+
+--- Processed cav2014b.cpp ---
+sat: 3
+unsat: 3
+unk: 0
+escher: 5
+
+[$] OOM Count = 0
+[$] MAX Usage = 74

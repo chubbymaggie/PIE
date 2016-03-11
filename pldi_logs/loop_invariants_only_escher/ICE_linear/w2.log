@@ -1,0 +1,53 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : (true & (x = n))
+     - guard : (flag != 0)
+
+   [Q1] Abduction query = ((flag != 0) | (true & (x = n)))
+   [#] Simplified query: ((flag != 0) | (true & (x = n)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x > (0 - flag))                            
+      [+] Added test ... [ 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((1 = flag) | (x = n))                            
+
+     - Result = ((1 = flag) | (x = n))
+
+   # Loop_1 | Invariant @ Postcondition: ((1 = flag) | (x = n))
+
+   # Loop_1 | Inductive Check: ((!((1 = flag) | (x = n))) | (!(flag != 0)) | ((((1 = 0) | ((x + 1) = n)) | (!(input != 0))) & (((1 = flag) | (x = n)) | (input != 0)))) is not valid!
+
+   [Q2] Abduction query = ((!((1 = flag) | (x = n))) | (!(flag != 0)) | ((((1 = 0) | ((x + 1) = n)) | (!(input != 0))) & (((1 = flag) | (x = n)) | (input != 0))))
+   [#] Simplified query: ((!((1 = flag) | (x = n))) | (!(flag != 0)) | ((((1 = 0) | ((x + 1) = n)) | (!(input != 0))) & (((1 = flag) | (x = n)) | (input != 0))))
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((0 = input) | (n <= (x + 1)))                            
+      [+] Added test ... [ 1, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+
+--- Processed w2.cpp ---
+sat: 5
+unsat: 1
+unk: 0
+escher: 5
+
+[$] OOM Count = 631993
+[$] MAX Usage = 8192

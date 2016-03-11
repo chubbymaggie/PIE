@@ -1,0 +1,53 @@
+ ==>
+364 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & (((a * a) <= n) & (((a + 1) * (a + 1)) > n))) | (!((a * a) <= n))) & ((true & (((a * a) <= n) & (((a + 1) * (a + 1)) > n))) | ((a * a) <= n)))
+     - guard : (su <= n)
+
+   [Q1] Abduction query = ((su <= n) | (((true & (((a * a) <= n) & (((a + 1) * (a + 1)) > n))) | (!((a * a) <= n))) & ((true & (((a * a) <= n) & (((a + 1) * (a + 1)) > n))) | ((a * a) <= n))))
+   [#] Simplified query: ((su <= n) | (((true & (((a * a) <= n) & (((a + 1) * (a + 1)) > n))) | (!((a * a) <= n))) & ((true & (((a * a) <= n) & (((a + 1) * (a + 1)) > n))) | ((a * a) <= n))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 2, 1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= a)                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (su > (a * (a - 1)))                            
+      [+] Added test ... [ 3, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- ((su * (a + 1)) > 0)                            
+      [+] Added test ... [ -1, -2, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- ((a * (a - 1)) <= n)                            
+      [+] Added test ... [ 1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= a) & (su > a))                            
+      [+] Added test ... [ 2, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (su = ((a + 1) * (a + 1)))                            
+      [+] Added test ... [ 0, -1, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9 @10
+
+--- Processed sqrt.cpp ---
+sat: 7
+unsat: 0
+unk: 0
+escher: 7
+
+[$] OOM Count = 289982
+[$] MAX Usage = 8192

@@ -1,0 +1,105 @@
+ ==>
+101 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (j = (2 * x)))
+     - guard : (i < x)
+
+   [Q1] Abduction query = ((i < x) | (true & (j = (2 * x))))
+   [#] Simplified query: ((i < x) | (true & (j = (2 * x))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x > 2)                            
+      [+] Added test ... [ 3, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= j)                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (x > (2 + 1))                            
+      [+] Added test ... [ 4, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i = (j - i))                            
+      [+] Added test ... [ 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x > ((2 + 1) + 1))                            
+      [+] Added test ... [ 5, 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (x > (2 * (2 + 1)))                            
+      [+] Added test ... [ 7, 7, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (x > ((i - j) + 1))                            
+      [+] Added test ... [ 2, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i <= j) & (x > 2))                            
+      [+] Added test ... [ 3, 3, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (x > (2 * ((2 + 1) + 1)))                            
+      [+] Added test ... [ 9, 9, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (x > (i - (j - i)))                            
+      [+] Added test ... [ 2, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((i <= j) & (x > (2 + 1)))                            
+      [+] Added test ... [ 4, 4, 4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((x > i) | (j > (i + 1)))                            
+      [+] Added test ... [ 3, 3, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (j > ((2 * (i + 1)) - x))                            
+      [+] Added test ... [ 4, 4, 7 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (x > (2 * (2 * (2 + 1))))                            
+      [+] Added test ... [ 13, 13, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((i <= x) & (i = (j - i)))                            
+
+     - Result = ((i <= x) & (i = (j - i)))
+
+   # Loop_1 | Invariant @ Postcondition: ((i <= x) & (i = (j - i)))
+
+   # Loop_1 | Inductive Check: ((!((i <= x) & (i = (j - i)))) | (!(i < x)) | (((i + 1) <= x) & ((i + 1) = ((j + 2) - (i + 1))))) is valid!
+
+   # Precondition Check: ((0 <= 100) & (0 = (0 - 0))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((i <= x) & (i = (j - i)))
+================================================================================
+checker_exec.sh: line 1: 21907 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/11.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/11.cpp --
+
+real	1m0.946s
+user	0m58.296s
+sys	0m0.476s
+
+
+--- Processed 11.cpp ---
+sat: 15
+unsat: 3
+unk: 0
+escher: 16
+
+[$] OOM Count = 0
+[$] MAX Usage = 343

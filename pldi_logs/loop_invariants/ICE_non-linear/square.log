@@ -1,0 +1,78 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (x = (n * n)))
+     - guard : (r != 0)
+
+   [Q1] Abduction query = ((r != 0) | (true & (x = (n * n))))
+   [#] Simplified query: ((r != 0) | (true & (x = (n * n))))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6401t) ...                                     
+    [%] Inferring {true} [k = 2] (2f x 6401t) ...                                     
+    [?] Verifying [k = 2] --- ((x > n) | (n = x))                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (3f x 6402t) ...                                     
+    [%] Inferring {true} [k = 2] (3f x 6402t) ...                                     
+    [?] Verifying [k = 2] --- ((n = x) | (x > 1))                            
+      [+] Added test ... [ 0, 2, 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (4f x 6403t) ...                                     
+    [%] Inferring {true} [k = 2] (4f x 6403t) ...                                     
+    [?] Verifying [k = 2] --- ((n = x) | (n > 1))                            
+      [+] Added test ... [ 0, 5, 2 ]
+
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Removing conflicts ...  @2 @3 @4
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (7f x 6404t) ...                                     
+    [%] Inferring {true} [k = 2] (7f x 6404t) ...                                     
+    [%] Inferring {true} [k = 3] (7f x 6404t) ...                                     
+    [?] Verifying [k = 3] --- ((! (0 = r)) | (n > (1 + 1)) | (x = ((n + 1) + 1))) & ((n > 1) | (! (0 = r)))                            
+      [+] Added test ... [ 0, 8, 3 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (8f x 6405t) ...                                     
+    [?] Verifying [k = 1] --- (x = (n * n))                            
+
+     - Result = (x = (n * n))
+
+   # Loop_1 | Invariant @ Postcondition: (x = (n * n))
+
+   # Loop_1 | Inductive Check: ((!(x = (n * n))) | (!(r != 0)) | ((x + ((2 * (n + 1)) - 1)) = ((n + 1) * (n + 1)))) is valid!
+
+   # Precondition Check: (0 = (0 * 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (x = (n * n))
+================================================================================
+checker_exec.sh: line 1:  1661 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/square.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_ice/non_linear/square.cpp --
+
+real	0m23.532s
+user	0m19.220s
+sys	0m0.196s
+
+
+--- Processed square.cpp ---
+sat: 5
+unsat: 3
+unk: 0
+escher: 8
+
+[$] OOM Count = 0
+[$] MAX Usage = 142

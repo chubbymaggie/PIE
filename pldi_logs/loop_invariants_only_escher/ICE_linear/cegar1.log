@@ -1,0 +1,49 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & (!((x = 4) & (y = 0)))) | (!(x = 4))) & ((true & (!((x = 4) & (y = 0)))) | (x = 4)))
+     - guard : (input != 0)
+
+   [Q1] Abduction query = ((input != 0) | (((true & (!((x = 4) & (y = 0)))) | (!(x = 4))) & ((true & (!((x = 4) & (y = 0)))) | (x = 4))))
+   [#] Simplified query: ((input != 0) | (((true & (!((x = 4) & (y = 0)))) | (!(x = 4))) & ((true & (!((x = 4) & (y = 0)))) | (x = 4))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (4 > (x - y))                            
+
+     - Result = (4 > (x - y))
+
+   # Loop_1 | Invariant @ Postcondition: (4 > (x - y))
+
+   # Loop_1 | Inductive Check: ((!(4 > (x - y))) | (!(input != 0)) | (4 > ((x + 2) - (y + 2)))) is valid!
+
+   # Precondition Check: ((((!((0 <= x) & (x <= 2))) | ((((!((0 <= y) & (y <= 2))) | (4 > (x - y))) | (!(0 <= y))) & (((!((0 <= y) & (y <= 2))) | (4 > (x - y))) | (0 <= y)))) | (!(0 <= x))) & (((!((0 <= x) & (x <= 2))) | ((((!((0 <= y) & (y <= 2))) | (4 > (x - y))) | (!(0 <= y))) & (((!((0 <= y) & (y <= 2))) | (4 > (x - y))) | (0 <= y)))) | (0 <= x))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (4 > (x - y))
+================================================================================
+checker_exec.sh: line 1: 28029 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/cegar1.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/cegar1.cpp --
+
+real	0m43.045s
+user	0m40.740s
+sys	0m0.508s
+
+
+--- Processed cegar1.cpp ---
+sat: 1
+unsat: 3
+unk: 0
+escher: 2
+
+[$] OOM Count = 0
+[$] MAX Usage = 1093

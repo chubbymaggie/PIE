@@ -90,8 +90,10 @@ EXEC_CMD="time bin/pinvgen -wpath $WORKING_PATH -abducer $ABDUCER_PATH/abduce.sh
                            -tool=$USE_TOOL -csize $CONFLICT_SIZE --extra-arg=--std=c++11 $SOURCE_FILE --"
 echo "$EXEC_CMD" > checker_exec.sh
 
+OOM_Monitor_PID=""
 if [[ "$CGROUP" != "" ]]; then
   bash kill_on_oom.sh "$CGROUP" &
+  OOM_Monitor_PID="$!"
   echo 0 > "$CG_LOCATION/memory.force_empty"
   echo 0 > "$CG_LOCATION/memory.memsw.failcnt"
   echo 0 > "$CG_LOCATION/memory.memsw.max_usage_in_bytes"
@@ -100,6 +102,7 @@ else
   bash checker_exec.sh 2>&1 | tee -a "$TOTAL_LOG"
 fi
 rm checker_exec.sh
+[ -n $OOM_Monitor_PID ] && { kill -9 $OOM_Monitor_PID; }
 
 COUNTER_PREFIX="count"
 aterrcho -ne "\n\n--- Processed $FILE ---\n"

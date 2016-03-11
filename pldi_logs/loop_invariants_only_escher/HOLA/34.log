@@ -1,0 +1,89 @@
+ ==>
+1808 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7 for loop #1
+
+     - post_1 : (((true & (x = (2 * y))) | (!(i = m))) & (true | (i = m)))
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | (((true & (x = (2 * y))) | (!(i = m))) & (true | (i = m))))
+   [#] Simplified query: ((i < n) | (((true & (x = (2 * y))) | (!(i = m))) & (true | (i = m))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i = x)                            
+      [+] Added test ... [ -1, -1, -1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (m > 2)                            
+      [+] Added test ... [ 3, 0, -1, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y <= x)                            
+      [+] Added test ... [ 0, 0, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (m > (2 + 1))                            
+      [+] Added test ... [ 4, 0, -1, 0, 4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (m > ((2 + 1) + 1))                            
+      [+] Added test ... [ 5, 0, -1, 0, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (y <= (x - y))                            
+      [+] Added test ... [ 0, 0, -1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (m > (2 * (2 + 1)))                            
+      [+] Added test ... [ 7, 0, -1, 0, 7 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (m > ((i - x) + 1))                            
+      [+] Added test ... [ 0, 0, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= i) & (x = i))                            
+      [+] Added test ... [ 0, 0, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i <= x) & (m > 2))                            
+      [+] Added test ... [ 3, 0, 3, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > 0) | (m > i))                            
+      [+] Added test ... [ 1, 1, -1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > 1) | (m > i))                            
+      [+] Added test ... [ 2, 2, -1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((n > 2) | (m > i))                            
+      [+] Added test ... [ 3, 3, -1, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 2) | (m > i))                            
+      [+] Added test ... [ 0, 0, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (m > (2 * ((2 + 1) + 1)))                            
+      [+] Added test ... [ 9, 0, -1, 0, 9 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+
+--- Processed 34.cpp ---
+sat: 16
+unsat: 0
+unk: 0
+escher: 16
+
+[$] OOM Count = 1475815
+[$] MAX Usage = 8192

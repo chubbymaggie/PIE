@@ -1,0 +1,180 @@
+ ==>
+2257 tests for loop #1.
+6400 tests for loop #2.
+6400 tests for loop #3.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B12 for loop #1
+
+     - post_1 : (true & true)
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | (true & true))
+   [#] Simplified query: ((i < n) | (true & true))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_1 | Invariant @ Postcondition: true
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : true
+     - guard : (j < n)
+
+   [Q2] Abduction query = ((j < n) | true)
+   [#] Simplified query: ((j < n) | true)
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_2 | Invariant @ Postcondition: true
+
+   + Found guard in B8 for loop #3
+
+     - post_3 : true
+     - guard : (k < n)
+
+   [Q3] Abduction query = ((k < n) | true)
+   [#] Simplified query: ((k < n) | true)
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_3 | Invariant @ Postcondition: true
+
+   # Loop_3 | Inductive Check: ((!true) | (!(k < n)) | (true & (k >= i))) is not valid!
+
+   [Q4] Abduction query = ((!true) | (!(k < n)) | (true & (k >= i)))
+   [#] Simplified query: ((!true) | (!(k < n)) | (true & (k >= i)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > i)                            
+      [+] Added test ... [ -2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 0, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= k)                            
+
+     - Result = (i <= k)
+
+   # Loop_3 | Invariant @ Inductive Condition: ((i <= k) & true)
+
+   # Loop_3 | Inductive Check: ((!((i <= k) & true)) | (!(k < n)) | (((i <= (k + 1)) & true) & (k >= i))) is valid!
+
+   # Loop_2 | Inductive Check: ((!true) | (!(j < n)) | ((i <= j) & true)) is not valid!
+
+   [Q5] Abduction query = ((!true) | (!(j < n)) | ((i <= j) & true))
+   [#] Simplified query: ((!true) | (!(j < n)) | ((i <= j) & true))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > i)                            
+      [+] Added test ... [ -2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= j)                            
+
+     - Result = (i <= j)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((i <= j) & true)
+
+   + Found guard in B8 for loop #3
+
+     - post_3 : ((i <= (j + 1)) & true)
+     - guard : (k < n)
+
+   [Q6] Abduction query = ((k < n) | ((i <= (j + 1)) & true))
+   [#] Simplified query: ((k < n) | ((i <= (j + 1)) & true))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > i)                            
+      [+] Added test ... [ 0, 0, -1, -3 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 2, 2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= j)                            
+
+     - Result = (i <= j)
+
+   # Loop_3 | Invariant @ Postcondition: (i <= j)
+
+   # Loop_3 | Inductive Check: ((!(i <= j)) | (!(k < n)) | ((i <= j) & (k >= i))) is not valid!
+
+   [Q7] Abduction query = ((!(i <= j)) | (!(k < n)) | ((i <= j) & (k >= i)))
+   [#] Simplified query: ((!(i <= j)) | (!(k < n)) | ((i <= j) & (k >= i)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > j)                            
+      [+] Added test ... [ -1, -1, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ 1, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j <= k)                            
+
+     - Result = (j <= k)
+
+   # Loop_3 | Invariant @ Inductive Condition: ((j <= k) & (i <= j))
+
+   # Loop_3 | Inductive Check: ((!((j <= k) & (i <= j))) | (!(k < n)) | (((j <= (k + 1)) & (i <= j)) & (k >= i))) is valid!
+
+   # Loop_2 | Inductive Check: ((!((i <= j) & true)) | (!(j < n)) | ((j <= j) & (i <= j))) is valid!
+
+   # Loop_1 | Inductive Check: ((!true) | (!(i < n)) | ((i <= i) & true)) is valid!
+
+   # Precondition Check: true is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: true
+Loop #2: ((i <= j) & true)
+Loop #3: ((j <= k) & (i <= j))
+================================================================================
+checker_exec.sh: line 1: 12907 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig24.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig24.cpp --
+
+real	0m44.683s
+user	0m39.316s
+sys	0m1.080s
+
+
+--- Processed dillig24.cpp ---
+sat: 14
+unsat: 12
+unk: 0
+escher: 18
+
+[$] OOM Count = 0
+[$] MAX Usage = 228

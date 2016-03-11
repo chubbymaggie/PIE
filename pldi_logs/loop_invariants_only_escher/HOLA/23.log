@@ -1,0 +1,65 @@
+ ==>
+2109 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (sum >= 0))
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | (true & (sum >= 0)))
+   [#] Simplified query: ((i < n) | (true & (sum >= 0)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= sum)                            
+
+     - Result = (0 <= sum)
+
+   # Loop_1 | Invariant @ Postcondition: (0 <= sum)
+
+   # Loop_1 | Inductive Check: ((!(0 <= sum)) | (!(i < n)) | (0 <= (sum + i))) is not valid!
+
+   [Q2] Abduction query = ((!(0 <= sum)) | (!(i < n)) | (0 <= (sum + i)))
+   [#] Simplified query: ((!(0 <= sum)) | (!(i < n)) | (0 <= (sum + i)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= i)                            
+
+     - Result = (0 <= i)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((0 <= i) & (0 <= sum))
+
+   # Loop_1 | Inductive Check: ((!((0 <= i) & (0 <= sum))) | (!(i < n)) | ((0 <= (i + 1)) & (0 <= (sum + i)))) is valid!
+
+   # Precondition Check: ((!(n >= 0)) | ((0 <= 0) & (0 <= 0))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((0 <= i) & (0 <= sum))
+================================================================================
+checker_exec.sh: line 1: 11858 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/23.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/23.cpp --
+
+real	0m20.055s
+user	0m17.896s
+sys	0m0.248s
+
+
+--- Processed 23.cpp ---
+sat: 3
+unsat: 4
+unk: 0
+escher: 4
+
+[$] OOM Count = 0
+[$] MAX Usage = 125

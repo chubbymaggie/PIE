@@ -1,0 +1,65 @@
+ ==>
+31 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (y >= 1))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (y >= 1)))
+   [#] Simplified query: (false | (true & (y >= 1)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 0)                            
+
+     - Result = (y > 0)
+
+   # Loop_1 | Invariant @ Postcondition: (y > 0)
+
+   # Loop_1 | Inductive Check: ((!(y > 0)) | false | ((x + y) > 0)) is not valid!
+
+   [Q2] Abduction query = ((!(y > 0)) | false | ((x + y) > 0))
+   [#] Simplified query: ((!(y > 0)) | false | ((x + y) > 0))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y = x)                            
+
+     - Result = (y = x)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((y = x) & (y > 0))
+
+   # Loop_1 | Inductive Check: ((!((y = x) & (y > 0))) | false | (((x + y) = (x + y)) & ((x + y) > 0))) is valid!
+
+   # Precondition Check: ((1 = 1) & (1 > 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((y = x) & (y > 0))
+================================================================================
+checker_exec.sh: line 1: 21190 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig01.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig01.cpp --
+
+real	0m26.525s
+user	0m17.280s
+sys	0m0.292s
+
+
+--- Processed dillig01.cpp ---
+sat: 3
+unsat: 4
+unk: 0
+escher: 4
+
+[$] OOM Count = 0
+[$] MAX Usage = 119

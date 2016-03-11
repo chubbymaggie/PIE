@@ -1,0 +1,37 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (s = (x * y)))
+     - guard : (j < x)
+
+   [Q1] Abduction query = ((j < x) | (true & (s = (x * y))))
+   [#] Simplified query: ((j < x) | (true & (s = (x * y))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (! (0 = (s + 1)))                            
+      [+] Added test ... [ -1, -1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (s = (j * y))                            
+      [+] Added test ... [ 0, -1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+
+--- Processed multiply.cpp ---
+sat: 3
+unsat: 0
+unk: 0
+escher: 3
+
+[$] OOM Count = 578151
+[$] MAX Usage = 8192

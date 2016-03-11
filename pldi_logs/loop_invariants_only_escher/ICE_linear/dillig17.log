@@ -1,0 +1,182 @@
+ ==>
+2073 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : (true & (k > (n - 1)))
+     - guard : (i <= (n - 1))
+
+   [Q1] Abduction query = ((i <= (n - 1)) | (true & (k > (n - 1))))
+   [#] Simplified query: ((i <= (n - 1)) | (true & (k > (n - 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 0)                            
+      [+] Added test ... [ 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > 0)                            
+      [+] Added test ... [ 2, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= k)                            
+
+     - Result = (i <= k)
+
+   # Loop_1 | Invariant @ Postcondition: (i <= k)
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : ((i + 1) <= k)
+     - guard : (j <= (i - 1))
+
+   [Q2] Abduction query = ((j <= (i - 1)) | ((i + 1) <= k))
+   [#] Simplified query: ((j <= (i - 1)) | ((i + 1) <= k))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > j)                            
+
+     - Result = (k > j)
+
+   # Loop_2 | Invariant @ Postcondition: (k > j)
+
+   # Loop_2 | Inductive Check: ((!(k > j)) | (!(j <= (i - 1))) | ((k + (i - j)) > (j + 1))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(i <= k)) | (!(i <= (n - 1))) | (k > 0)) is not valid!
+
+   [Q3] Abduction query = ((!(i <= k)) | (!(i <= (n - 1))) | (k > 0))
+   [#] Simplified query: ((!(i <= k)) | (!(i <= (n - 1))) | (k > 0))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > 0)                            
+
+     - Result = (k > 0)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((k > 0) & (i <= k))
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : ((k > 0) & ((i + 1) <= k))
+     - guard : (j <= (i - 1))
+
+   [Q4] Abduction query = ((j <= (i - 1)) | ((k > 0) & ((i + 1) <= k)))
+   [#] Simplified query: ((j <= (i - 1)) | ((k > 0) & ((i + 1) <= k)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > j)                            
+      [+] Added test ... [ -1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > 0)                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (k > ((j - i) + 1))                            
+      [+] Added test ... [ 2, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= i) & (k > j))                            
+
+     - Result = ((0 <= i) & (k > j))
+
+   # Loop_2 | Invariant @ Postcondition: ((0 <= i) & (k > j))
+
+   # Loop_2 | Inductive Check: ((!((0 <= i) & (k > j))) | (!(j <= (i - 1))) | ((0 <= i) & ((k + (i - j)) > (j + 1)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((k > 0) & (i <= k))) | (!(i <= (n - 1))) | ((0 <= i) & (k > 0))) is not valid!
+
+   [Q5] Abduction query = ((!((k > 0) & (i <= k))) | (!(i <= (n - 1))) | ((0 <= i) & (k > 0)))
+   [#] Simplified query: ((!((k > 0) & (i <= k))) | (!(i <= (n - 1))) | ((0 <= i) & (k > 0)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 0)                            
+
+     - Result = (i > 0)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((i > 0) & ((k > 0) & (i <= k)))
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : (((i + 1) > 0) & ((k > 0) & ((i + 1) <= k)))
+     - guard : (j <= (i - 1))
+
+   [Q6] Abduction query = ((j <= (i - 1)) | (((i + 1) > 0) & ((k > 0) & ((i + 1) <= k))))
+   [#] Simplified query: ((j <= (i - 1)) | (((i + 1) > 0) & ((k > 0) & ((i + 1) <= k))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > j)                            
+      [+] Added test ... [ 0, -1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 0)                            
+      [+] Added test ... [ 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i > (1 - k))                            
+      [+] Added test ... [ 0, -1, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j <= k) & (i > 0))                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > 0) & (k > j))                            
+
+     - Result = ((i > 0) & (k > j))
+
+   # Loop_2 | Invariant @ Postcondition: ((i > 0) & (k > j))
+
+   # Loop_2 | Inductive Check: ((!((i > 0) & (k > j))) | (!(j <= (i - 1))) | ((i > 0) & ((k + (i - j)) > (j + 1)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((i > 0) & ((k > 0) & (i <= k)))) | (!(i <= (n - 1))) | ((i > 0) & (k > 0))) is valid!
+
+   # Precondition Check: ((1 > 0) & ((1 > 0) & (1 <= 1))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((i > 0) & ((k > 0) & (i <= k)))
+Loop #2: ((i > 0) & (k > j))
+================================================================================
+checker_exec.sh: line 1: 15022 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig17.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig17.cpp --
+
+real	7m56.104s
+user	7m50.144s
+sys	0m2.660s
+
+
+--- Processed dillig17.cpp ---
+sat: 17
+unsat: 11
+unk: 0
+escher: 21
+
+[$] OOM Count = 0
+[$] MAX Usage = 1553

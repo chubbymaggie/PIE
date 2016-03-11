@@ -1,0 +1,49 @@
+ ==>
+3758 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (y > 0))
+     - guard : (x < 0)
+
+   [Q1] Abduction query = ((x < 0) | (true & (y > 0)))
+   [#] Simplified query: ((x < 0) | (true & (y > 0)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > x) | (0 > x))                            
+
+     - Result = ((y > x) | (0 > x))
+
+   # Loop_1 | Invariant @ Postcondition: ((y > x) | (0 > x))
+
+   # Loop_1 | Inductive Check: ((!((y > x) | (0 > x))) | (!(x < 0)) | (((y + 1) > (x + y)) | (0 > (x + y)))) is valid!
+
+   # Precondition Check: ((y > -50) | (0 > -50)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((y > x) | (0 > x))
+================================================================================
+checker_exec.sh: line 1: 11752 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/fig1.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/fig1.cpp --
+
+real	0m54.199s
+user	0m52.056s
+sys	0m0.288s
+
+
+--- Processed fig1.cpp ---
+sat: 1
+unsat: 3
+unk: 0
+escher: 2
+
+[$] OOM Count = 0
+[$] MAX Usage = 590

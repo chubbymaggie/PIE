@@ -1,0 +1,65 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B8 for loop #1
+
+     - post_1 : (((true & (j = ((2 * k) + 2))) | (!(k != 0))) & (true | (k != 0)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (((true & (j = ((2 * k) + 2))) | (!(k != 0))) & (true | (k != 0))))
+   [#] Simplified query: (false | (((true & (j = ((2 * k) + 2))) | (!(k != 0))) & (true | (k != 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j > 1)                            
+      [+] Added test ... [ 3, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (0 = (j % 2))                            
+      [+] Added test ... [ -2, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (j > ((2 * k) + 1))                            
+      [+] Added test ... [ -1, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 = k) | (k > 2))                            
+      [+] Added test ... [ 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((j > 1) & (! (k = 1)))                            
+      [+] Added test ... [ 5, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((k = 0) | (k > (2 + 1)))                            
+      [+] Added test ... [ 0, 4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((k <= j) & (0 = (j % 2)))                            
+      [+] Added test ... [ -2, -3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((j > 1) & (0 = (j % 2)))                            
+      [+] Added test ... [ 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((k = 0) | (k > ((2 + 1) + 1)))                            
+      [+] Added test ... [ 0, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9 @10
+
+--- Processed 13.cpp ---
+sat: 10
+unsat: 0
+unk: 0
+escher: 10
+
+[$] OOM Count = 1345014
+[$] MAX Usage = 8192

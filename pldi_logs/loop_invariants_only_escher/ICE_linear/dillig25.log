@@ -1,0 +1,449 @@
+ ==>
+6400 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B12 for loop #1
+
+     - post_1 : (true & (i > (j - 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (i > (j - 1))))
+   [#] Simplified query: (false | (true & (i > (j - 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j <= i)                            
+
+     - Result = (j <= i)
+
+   # Loop_1 | Invariant @ Postcondition: (j <= i)
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q2] Abduction query = (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
+   [#] Simplified query: (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 1)                            
+      [+] Added test ... [ 3, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > j)                            
+
+     - Result = (i > j)
+
+   # Loop_2 | Invariant @ Postcondition: (i > j)
+
+   # Loop_2 | Inductive Check: ((!(i > j)) | false | ((((i + 1) > j) | (!(x = y))) & ((i > (j + 1)) | (x = y)))) is not valid!
+
+   [Q3] Abduction query = ((!(i > j)) | false | ((((i + 1) > j) | (!(x = y))) & ((i > (j + 1)) | (x = y))))
+   [#] Simplified query: ((!(i > j)) | false | ((((i + 1) > j) | (!(x = y))) & ((i > (j + 1)) | (x = y))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((x = y) & (i > j))
+
+   # Loop_2 | Inductive Check: ((!((x = y) & (i > j))) | false | ((((x = y) & ((i + 1) > j)) | (!(x = y))) & (((x = y) & (i > (j + 1))) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(j <= i)) | false | ((x = y) & (i > j))) is not valid!
+
+   [Q4] Abduction query = ((!(j <= i)) | false | ((x = y) & (i > j)))
+   [#] Simplified query: ((!(j <= i)) | false | ((x = y) & (i > j)))
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > y)                            
+      [+] Added test ... [ 1, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > x)                            
+      [+] Added test ... [ 1, 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 1)                            
+      [+] Added test ... [ 2, 2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > j)                            
+      [+] Added test ... [ 0, 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x > j)                            
+      [+] Added test ... [ -1, -1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 0)                            
+      [+] Added test ... [ 0, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i > (1 + 1))                            
+      [+] Added test ... [ 3, 3, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i > (j + 1))                            
+      [+] Added test ... [ 0, 2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i > ((1 + 1) + 1))                            
+      [+] Added test ... [ 4, 4, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i > ((j + 1) + 1))                            
+      [+] Added test ... [ 0, 3, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x > (1 - y))                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (i > (((j + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 4, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (x > ((j - x) + 1))                            
+      [+] Added test ... [ -2, -2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((1 > j) & (x > 0))                            
+      [+] Added test ... [ 0, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y <= x) & (y > 0))                            
+      [+] Added test ... [ 0, 0, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j <= y) & (i > y))                            
+      [+] Added test ... [ 0, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j <= y) & (i > x))                            
+      [+] Added test ... [ 1, 1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j <= y) & (i > 1))                            
+      [+] Added test ... [ 2, 2, 3, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y <= i) & (y > j))                            
+      [+] Added test ... [ -1, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > j) & (i > x))                            
+      [+] Added test ... [ -1, 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > j) & (x <= y))                            
+      [+] Added test ... [ -1, -1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > j) & (y = x))                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > j) & (i > 0))                            
+      [+] Added test ... [ 1, 1, 3, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > j) & (i > x))                            
+      [+] Added test ... [ 1, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > j) & (i > y))                            
+      [+] Added test ... [ -1, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > j) & (i > 1))                            
+      [+] Added test ... [ 2, 2, 4, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > 0) & (x = y))                            
+      [+] Added test ... [ 1, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > y) & (y > 0))                            
+      [+] Added test ... [ 2, 2, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (i > j))                            
+      [+] Added test ... [ 0, 1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > x) & (x > 0))                            
+      [+] Added test ... [ 2, 2, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > 1) & (x = y))                            
+      [+] Added test ... [ 2, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x = y) & (i > j))                            
+
+     - Result = ((x = y) & (i > j))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((x = y) & (i > j)) & (j <= i))
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : ((((((x + 1) = (y + 1)) & (i > j)) & (j <= i)) | (!(i >= j))) & ((((x = (y + 1)) & (i > j)) & (j <= i)) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q5] Abduction query = (false | ((((((x + 1) = (y + 1)) & (i > j)) & (j <= i)) | (!(i >= j))) & ((((x = (y + 1)) & (i > j)) & (j <= i)) | (i >= j))))
+   [#] Simplified query: (false | ((((((x + 1) = (y + 1)) & (i > j)) & (j <= i)) | (!(i >= j))) & ((((x = (y + 1)) & (i > j)) & (j <= i)) | (i >= j))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 1)                            
+      [+] Added test ... [ 0, -1, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > j)                            
+      [+] Added test ... [ 0, -1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i > (1 + 1))                            
+      [+] Added test ... [ 0, -1, 3, 4 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i > (j + 1))                            
+      [+] Added test ... [ 0, -1, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 4, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i > ((j + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (i > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 5, 6 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (i > (((j + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, -1, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y <= i) & (x = y))                            
+      [+] Added test ... [ 0, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y <= i) & (j <= y))                            
+      [+] Added test ... [ 1, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= y) & (i > x))                            
+      [+] Added test ... [ 1, 0, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= y) & (i > j))                            
+      [+] Added test ... [ 1, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > 0) & (x = y))                            
+      [+] Added test ... [ 0, 0, 1, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > x) & (j <= y))                            
+      [+] Added test ... [ 0, 2, 1, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (j <= i))                            
+      [+] Added test ... [ 0, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (i > j))                            
+      [+] Added test ... [ 0, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (i > 1))                            
+      [+] Added test ... [ 0, 1, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > 1) & (j <= y))                            
+      [+] Added test ... [ 0, 3, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i > 1) & (y = x))                            
+      [+] Added test ... [ 0, 0, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y = x) & (j <= i))                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y = x) & (i > j))                            
+
+     - Result = ((y = x) & (i > j))
+
+   # Loop_2 | Invariant @ Postcondition: ((y = x) & (i > j))
+
+   # Loop_2 | Inductive Check: ((!((y = x) & (i > j))) | false | ((((y = x) & ((i + 1) > j)) | (!(x = y))) & (((y = x) & (i > (j + 1))) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(((x = y) & (i > j)) & (j <= i))) | false | ((y = x) & (i > j))) is valid!
+
+   # Precondition Check: (((0 = 0) & (0 > 0)) & (0 <= 0))    [+] Root state for counter-examples : {'i': '-', 'x': '-', 'j': '-', 'y': '-'}
+ is not valid!
+
+----------------------------------< RESTART >-----------------------------------
+
+   + Found guard in B12 for loop #1
+
+     - post_1 : (true & (i > (j - 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q6] Abduction query = (false | (true & (i > (j - 1))))
+   [#] Simplified query: (false | (true & (i > (j - 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j <= i)                            
+
+     - Result = (j <= i)
+
+   # Loop_1 | Invariant @ Postcondition: (j <= i)
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q7] Abduction query = (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
+   [#] Simplified query: (false | (((j <= i) | (!(i >= j))) & ((j <= i) | (i >= j))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j <= i)                            
+
+     - Result = (j <= i)
+
+   # Loop_2 | Invariant @ Postcondition: (j <= i)
+
+   # Loop_2 | Inductive Check: ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y)))) is not valid!
+
+   [Q8] Abduction query = ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y))))
+   [#] Simplified query: ((!(j <= i)) | false | (((j <= (i + 1)) | (!(x = y))) & (((j + 1) <= i) | (x = y))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((x = y) & (j <= i))
+
+   # Loop_2 | Inductive Check: ((!((x = y) & (j <= i))) | false | ((((x = y) & (j <= (i + 1))) | (!(x = y))) & (((x = y) & ((j + 1) <= i)) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(j <= i)) | false | ((x = y) & (j <= i))) is not valid!
+
+   [Q9] Abduction query = ((!(j <= i)) | false | ((x = y) & (j <= i)))
+   [#] Simplified query: ((!(j <= i)) | false | ((x = y) & (j <= i)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = y) & (j <= i))
+
+   + Found guard in B10 for loop #2
+
+     - post_2 : (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j)))
+     - guard : NON-DETERMINISTIC
+
+   [Q10] Abduction query = (false | (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j))))
+   [#] Simplified query: (false | (((((x + 1) = (y + 1)) & (j <= i)) | (!(i >= j))) & (((x = (y + 1)) & (j <= i)) | (i >= j))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x <= (y + i))                            
+      [+] Added test ... [ 0, -1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= i) & (x = y))                            
+      [+] Added test ... [ 0, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= i) & (j <= y))                            
+      [+] Added test ... [ 1, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j <= i) & (x = y))                            
+
+     - Result = ((j <= i) & (x = y))
+
+   # Loop_2 | Invariant @ Postcondition: ((j <= i) & (x = y))
+
+   # Loop_2 | Inductive Check: ((!((j <= i) & (x = y))) | false | ((((j <= (i + 1)) & (x = y)) | (!(x = y))) & ((((j + 1) <= i) & (x = y)) | (x = y)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((x = y) & (j <= i))) | false | ((j <= i) & (x = y))) is valid!
+
+   # Precondition Check: ((0 = 0) & (0 <= 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((x = y) & (j <= i))
+Loop #2: ((j <= i) & (x = y))
+================================================================================
+checker_exec.sh: line 1: 16386 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig25.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig25.cpp --
+
+real	183m5.144s
+user	182m13.840s
+sys	0m40.892s
+
+
+--- Processed dillig25.cpp ---
+sat: 71
+unsat: 17
+unk: 0
+escher: 76
+
+[$] OOM Count = 0
+[$] MAX Usage = 7339

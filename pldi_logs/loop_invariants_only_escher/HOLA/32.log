@@ -1,0 +1,69 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & (i = j))
+     - guard : (n < (2 * k))
+
+   [Q1] Abduction query = ((n < (2 * k)) | (true & (i = j)))
+   [#] Simplified query: ((n < (2 * k)) | (true & (i = j)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > 2)                            
+      [+] Added test ... [ 6, 3, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (k > (2 + 1))                            
+      [+] Added test ... [ 8, 4, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (k > ((2 + 1) + 1))                            
+      [+] Added test ... [ 10, 5, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (k > (2 * (2 + 1)))                            
+      [+] Added test ... [ 14, 7, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j <= i) | (0 <= i))                            
+      [+] Added test ... [ 0, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (k > (2 * ((2 + 1) + 1)))                            
+      [+] Added test ... [ 18, 9, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (k > (n - (k + j)))                            
+      [+] Added test ... [ 0, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8/home/saswat/Repos/PIE/abducer/abduce.sh: line 52:   388 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/32.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1: 32767 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/32.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/32.cpp --
+
+real	28m31.224s
+user	28m19.344s
+sys	0m9.184s
+
+
+--- Processed 32.cpp ---
+sat: 8
+unsat: 0
+unk: 0
+escher: 8
+
+[$] OOM Count = 3944
+[$] MAX Usage = 8192

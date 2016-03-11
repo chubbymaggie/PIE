@@ -1,0 +1,169 @@
+ ==>
+6400 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B11 for loop #1
+
+     - post_1 : (true & (x = y))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (x = y)))
+   [#] Simplified query: (false | (true & (x = y)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Postcondition: (x = y)
+
+   + Found guard in B9 for loop #2
+
+     - post_2 : (x = y)
+     - guard : NON-DETERMINISTIC
+
+   [Q2] Abduction query = (false | (x = y))
+   [#] Simplified query: (false | (x = y))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Postcondition: (x = y)
+
+   # Loop_2 | Inductive Check: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1)))) is not valid!
+
+   [Q3] Abduction query = ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1))))
+   [#] Simplified query: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > z)                            
+      [+] Added test ... [ 0, 0, -1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 2)                            
+      [+] Added test ... [ 3, 3, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (w = (z + 1))                            
+
+     - Result = (w = (z + 1))
+
+   # Loop_2 | Invariant @ Inductive Condition: ((w = (z + 1)) & (x = y))
+
+   # Loop_2 | Inductive Check: ((!((w = (z + 1)) & (x = y))) | false | ((((((w = (z + 1)) & ((x + 1) = (y + 1))) | (!((z % 2) = 0))) & (((w = (z + 1)) & ((x + 1) = y)) | ((z % 2) = 0))) | (!((w % 2) = 1))) & (((((w = (z + 1)) & (x = (y + 1))) | (!((z % 2) = 0))) & (((w = (z + 1)) & (x = y)) | ((z % 2) = 0))) | ((w % 2) = 1)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(x = y)) | false | ((w = (z + 1)) & (x = y))) is not valid!
+
+   [Q4] Abduction query = ((!(x = y)) | false | ((w = (z + 1)) & (x = y)))
+   [#] Simplified query: ((!(x = y)) | false | ((w = (z + 1)) & (x = y)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > 1)                            
+      [+] Added test ... [ 0, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (z > 1)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 1)                            
+      [+] Added test ... [ 2, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (z = (w - 1))                            
+
+     - Result = (z = (w - 1))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((z = (w - 1)) & (x = y))
+
+   + Found guard in B9 for loop #2
+
+     - post_2 : (((x + y) = (((x + y) + 1) - 1)) & (x = y))
+     - guard : NON-DETERMINISTIC
+
+   [Q5] Abduction query = (false | (((x + y) = (((x + y) + 1) - 1)) & (x = y)))
+   [#] Simplified query: (false | (((x + y) = (((x + y) + 1) - 1)) & (x = y)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Postcondition: (x = y)
+
+   # Loop_2 | Inductive Check: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1)))) is not valid!
+
+   [Q6] Abduction query = ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1))))
+   [#] Simplified query: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > z)                            
+      [+] Added test ... [ 0, 0, -1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 2)                            
+      [+] Added test ... [ 3, 3, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (w = (z + 1))                            
+
+     - Result = (w = (z + 1))
+
+   # Loop_2 | Invariant @ Inductive Condition: ((w = (z + 1)) & (x = y))
+
+   # Loop_2 | Inductive Check: ((!((w = (z + 1)) & (x = y))) | false | ((((((w = (z + 1)) & ((x + 1) = (y + 1))) | (!((z % 2) = 0))) & (((w = (z + 1)) & ((x + 1) = y)) | ((z % 2) = 0))) | (!((w % 2) = 1))) & (((((w = (z + 1)) & (x = (y + 1))) | (!((z % 2) = 0))) & (((w = (z + 1)) & (x = y)) | ((z % 2) = 0))) | ((w % 2) = 1)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!((z = (w - 1)) & (x = y))) | false | ((w = (z + 1)) & (x = y))) is valid!
+
+   # Precondition Check: ((0 = (1 - 1)) & (0 = 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((z = (w - 1)) & (x = y))
+Loop #2: ((w = (z + 1)) & (x = y))
+================================================================================
+checker_exec.sh: line 1: 29415 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/06.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/06.cpp --
+
+real	0m50.943s
+user	0m46.816s
+sys	0m1.052s
+
+
+--- Processed 06.cpp ---
+sat: 16
+unsat: 10
+unk: 0
+escher: 19
+
+[$] OOM Count = 0
+[$] MAX Usage = 290

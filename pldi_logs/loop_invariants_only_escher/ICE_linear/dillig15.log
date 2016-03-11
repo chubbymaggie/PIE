@@ -1,0 +1,81 @@
+ ==>
+5931 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : ((!(j >= n)) | (true & (k > -1)))
+     - guard : (j <= (n - 1))
+
+   [Q1] Abduction query = ((j <= (n - 1)) | ((!(j >= n)) | (true & (k > -1))))
+   [#] Simplified query: ((j <= (n - 1)) | ((!(j >= n)) | (true & (k > -1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 1, 1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (k > -1)                            
+
+     - Result = (k > -1)
+
+   # Loop_1 | Invariant @ Postcondition: (k > -1)
+
+   # Loop_1 | Inductive Check: ((!(k > -1)) | (!(j <= (n - 1))) | ((k - 1) > -1)) is not valid!
+
+   [Q2] Abduction query = ((!(k > -1)) | (!(j <= (n - 1))) | ((k - 1) > -1))
+   [#] Simplified query: ((!(k > -1)) | (!(j <= (n - 1))) | ((k - 1) > -1))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (1 - k))                            
+      [+] Added test ... [ 0, 1, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (j > (1 - k))                            
+      [+] Added test ... [ 0, 2, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n <= (j + k))                            
+
+     - Result = (n <= (j + k))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((n <= (j + k)) & (k > -1))
+
+   # Loop_1 | Inductive Check: ((!((n <= (j + k)) & (k > -1))) | (!(j <= (n - 1))) | ((n <= ((j + 1) + (k - 1))) & ((k - 1) > -1))) is valid!
+
+   # Precondition Check: ((((!((k >= n) & (n >= 1))) | ((n <= (0 + k)) & (k > -1))) | (!(k >= n))) & (((!((k >= n) & (n >= 1))) | ((n <= (0 + k)) & (k > -1))) | (k >= n))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((n <= (j + k)) & (k > -1))
+================================================================================
+checker_exec.sh: line 1: 12131 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig15.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig15.cpp --
+
+real	1m10.672s
+user	1m7.828s
+sys	0m0.712s
+
+
+--- Processed dillig15.cpp ---
+sat: 7
+unsat: 4
+unk: 0
+escher: 8
+
+[$] OOM Count = 0
+[$] MAX Usage = 534

@@ -1,0 +1,161 @@
+ ==>
+4409 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1)))
+     - guard : (i <= k)
+
+   [Q1] Abduction query = ((i <= k) | (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1))))
+   [#] Simplified query: ((i <= k) | (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (! (j = 1))                            
+      [+] Added test ... [ -1, -2, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (! (1 = flag))                            
+
+     - Result = (!(1 = flag))
+
+   # Loop_1 | Invariant @ Postcondition: (!(1 = flag))
+
+   # Loop_1 | Inductive Check: ((!(!(1 = flag))) | (!(i <= k)) | (!(1 = flag))) is valid!
+
+   # Precondition Check: (((!(1 = flag)) | (!(flag = 1))) & ((!(1 = flag)) | (flag = 1)))    [+] Root state for counter-examples : {'i': '-', 'k': '-', 'j': '-', 'flag': '1', 'n': '-'}
+ is not valid!
+
+----------------------------------< RESTART >-----------------------------------
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1)))
+     - guard : (i <= k)
+
+   [Q2] Abduction query = ((i <= k) | (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1))))
+   [#] Simplified query: ((i <= k) | (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (! (j = 1))                            
+      [+] Added test ... [ -1, -2, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (j = (i + i))                            
+      [+] Added test ... [ -1, -2, -2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= k) | (i = j))                            
+      [+] Added test ... [ 1, 0, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((j = i) | (! (1 = flag)))                            
+
+     - Result = ((j = i) | (!(1 = flag)))
+
+   # Loop_1 | Invariant @ Postcondition: ((j = i) | (!(1 = flag)))
+
+   # Loop_1 | Inductive Check: ((!((j = i) | (!(1 = flag)))) | (!(i <= k)) | (((j + n) = (i + 1)) | (!(1 = flag)))) is not valid!
+
+   [Q3] Abduction query = ((!((j = i) | (!(1 = flag)))) | (!(i <= k)) | (((j + n) = (i + 1)) | (!(1 = flag))))
+   [#] Simplified query: ((!((j = i) | (!(1 = flag)))) | (!(i <= k)) | (((j + n) = (i + 1)) | (!(1 = flag))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 0, 0, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((j > k) | (! (1 = flag)))                            
+
+     - Result = ((j > k) | (!(1 = flag)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((j > k) | (!(1 = flag))) & ((j = i) | (!(1 = flag))))
+
+   # Loop_1 | Inductive Check: ((!(((j > k) | (!(1 = flag))) & ((j = i) | (!(1 = flag))))) | (!(i <= k)) | ((((j + n) > k) | (!(1 = flag))) & (((j + n) = (i + 1)) | (!(1 = flag))))) is valid!
+
+   # Precondition Check: (((((0 > k) | (!(1 = flag))) & ((0 = 0) | (!(1 = flag)))) | (!(flag = 1))) & ((((0 > k) | (!(1 = flag))) & ((0 = 0) | (!(1 = flag)))) | (flag = 1)))    [+] Root state for counter-examples : {'i': '-', 'k': '0', 'j': '-', 'flag': '1', 'n': '-'}
+ is not valid!
+
+----------------------------------< RESTART >-----------------------------------
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1)))
+     - guard : (i <= k)
+
+   [Q4] Abduction query = ((i <= k) | (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1))))
+   [#] Simplified query: ((i <= k) | (((true & (j = i)) | (!(flag = 1))) & (true | (flag = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (j <= (i + i))                            
+      [+] Added test ... [ 1, 0, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((j = i) | (! (1 = flag)))                            
+
+     - Result = ((j = i) | (!(1 = flag)))
+
+   # Loop_1 | Invariant @ Postcondition: ((j = i) | (!(1 = flag)))
+
+   # Loop_1 | Inductive Check: ((!((j = i) | (!(1 = flag)))) | (!(i <= k)) | (((j + n) = (i + 1)) | (!(1 = flag)))) is not valid!
+
+   [Q5] Abduction query = ((!((j = i) | (!(1 = flag)))) | (!(i <= k)) | (((j + n) = (i + 1)) | (!(1 = flag))))
+   [#] Simplified query: ((!((j = i) | (!(1 = flag)))) | (!(i <= k)) | (((j + n) = (i + 1)) | (!(1 = flag))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 0)                            
+      [+] Added test ... [ 0, 0, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((n = 1) | (! (1 = flag)))                            
+
+     - Result = ((n = 1) | (!(1 = flag)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((n = 1) | (!(1 = flag))) & ((j = i) | (!(1 = flag))))
+
+   # Loop_1 | Inductive Check: ((!(((n = 1) | (!(1 = flag))) & ((j = i) | (!(1 = flag))))) | (!(i <= k)) | (((n = 1) | (!(1 = flag))) & (((j + n) = (i + 1)) | (!(1 = flag))))) is valid!
+
+   # Precondition Check: (((((1 = 1) | (!(1 = flag))) & ((0 = 0) | (!(1 = flag)))) | (!(flag = 1))) & ((((2 = 1) | (!(1 = flag))) & ((0 = 0) | (!(1 = flag)))) | (flag = 1))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((n = 1) | (!(1 = flag))) & ((j = i) | (!(1 = flag))))
+================================================================================
+checker_exec.sh: line 1: 10235 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/44.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/44.cpp --
+
+real	49m33.593s
+user	49m20.676s
+sys	0m8.780s
+
+
+--- Processed 44.cpp ---
+sat: 16
+unsat: 9
+unk: 0
+escher: 17
+
+[$] OOM Count = 0
+[$] MAX Usage = 8144

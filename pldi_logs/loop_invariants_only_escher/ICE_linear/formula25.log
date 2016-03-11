@@ -1,0 +1,69 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B15 for loop #1
+
+     - post_1 : (((true & ((((x1 <= 0) & (x1 >= (x4 + 1))) & (x2 = x3)) & ((x4 >= 0) | (x4 <= x3)))) | (!(x1 <= 0))) & ((true & ((((x1 <= 0) & (x1 >= (x4 + 1))) & (x2 = x3)) & ((x4 >= 0) | (x4 <= x3)))) | (x1 <= 0)))
+     - guard : (input != 0)
+
+   [Q1] Abduction query = ((input != 0) | (((true & ((((x1 <= 0) & (x1 >= (x4 + 1))) & (x2 = x3)) & ((x4 >= 0) | (x4 <= x3)))) | (!(x1 <= 0))) & ((true & ((((x1 <= 0) & (x1 >= (x4 + 1))) & (x2 = x3)) & ((x4 >= 0) | (x4 <= x3)))) | (x1 <= 0))))
+   [#] Simplified query: ((input != 0) | (((true & ((((x1 <= 0) & (x1 >= (x4 + 1))) & (x2 = x3)) & ((x4 >= 0) | (x4 <= x3)))) | (!(x1 <= 0))) & ((true & ((((x1 <= 0) & (x1 >= (x4 + 1))) & (x2 = x3)) & ((x4 >= 0) | (x4 <= x3)))) | (x1 <= 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1, 0, -2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x2 = x3)                            
+      [+] Added test ... [ 0, 0, -1, -2, -2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x3 > x4)                            
+      [+] Added test ... [ 0, 0, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (x3 > ((x4 + x4) + 1))                            
+      [+] Added test ... [ 0, 0, -3, 0, -4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x4 <= x2) & (x2 = x3))                            
+      [+] Added test ... [ 0, 1, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x1 > x4) & (x3 > x4))                            
+      [+] Added test ... [ 0, 0, -1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x2 > x4) & (x2 <= x3))                            
+      [+] Added test ... [ 0, 0, 0, 1, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x2 > x4) & (x3 = x2))                            
+      [+] Added test ... [ 0, 1, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8/home/saswat/Repos/PIE/abducer/abduce.sh: line 52: 19025 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/formula25.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1: 18933 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/formula25.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/formula25.cpp --
+
+real	38m55.024s
+user	38m42.112s
+sys	0m9.856s
+
+
+--- Processed formula25.cpp ---
+sat: 8
+unsat: 0
+unk: 0
+escher: 8
+
+[$] OOM Count = 4098
+[$] MAX Usage = 8192

@@ -1,0 +1,103 @@
+ ==>
+2027 tests for loop #1.
+6400 tests for loop #2.
+6400 tests for loop #3.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B14 for loop #1
+
+     - post_1 : true
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | true)
+   [#] Simplified query: ((i < n) | true)
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_1 | Invariant @ Postcondition: true
+
+   + Found guard in B12 for loop #2
+
+     - post_2 : true
+     - guard : (j < m)
+
+   [Q2] Abduction query = ((j < m) | true)
+   [#] Simplified query: ((j < m) | true)
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_2 | Invariant @ Postcondition: true
+
+   + Found guard in B9 for loop #3
+
+     - post_3 : true
+     - guard : (k < j)
+
+   [Q3] Abduction query = ((k < j) | true)
+   [#] Simplified query: ((k < j) | true)
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+
+     - Result = true
+
+   # Loop_3 | Invariant @ Postcondition: true
+
+   # Loop_3 | Inductive Check: ((!true) | (!(k < j)) | true) is valid!
+
+   # Loop_2 | Inductive Check: ((!true) | (!(j < m)) | (((true & (j >= 0)) | false) & ((true & (((n + j) + 5) > i)) | false))) is not valid!
+
+   [Q4] Abduction query = ((!true) | (!(j < m)) | (((true & (j >= 0)) | false) & ((true & (((n + j) + 5) > i)) | false)))
+   [#] Simplified query: ((!true) | (!(j < m)) | (((true & (j >= 0)) | false) & ((true & (((n + j) + 5) > i)) | false)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n > 1)                            
+      [+] Added test ... [ -1, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= j)                            
+      [+] Added test ... [ -1, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= j)                            
+      [+] Added test ... [ 0, 1, 0, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (1 - j))                            
+      [+] Added test ... [ -1, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n > (j % 5))                            
+      [+] Added test ... [ -5, -4, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i <= (j + j))                            
+      [+] Added test ... [ -1, 0, 0, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i <= (5 * j))                            
+      [+] Added test ... [ -1, 0, 0, -5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+
+--- Processed 31.cpp ---
+sat: 9
+unsat: 4
+unk: 0
+escher: 11
+
+[$] OOM Count = 172869
+[$] MAX Usage = 8192

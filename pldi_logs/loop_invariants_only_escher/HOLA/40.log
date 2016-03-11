@@ -1,0 +1,78 @@
+ ==>
+6400 tests for loop #1.
+6400 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : (((true & (a = b)) | (!(flag != 0))) & (true | (flag != 0)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (((true & (a = b)) | (!(flag != 0))) & (true | (flag != 0))))
+   [#] Simplified query: (false | (((true & (a = b)) | (!(flag != 0))) & (true | (flag != 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (b <= a)                            
+      [+] Added test ... [ 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((a = b) | (0 <= flag))                            
+      [+] Added test ... [ -1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((b = a) | (flag = 0))                            
+
+     - Result = ((b = a) | (flag = 0))
+
+   # Loop_2 | Invariant @ Postcondition: ((b = a) | (flag = 0))
+
+   # Loop_2 | Inductive Check: ((!((b = a) | (flag = 0))) | false | (((b + (j - i)) = (a + 1)) | (flag = 0))) is not valid!
+
+   [Q2] Abduction query = ((!((b = a) | (flag = 0))) | false | (((b + (j - i)) = (a + 1)) | (flag = 0)))
+   [#] Simplified query: ((!((b = a) | (flag = 0))) | false | (((b + (j - i)) = (a + 1)) | (flag = 0)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j > 1)                            
+      [+] Added test ... [ 0, 0, -1, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > 1)                            
+      [+] Added test ... [ 0, 0, -1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (j > (1 + 1))                            
+      [+] Added test ... [ 0, 0, -1, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (i > ((1 - a) + 1))                            
+      [+] Added test ... [ 3, 3, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((j > 1) & (i > 1))                            
+      [+] Added test ... [ 0, 0, -1, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (j > (((1 - a) + 1) + 1))                            
+      [+] Added test ... [ 4, 4, -1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+
+--- Processed 40.cpp ---
+sat: 11
+unsat: 1
+unk: 0
+escher: 11
+
+[$] OOM Count = 145336
+[$] MAX Usage = 8192

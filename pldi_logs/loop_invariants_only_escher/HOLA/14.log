@@ -1,0 +1,101 @@
+ ==>
+6169 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : ((true & (a <= m)) & (a >= (0 - m)))
+     - guard : (j <= m)
+
+   [Q1] Abduction query = ((j <= m) | ((true & (a <= m)) & (a >= (0 - m))))
+   [#] Simplified query: ((j <= m) | ((true & (a <= m)) & (a >= (0 - m))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (m > 0)                            
+      [+] Added test ... [ 2, 1, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (j > (0 - a))                            
+      [+] Added test ... [ 1, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (0 <= (a + m))                            
+      [+] Added test ... [ 1, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((j > a) & (0 <= (a + m)))                            
+      [+] Added test ... [ 2, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((a <= m) & (j > (0 - a)))                            
+      [+] Added test ... [ 2, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((a <= m) & (0 <= (m + a)))                            
+
+     - Result = ((a <= m) & (0 <= (m + a)))
+
+   # Loop_1 | Invariant @ Postcondition: ((a <= m) & (0 <= (m + a)))
+
+   # Loop_1 | Inductive Check: ((!((a <= m) & (0 <= (m + a)))) | (!(j <= m)) | (((((a + 1) <= m) & (0 <= (m + (a + 1)))) | false) & ((((a - 1) <= m) & (0 <= (m + (a - 1)))) | false))) is not valid!
+
+   [Q2] Abduction query = ((!((a <= m) & (0 <= (m + a)))) | (!(j <= m)) | (((((a + 1) <= m) & (0 <= (m + (a + 1)))) | false) & ((((a - 1) <= m) & (0 <= (m + (a - 1)))) | false)))
+   [#] Simplified query: ((!((a <= m) & (0 <= (m + a)))) | (!(j <= m)) | (((((a + 1) <= m) & (0 <= (m + (a + 1)))) | false) & ((((a - 1) <= m) & (0 <= (m + (a - 1)))) | false)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (m > 0)                            
+      [+] Added test ... [ 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (j > a)                            
+      [+] Added test ... [ -1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (j > (1 - (j + a)))                            
+      [+] Added test ... [ 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((j > 1) | (j = (a + 1)))                            
+      [+] Added test ... [ 2, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- ((j > a) & (j > (0 - a)))                            
+
+     - Result = ((j > a) & (j > (0 - a)))
+
+   # Loop_1 | Invariant @ Inductive Condition: (((j > a) & (j > (0 - a))) & ((a <= m) & (0 <= (m + a))))
+
+   # Loop_1 | Inductive Check: ((!(((j > a) & (j > (0 - a))) & ((a <= m) & (0 <= (m + a))))) | (!(j <= m)) | ((((((j + 1) > (a + 1)) & ((j + 1) > (0 - (a + 1)))) & (((a + 1) <= m) & (0 <= (m + (a + 1))))) | false) & (((((j + 1) > (a - 1)) & ((j + 1) > (0 - (a - 1)))) & (((a - 1) <= m) & (0 <= (m + (a - 1))))) | false))) is valid!
+
+   # Precondition Check: ((!(m > 0)) | (((1 > 0) & (1 > (0 - 0))) & ((0 <= m) & (0 <= (m + 0))))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (((j > a) & (j > (0 - a))) & ((a <= m) & (0 <= (m + a))))
+================================================================================
+checker_exec.sh: line 1: 15180 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/14.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/14.cpp --
+
+real	65m41.545s
+user	65m28.204s
+sys	0m9.544s
+
+
+--- Processed 14.cpp ---
+sat: 12
+unsat: 4
+unk: 0
+escher: 13
+
+[$] OOM Count = 0
+[$] MAX Usage = 7470

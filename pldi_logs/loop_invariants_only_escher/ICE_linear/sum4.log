@@ -1,0 +1,73 @@
+ ==>
+9 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & ((sn = 8) | (sn = 0))) | (!(sn = 8))) & ((true & ((sn = 8) | (sn = 0))) | (sn = 8)))
+     - guard : (i <= 8)
+
+   [Q1] Abduction query = ((i <= 8) | (((true & ((sn = 8) | (sn = 0))) | (!(sn = 8))) & ((true & ((sn = 8) | (sn = 0))) | (sn = 8))))
+   [#] Simplified query: ((i <= 8) | (((true & ((sn = 8) | (sn = 0))) | (!(sn = 8))) & ((true & ((sn = 8) | (sn = 0))) | (sn = 8))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 9, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= sn)                            
+      [+] Added test ... [ 9, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i = (sn + 1))                            
+      [+] Added test ... [ 10, 9 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i <= 8) | (sn = 8))                            
+
+     - Result = ((i <= 8) | (sn = 8))
+
+   # Loop_1 | Invariant @ Postcondition: ((i <= 8) | (sn = 8))
+
+   # Loop_1 | Inductive Check: ((!((i <= 8) | (sn = 8))) | (!(i <= 8)) | (((i + 1) <= 8) | ((sn + 1) = 8))) is not valid!
+
+   [Q2] Abduction query = ((!((i <= 8) | (sn = 8))) | (!(i <= 8)) | (((i + 1) <= 8) | ((sn + 1) = 8)))
+   [#] Simplified query: ((!((i <= 8) | (sn = 8))) | (!(i <= 8)) | (((i + 1) <= 8) | ((sn + 1) = 8)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 8, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i = (sn + 1))                            
+
+     - Result = (i = (sn + 1))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((i = (sn + 1)) & ((i <= 8) | (sn = 8)))
+
+   # Loop_1 | Inductive Check: ((!((i = (sn + 1)) & ((i <= 8) | (sn = 8)))) | (!(i <= 8)) | (((i + 1) = ((sn + 1) + 1)) & (((i + 1) <= 8) | ((sn + 1) = 8)))) is valid!
+
+   # Precondition Check: ((1 = (0 + 1)) & ((1 <= 8) | (0 = 8))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((i = (sn + 1)) & ((i <= 8) | (sn = 8)))
+================================================================================
+checker_exec.sh: line 1:  3342 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/sum4.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/sum4.cpp --
+
+real	0m19.789s
+user	0m17.540s
+sys	0m0.284s
+
+
+--- Processed sum4.cpp ---
+sat: 5
+unsat: 4
+unk: 0
+escher: 6
+
+[$] OOM Count = 0
+[$] MAX Usage = 119

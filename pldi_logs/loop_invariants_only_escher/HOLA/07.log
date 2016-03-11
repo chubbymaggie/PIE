@@ -1,0 +1,57 @@
+ ==>
+2862 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B7 for loop #1
+
+     - post_1 : (true & ((a + b) = (3 * n)))
+     - guard : (i < n)
+
+   [Q1] Abduction query = ((i < n) | (true & ((a + b) = (3 * n))))
+   [#] Simplified query: ((i < n) | (true & ((a + b) = (3 * n))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= a)                            
+      [+] Added test ... [ 0, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (i <= (a + b))                            
+      [+] Added test ... [ 1, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((i <= b) & (i <= a))                            
+      [+] Added test ... [ 1, 1, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (b = ((3 * i) - a))                            
+      [+] Added test ... [ 1, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8/home/saswat/Repos/PIE/abducer/abduce.sh: line 52:   505 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/07.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1: 32698 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/07.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/07.cpp --
+
+real	15m5.687s
+user	14m58.564s
+sys	0m4.792s
+
+
+--- Processed 07.cpp ---
+sat: 5
+unsat: 0
+unk: 0
+escher: 5
+
+[$] OOM Count = 4008
+[$] MAX Usage = 8192

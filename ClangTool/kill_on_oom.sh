@@ -38,7 +38,7 @@ quit () { echo -ne "\n[K] Stopped OOM Kill Monitor on $CGROUP\n"; exit 0; }
 echo -ne "\n[K] Started OOM Kill Monitor on $CGROUP\n"
 sleep ${interval}
 while true; do
-  [ "`cat /sys/fs/cgroup/memory/$CGROUP/memory.memsw.failcnt`" != 0 ] && { break; }
+  [ "`cat /sys/fs/cgroup/memory/$CGROUP/memory.memsw.failcnt`" != "0" ] && { break; }
   [ -z "`cat /sys/fs/cgroup/memory/$CGROUP/cgroup.procs`" ] && { quit; }
   sleep ${interval}
 done

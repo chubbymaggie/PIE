@@ -1,0 +1,127 @@
+ ==>
+6400 tests for loop #1.
+1013 tests for loop #2.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #2
+
+     - post_2 : (true & (y <= 4))
+     - guard : (y <= x)
+
+   [Q1] Abduction query = ((y <= x) | (true & (y <= 4)))
+   [#] Simplified query: ((y <= x) | (true & (y <= 4)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x > 0)                            
+      [+] Added test ... [ 5, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y <= 4)                            
+
+     - Result = (y <= 4)
+
+   # Loop_2 | Invariant @ Postcondition: (y <= 4)
+
+   # Loop_2 | Inductive Check: ((!(y <= 4)) | (!(y <= x)) | ((((y + 1) <= 4) | false) & (((y + 2) <= 4) | false))) is not valid!
+
+   [Q2] Abduction query = ((!(y <= 4)) | (!(y <= x)) | ((((y + 1) <= 4) | false) & (((y + 2) <= 4) | false)))
+   [#] Simplified query: ((!(y <= 4)) | (!(y <= x)) | ((((y + 1) <= 4) | false) & (((y + 2) <= 4) | false)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 4, 4 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (4 > x)                            
+      [+] Added test ... [ 3, 3 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x <= 2)                            
+
+     - Result = (x <= 2)
+
+   # Loop_2 | Invariant @ Inductive Condition: ((x <= 2) & (y <= 4))
+
+   # Loop_2 | Inductive Check: ((!((x <= 2) & (y <= 4))) | (!(y <= x)) | ((((x <= 2) & ((y + 1) <= 4)) | false) & (((x <= 2) & ((y + 2) <= 4)) | false))) is valid!
+
+   + Found guard in B13 for loop #1
+
+     - post_1 : ((((((t - (2 * s)) + 2) <= 2) & (0 <= 4)) | (!(flag != 0))) & (((1 <= 2) & (0 <= 4)) | (flag != 0)))
+     - guard : NON-DETERMINISTIC
+
+   [Q3] Abduction query = (false | ((((((t - (2 * s)) + 2) <= 2) & (0 <= 4)) | (!(flag != 0))) & (((1 <= 2) & (0 <= 4)) | (flag != 0))))
+   [#] Simplified query: (false | ((((((t - (2 * s)) + 2) <= 2) & (0 <= 4)) | (!(flag != 0))) & (((1 <= 2) & (0 <= 4)) | (flag != 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, -1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= t)                            
+      [+] Added test ... [ 0, -1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= s)                            
+      [+] Added test ... [ 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (! (0 = (flag + 1)))                            
+      [+] Added test ... [ -1, -1, -2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (t <= (2 * s))                            
+
+     - Result = (t <= (2 * s))
+
+   # Loop_1 | Invariant @ Postcondition: (t <= (2 * s))
+
+   # Loop_1 | Inductive Check: ((!(t <= (2 * s))) | false | (((((t + (b + 1)) + (a + 1)) <= (2 * (s + (a + 1)))) | (!(flag != 0))) & (((t + (b + 1)) <= (2 * (s + (a + 1)))) | (flag != 0)))) is not valid!
+
+   [Q4] Abduction query = ((!(t <= (2 * s))) | false | (((((t + (b + 1)) + (a + 1)) <= (2 * (s + (a + 1)))) | (!(flag != 0))) & (((t + (b + 1)) <= (2 * (s + (a + 1)))) | (flag != 0))))
+   [#] Simplified query: ((!(t <= (2 * s))) | false | (((((t + (b + 1)) + (a + 1)) <= (2 * (s + (a + 1)))) | (!(flag != 0))) & (((t + (b + 1)) <= (2 * (s + (a + 1)))) | (flag != 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, -1, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (b = a)                            
+      [+] Added test ... [ 0, 0, -2, -2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= a)                            
+      [+] Added test ... [ 0, 0, 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (b <= (2 * a))                            
+      [+] Added test ... [ 0, 0, 2, 1, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7/home/saswat/Repos/PIE/abducer/abduce.sh: line 52: 26345 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/12.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1: 24727 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/12.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/12.cpp --
+
+real	12m14.606s
+user	12m8.188s
+sys	0m3.336s
+
+
+--- Processed 12.cpp ---
+sat: 14
+unsat: 4
+unk: 0
+escher: 15
+
+[$] OOM Count = 6483
+[$] MAX Usage = 8192

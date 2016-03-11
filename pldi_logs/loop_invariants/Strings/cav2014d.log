@@ -1,0 +1,64 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & #eql(#sub(r, 0, i), "a"))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & #eql(#sub(r, 0, i), "a")))
+   [#] Simplified query: (false | (true & #eql(#sub(r, 0, i), "a")))
+
+    [%] Inferring {true} [k = 1] (0f x 6400t) ...                                     
+    [?] Verifying [k = 1] --- true                            
+      [+] Added test ... [ "", 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (1f x 6401t) ...                                     
+    [?] Verifying [k = 1] --- (#has(r, "a"))                            
+      [+] Added test ... [ "a", 0 ]
+
+    [%] Removing conflicts ...  @2 @3
+    [%] Inferring {true} [k = 1] (2f x 6402t) ...                                     
+    [?] Verifying [k = 1] --- (1 = i)                            
+      [+] Added test ... [ "A", 1 ]
+
+    [%] Inferring {true} [k = 1] (2f x 6403t) ...                                     
+    [?] Verifying [k = 1] --- (#has(r, "a")) & (1 = i)                            
+      [+] Added test ... [ "Aa", 1 ]
+
+    [%] Removing conflicts ...  @2 @3 @4 @5
+    [%] Inferring {true} [k = 1] (3f x 6404t) ...                                     
+    [?] Verifying [k = 1] --- (1 = i) & (#has("a", (#get(r, 0))))                            
+
+     - Result = ((1 = i) & #has("a", #get(r, 0)))
+
+   # Loop_1 | Invariant @ Postcondition: ((1 = i) & #has("a", #get(r, 0)))
+
+   # Loop_1 | Inductive Check: ((!((1 = i) & #has("a", #get(r, 0)))) | false | ((1 = i) & #has("a", #get(#cat(r, t), 0)))) is valid!
+
+   # Precondition Check: ((1 = #len("a")) & #has("a", #get("a", 0))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((1 = i) & #has("a", #get(r, 0)))
+================================================================================
+checker_exec.sh: line 1: 28031 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/pie/16/cav2014d.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=pie -csize 16 --extra-arg=--std=c++11 ../../PIE/bm_strings/cav2014d.cpp --
+
+real	0m10.533s
+user	0m8.580s
+sys	0m0.204s
+
+
+--- Processed cav2014d.cpp ---
+sat: 4
+unsat: 3
+unk: 0
+escher: 3
+
+[$] OOM Count = 0
+[$] MAX Usage = 88

@@ -1,0 +1,81 @@
+ ==>
+1733 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (((true & ((sn = SIZE) | (sn = 0))) | (!(sn = SIZE))) & ((true & ((sn = SIZE) | (sn = 0))) | (sn = SIZE)))
+     - guard : (i <= SIZE)
+
+   [Q1] Abduction query = ((i <= SIZE) | (((true & ((sn = SIZE) | (sn = 0))) | (!(sn = SIZE))) & ((true & ((sn = SIZE) | (sn = 0))) | (sn = SIZE))))
+   [#] Simplified query: ((i <= SIZE) | (((true & ((sn = SIZE) | (sn = 0))) | (!(sn = SIZE))) & ((true & ((sn = SIZE) | (sn = 0))) | (sn = SIZE))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= sn)                            
+      [+] Added test ... [ 3, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i = (sn + 1))                            
+      [+] Added test ... [ 0, -2, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((i > 0) & (i = (sn + 1)))                            
+      [+] Added test ... [ 2, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9 @10 @11
+    [?] Verifying --- ((i <= SIZE) | ((sn = SIZE) | (sn = 0)))                            
+
+     - Result = ((i <= SIZE) | ((sn = SIZE) | (sn = 0)))
+
+   # Loop_1 | Invariant @ Postcondition: ((i <= SIZE) | ((sn = SIZE) | (sn = 0)))
+
+   # Loop_1 | Inductive Check: ((!((i <= SIZE) | ((sn = SIZE) | (sn = 0)))) | (!(i <= SIZE)) | (((i + 1) <= SIZE) | (((sn + 1) = SIZE) | ((sn + 1) = 0)))) is not valid!
+
+   [Q2] Abduction query = ((!((i <= SIZE) | ((sn = SIZE) | (sn = 0)))) | (!(i <= SIZE)) | (((i + 1) <= SIZE) | (((sn + 1) = SIZE) | ((sn + 1) = 0))))
+   [#] Simplified query: ((!((i <= SIZE) | ((sn = SIZE) | (sn = 0)))) | (!(i <= SIZE)) | (((i + 1) <= SIZE) | (((sn + 1) = SIZE) | ((sn + 1) = 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i > sn)                            
+      [+] Added test ... [ 2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (i = (sn + 1))                            
+
+     - Result = (i = (sn + 1))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((i = (sn + 1)) & ((i <= SIZE) | ((sn = SIZE) | (sn = 0))))
+
+   # Loop_1 | Inductive Check: ((!((i = (sn + 1)) & ((i <= SIZE) | ((sn = SIZE) | (sn = 0))))) | (!(i <= SIZE)) | (((i + 1) = ((sn + 1) + 1)) & (((i + 1) <= SIZE) | (((sn + 1) = SIZE) | ((sn + 1) = 0))))) is valid!
+
+   # Precondition Check: ((1 = (0 + 1)) & ((1 <= SIZE) | ((0 = SIZE) | (0 = 0)))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((i = (sn + 1)) & ((i <= SIZE) | ((sn = SIZE) | (sn = 0))))
+================================================================================
+checker_exec.sh: line 1:   620 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/sum4c.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/sum4c.cpp --
+
+real	21m13.631s
+user	21m9.692s
+sys	0m1.436s
+
+
+--- Processed sum4c.cpp ---
+sat: 7
+unsat: 4
+unk: 0
+escher: 8
+
+[$] OOM Count = 0
+[$] MAX Usage = 3890

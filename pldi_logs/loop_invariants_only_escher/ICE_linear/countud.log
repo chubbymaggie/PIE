@@ -1,0 +1,77 @@
+ ==>
+2145 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (y = n))
+     - guard : (x > 0)
+
+   [Q1] Abduction query = ((x > 0) | (true & (y = n)))
+   [#] Simplified query: ((x > 0) | (true & (y = n)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (0 <= y)                            
+      [+] Added test ... [ 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (n = (x + y))                            
+      [+] Added test ... [ -1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 0) | (y = n))                            
+
+     - Result = ((x > 0) | (y = n))
+
+   # Loop_1 | Invariant @ Postcondition: ((x > 0) | (y = n))
+
+   # Loop_1 | Inductive Check: ((!((x > 0) | (y = n))) | (!(x > 0)) | (((x - 1) > 0) | ((y + 1) = n))) is not valid!
+
+   [Q2] Abduction query = ((!((x > 0) | (y = n))) | (!(x > 0)) | (((x - 1) > 0) | ((y + 1) = n)))
+   [#] Simplified query: ((!((x > 0) | (y = n))) | (!(x > 0)) | (((x - 1) > 0) | ((y + 1) = n)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x <= n)                            
+      [+] Added test ... [ 1, -1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x = (n - y))                            
+
+     - Result = (x = (n - y))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = (n - y)) & ((x > 0) | (y = n)))
+
+   # Loop_1 | Inductive Check: ((!((x = (n - y)) & ((x > 0) | (y = n)))) | (!(x > 0)) | (((x - 1) = (n - (y + 1))) & (((x - 1) > 0) | ((y + 1) = n)))) is valid!
+
+   # Precondition Check: ((!(n >= 0)) | ((n = (n - 0)) & ((n > 0) | (0 = n)))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((x = (n - y)) & ((x > 0) | (y = n)))
+================================================================================
+checker_exec.sh: line 1: 13058 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/countud.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/countud.cpp --
+
+real	1m13.898s
+user	1m11.332s
+sys	0m0.532s
+
+
+--- Processed countud.cpp ---
+sat: 6
+unsat: 4
+unk: 0
+escher: 7
+
+[$] OOM Count = 0
+[$] MAX Usage = 605

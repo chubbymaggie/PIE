@@ -1,0 +1,65 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : (true & (j > (i - 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (j > (i - 1))))
+   [#] Simplified query: (false | (true & (j > (i - 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (i <= j)                            
+
+     - Result = (i <= j)
+
+   # Loop_1 | Invariant @ Postcondition: (i <= j)
+
+   # Loop_1 | Inductive Check: ((!(i <= j)) | false | ((((i + (x + 1)) <= ((j + (y + 1)) + 1)) | (!(flag != 0))) & (((i + (x + 1)) <= (j + (y + 1))) | (flag != 0)))) is not valid!
+
+   [Q2] Abduction query = ((!(i <= j)) | false | ((((i + (x + 1)) <= ((j + (y + 1)) + 1)) | (!(flag != 0))) & (((i + (x + 1)) <= (j + (y + 1))) | (flag != 0))))
+   [#] Simplified query: ((!(i <= j)) | false | ((((i + (x + 1)) <= ((j + (y + 1)) + 1)) | (!(flag != 0))) & (((i + (x + 1)) <= (j + (y + 1))) | (flag != 0))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, -2, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Inductive Condition: ((x = y) & (i <= j))
+
+   # Loop_1 | Inductive Check: ((!((x = y) & (i <= j))) | false | (((((x + 1) = (y + 1)) & ((i + (x + 1)) <= ((j + (y + 1)) + 1))) | (!(flag != 0))) & ((((x + 1) = (y + 1)) & ((i + (x + 1)) <= (j + (y + 1)))) | (flag != 0)))) is valid!
+
+   # Precondition Check: ((0 = 0) & (0 <= 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: ((x = y) & (i <= j))
+================================================================================
+checker_exec.sh: line 1: 26289 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/dillig05.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/dillig05.cpp --
+
+real	0m22.476s
+user	0m20.072s
+sys	0m0.476s
+
+
+--- Processed dillig05.cpp ---
+sat: 3
+unsat: 4
+unk: 0
+escher: 4
+
+[$] OOM Count = 0
+[$] MAX Usage = 237

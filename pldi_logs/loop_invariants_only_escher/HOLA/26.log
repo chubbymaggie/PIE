@@ -1,0 +1,413 @@
+ ==>
+255 tests for loop #1.
+6400 tests for loop #2.
+6400 tests for loop #3.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B15 for loop #1
+
+     - post_1 : (true & (x = y))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & (x = y)))
+   [#] Simplified query: (false | (true & (x = y)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_1 | Invariant @ Postcondition: (x = y)
+
+   + Found guard in B6 for loop #3
+
+     - post_3 : (x = y)
+     - guard : NON-DETERMINISTIC
+
+   [Q2] Abduction query = (false | (x = y))
+   [#] Simplified query: (false | (x = y))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_3 | Invariant @ Postcondition: (x = y)
+
+   # Loop_3 | Inductive Check: ((!(x = y)) | false | (x = y)) is valid!
+
+   + Found guard in B13 for loop #2
+
+     - post_2 : (x = y)
+     - guard : NON-DETERMINISTIC
+
+   [Q3] Abduction query = (false | (x = y))
+   [#] Simplified query: (false | (x = y))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+
+     - Result = (x = y)
+
+   # Loop_2 | Invariant @ Postcondition: (x = y)
+
+   # Loop_2 | Inductive Check: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1)))) is not valid!
+
+   [Q4] Abduction query = ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1))))
+   [#] Simplified query: ((!(x = y)) | false | ((((((x + 1) = (y + 1)) | (!((z % 2) = 0))) & (((x + 1) = y) | ((z % 2) = 0))) | (!((w % 2) = 1))) & ((((x = (y + 1)) | (!((z % 2) = 0))) & ((x = y) | ((z % 2) = 0))) | ((w % 2) = 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > 2)                            
+      [+] Added test ... [ 0, 0, 1, 3 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (z > 1)                            
+      [+] Added test ... [ 0, 0, 3, 1 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 2)                            
+      [+] Added test ... [ 3, 3, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (z = (w - 1))                            
+
+     - Result = (z = (w - 1))
+
+   # Loop_2 | Invariant @ Inductive Condition: ((z = (w - 1)) & (x = y))
+
+   # Loop_2 | Inductive Check: ((!((z = (w - 1)) & (x = y))) | false | ((((((z = (w - 1)) & ((x + 1) = (y + 1))) | (!((z % 2) = 0))) & (((z = (w - 1)) & ((x + 1) = y)) | ((z % 2) = 0))) | (!((w % 2) = 1))) & (((((z = (w - 1)) & (x = (y + 1))) | (!((z % 2) = 0))) & (((z = (w - 1)) & (x = y)) | ((z % 2) = 0))) | ((w % 2) = 1)))) is valid!
+
+   # Loop_1 | Inductive Check: ((!(x = y)) | false | ((z = (w - 1)) & (x = y))) is not valid!
+
+   [Q5] Abduction query = ((!(x = y)) | false | ((z = (w - 1)) & (x = y)))
+   [#] Simplified query: ((!(x = y)) | false | ((z = (w - 1)) & (x = y)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > z)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (w = (z + 1))                            
+
+     - Result = (w = (z + 1))
+
+   # Loop_1 | Invariant @ Inductive Condition: ((w = (z + 1)) & (x = y))
+
+   + Found guard in B6 for loop #3
+
+     - post_3 : ((w = (z + 1)) & (x = y))
+     - guard : NON-DETERMINISTIC
+
+   [Q6] Abduction query = (false | ((w = (z + 1)) & (x = y)))
+   [#] Simplified query: (false | ((w = (z + 1)) & (x = y)))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > z)                            
+      [+] Added test ... [ 2, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 1)                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x > 1)                            
+      [+] Added test ... [ 0, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (w = (z + 1))                            
+      [+] Added test ... [ 1, 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (x > (1 + 1))                            
+      [+] Added test ... [ 0, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (y > (1 + 1))                            
+      [+] Added test ... [ 0, 0, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (y > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, 0, 0, 4 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, 0, 4, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (x > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 0, 5, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (y > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 0, 0, 5 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (x > 1))                            
+      [+] Added test ... [ 0, 0, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 1) & (w > z))                            
+      [+] Added test ... [ 2, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((w > z) & (x > 1))                            
+      [+] Added test ... [ 2, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (x > ((((1 + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 0, 6, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (y > ((((1 + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 0, 0, 6 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((0 <= y) & (w = (z + 1)))                            
+      [+] Added test ... [ 1, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((y <= x) & (y > (1 + 1)))                            
+      [+] Added test ... [ 0, 0, 3, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((x <= y) & (w = (z + 1)))                            
+      [+] Added test ... [ 1, 0, 0, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((w > z) & (y > (1 + 1)))                            
+      [+] Added test ... [ 2, 0, 0, 3 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((w > z) & (x > (1 + 1)))                            
+      [+] Added test ... [ 2, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((x > 1) & (w = (z + 1)))                            
+      [+] Added test ... [ 1, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((y > 1) & (w = (z + 1)))                            
+      [+] Added test ... [ 1, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- ((y = x) & (w = (z + 1)))                            
+
+     - Result = ((y = x) & (w = (z + 1)))
+
+   # Loop_3 | Invariant @ Postcondition: ((y = x) & (w = (z + 1)))
+
+   # Loop_3 | Inductive Check: ((!((y = x) & (w = (z + 1)))) | false | ((y = x) & (((x + y) + 1) = ((x + y) + 1)))) is valid!
+
+   + Found guard in B13 for loop #2
+
+     - post_2 : ((y = x) & (w = (z + 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q7] Abduction query = (false | ((y = x) & (w = (z + 1))))
+   [#] Simplified query: (false | ((y = x) & (w = (z + 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ -1, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x = y)                            
+      [+] Added test ... [ 0, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (w > 1)                            
+      [+] Added test ... [ -1, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (z > 1)                            
+      [+] Added test ... [ -1, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (x > 1)                            
+      [+] Added test ... [ 0, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (y > 1)                            
+      [+] Added test ... [ 2, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (z = (w - 1))                            
+      [+] Added test ... [ -1, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (w > (1 + 1))                            
+      [+] Added test ... [ -1, 0, 3, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (x > (1 + 1))                            
+      [+] Added test ... [ 0, 3, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- (y > (1 + 1))                            
+      [+] Added test ... [ 3, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (y > ((1 + 1) + 1))                            
+      [+] Added test ... [ 4, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x > ((1 + 1) + 1))                            
+      [+] Added test ... [ 0, 4, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (x > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 5, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (y > (((1 + 1) + 1) + 1))                            
+      [+] Added test ... [ 5, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((z <= w) & (z > 1))                            
+      [+] Added test ... [ -1, 0, 2, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y <= x) & (y > 1))                            
+      [+] Added test ... [ 2, 3, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= y) & (w > 0))                            
+      [+] Added test ... [ 0, 1, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= y) & (w > 1))                            
+      [+] Added test ... [ 0, 1, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((0 <= y) & (z > 1))                            
+      [+] Added test ... [ 0, 1, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 0) & (x <= y))                            
+      [+] Added test ... [ 2, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 0) & (y = x))                            
+      [+] Added test ... [ 1, 1, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 0) & (z > 1))                            
+      [+] Added test ... [ 1, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 0) & (w > 0))                            
+      [+] Added test ... [ 1, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 0) & (w > 1))                            
+      [+] Added test ... [ 1, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x <= y) & (x > 1))                            
+      [+] Added test ... [ 3, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 1) & (w > 0))                            
+      [+] Added test ... [ 2, 0, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 1) & (w > 1))                            
+      [+] Added test ... [ 2, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 1) & (z > 1))                            
+      [+] Added test ... [ 2, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((y > 1) & (y = x))                            
+      [+] Added test ... [ 2, 2, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 1) & (z > 1))                            
+      [+] Added test ... [ 0, 2, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 1) & (w > 0))                            
+      [+] Added test ... [ 0, 2, 1, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((x > 1) & (w > 1))                            
+      [+] Added test ... [ 0, 2, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((w > 0) & (x = y))                            
+      [+] Added test ... [ 0, 0, 1, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((z > 0) & (w > z))                            
+      [+] Added test ... [ -1, 0, 2, 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((w > z) & (x = y))                            
+      [+] Added test ... [ 0, 0, 2, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((w > z) & (z > 1))                            
+      [+] Added test ... [ -1, 0, 3, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- ((z > 1) & (x = y))                            
+      [+] Added test ... [ 0, 0, 0, 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (x > ((((1 + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 0, 6, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (y > ((((1 + 1) + 1) + 1) + 1))                            
+      [+] Added test ... [ 6, 0, 0, 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8/home/saswat/Repos/PIE/abducer/abduce.sh: line 52: 28050 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/26.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1:  2233 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/26.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_hola/26.cpp --
+
+real	234m40.378s
+user	233m42.160s
+sys	0m46.656s
+
+
+--- Processed 26.cpp ---
+sat: 73
+unsat: 9
+unk: 0
+escher: 77
+
+[$] OOM Count = 10390
+[$] MAX Usage = 8192

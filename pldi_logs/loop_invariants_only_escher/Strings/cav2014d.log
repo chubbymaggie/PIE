@@ -1,0 +1,65 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & #eql(#sub(r, 0, i), "a"))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | (true & #eql(#sub(r, 0, i), "a")))
+   [#] Simplified query: (false | (true & #eql(#sub(r, 0, i), "a")))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ "", 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (#has(r, "a"))                            
+      [+] Added test ... [ "a", 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (1 = i)                            
+      [+] Added test ... [ "A", 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- ((#len(r)) > 1)                            
+      [+] Added test ... [ "AA", 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (#has((#sub(r, 0, i)), "a"))                            
+      [+] Added test ... [ "aA", 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- (#eql("a", (#sub(r, 0, i))))                            
+
+     - Result = #eql("a", #sub(r, 0, i))
+
+   # Loop_1 | Invariant @ Postcondition: #eql("a", #sub(r, 0, i))
+
+   # Loop_1 | Inductive Check: ((!#eql("a", #sub(r, 0, i))) | false | #eql("a", #sub(#cat(r, t), 0, i))) is valid!
+
+   # Precondition Check: #eql("a", #sub("a", 0, #len("a"))) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: #eql("a", #sub(r, 0, i))
+================================================================================
+checker_exec.sh: line 1: 26385 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/cav2014d.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_strings/cav2014d.cpp --
+
+real	0m41.938s
+user	0m39.672s
+sys	0m0.428s
+
+
+--- Processed cav2014d.cpp ---
+sat: 5
+unsat: 3
+unk: 0
+escher: 6
+
+[$] OOM Count = 0
+[$] MAX Usage = 438

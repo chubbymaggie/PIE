@@ -1,0 +1,53 @@
+ ==>
+6400 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B4 for loop #1
+
+     - post_1 : (true & (x = (n * n)))
+     - guard : (r != 0)
+
+   [Q1] Abduction query = ((r != 0) | (true & (x = (n * n))))
+   [#] Simplified query: ((r != 0) | (true & (x = (n * n))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ 0, -1, 0 ]
+
+    [*] Synthesizing ---  @2 @3
+    [?] Verifying --- (n <= x)                            
+      [+] Added test ... [ 0, 0, -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (x = (n * n))                            
+
+     - Result = (x = (n * n))
+
+   # Loop_1 | Invariant @ Postcondition: (x = (n * n))
+
+   # Loop_1 | Inductive Check: ((!(x = (n * n))) | (!(r != 0)) | ((x + ((2 * (n + 1)) - 1)) = ((n + 1) * (n + 1)))) is valid!
+
+   # Precondition Check: (0 = (0 * 0)) is valid!
+
+
+[###] Final invariants: [###]
+Loop #1: (x = (n * n))
+================================================================================
+checker_exec.sh: line 1:  9136 Aborted                 (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/square.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_ice/non_linear/square.cpp --
+
+real	0m36.630s
+user	0m32.492s
+sys	0m0.316s
+
+
+--- Processed square.cpp ---
+sat: 2
+unsat: 3
+unk: 0
+escher: 3
+
+[$] OOM Count = 0
+[$] MAX Usage = 864

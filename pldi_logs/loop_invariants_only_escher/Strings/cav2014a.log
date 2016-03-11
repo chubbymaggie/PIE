@@ -1,0 +1,73 @@
+ ==>
+1144 tests for loop #1.
+
+(*) Checking loop invariant:
+================================================================================
+[#] Starting Loop Invariant Generation ...
+
+   + Found guard in B6 for loop #1
+
+     - post_1 : ((((true & #has(r, "(a)")) | (!(i > 0))) & (true | (i > 0))) & (#len(r) = ((2 * i) + 1)))
+     - guard : NON-DETERMINISTIC
+
+   [Q1] Abduction query = (false | ((((true & #has(r, "(a)")) | (!(i > 0))) & (true | (i > 0))) & (#len(r) = ((2 * i) + 1))))
+   [#] Simplified query: (false | ((((true & #has(r, "(a)")) | (!(i > 0))) & (true | (i > 0))) & (#len(r) = ((2 * i) + 1))))
+
+    [*] Synthesizing --- 
+    [?] Verifying --- true                            
+      [+] Added test ... [ "", 0 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- ((#len(r)) > i)                            
+      [+] Added test ... [ "", -1 ]
+
+    [*] Synthesizing ---  @2 @3 @4
+    [?] Verifying --- ((#len(r)) > 0)                            
+      [+] Added test ... [ "A", 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5
+    [?] Verifying --- (#has(r, (#get("(a)", 1))))                            
+      [+] Added test ... [ "a", 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6
+    [?] Verifying --- ((#len(r)) > (i % 2))                            
+      [+] Added test ... [ "A", 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7
+    [?] Verifying --- (i = (((#len(r)) - i) - 1))                            
+      [+] Added test ... [ "AAA", 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (#has(r, (#get("(a)", ((i % 2) + 1)))))                            
+      [+] Added test ... [ ")", 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8
+    [?] Verifying --- (#has(r, (#get("(a)", ((i + 1) % 2)))))                            
+      [+] Added test ... [ "(", 1 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9
+    [?] Verifying --- (#has(r, (#sub("(a)", 1, ((i % 2) + 1)))))                            
+      [+] Added test ... [ "a", 2 ]
+
+    [*] Synthesizing ---  @2 @3 @4 @5 @6 @7 @8 @9 @10/home/saswat/Repos/PIE/abducer/abduce.sh: line 52: 20764 Killed                  OCAMLRUNPARAM=l=1024M "./$FILE.e" > "./$FILE.exe_out"
+Traceback (most recent call last):
+  File "/home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/cav2014a.cpp/mcf2xml", line 85, in <module>
+    print(toXML(expr.parseString(mcf, parseAll=True).asList()))
+  File "/usr/local/lib/python2.7/dist-packages/pyparsing-1.5.7-py2.7.egg/pyparsing.py", line 1006, in parseString
+    raise exc
+pyparsing.ParseException: Expected "#get" (at char 0), (line:1, col:1)
+checker_exec.sh: line 1: 20674 Segmentation fault      (core dumped) bin/pinvgen -wpath /home/saswat/Repos/PIE/logs/limit_8gb/6400/escher/all/cav2014a.cpp -abducer /home/saswat/Repos/PIE/abducer/abduce.sh -tool=escher -csize all --extra-arg=--std=c++11 /home/saswat/Repos/PIE/abducer/../bm_strings/cav2014a.cpp --
+
+real	7m39.399s
+user	7m32.716s
+sys	0m4.312s
+
+
+--- Processed cav2014a.cpp ---
+sat: 9
+unsat: 0
+unk: 0
+escher: 9
+
+[$] OOM Count = 6682
+[$] MAX Usage = 8192
