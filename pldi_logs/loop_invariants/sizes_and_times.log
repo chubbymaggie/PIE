@@ -1,0 +1,1094 @@
+
+HOLA/01.log
+Loop #1: == ((y = x) & ((y > 1) | (1 = y)))
+AST: and = y x
+         or > y 1
+            = 1 y
+SIZE: 11
+TIME: 21s
+
+---------------------------------------
+HOLA/02.log
+Loop #1: == (((1 = (z % 2)) & (w = (y * 2))) & (x = y))
+AST: and and = 1
+               mod z 2
+             = w
+               * y 2
+         = x y
+SIZE: 15
+TIME: 27s
+
+---------------------------------------
+HOLA/03.log
+Loop #1: == ((l > 0))
+AST: > l 0
+SIZE: 3
+Loop #2: == ((l > 1) | (1 = l))
+AST: or > l 1
+        = 1 l
+SIZE: 7
+Loop #3: == (((l = i) | (i > l)) & ((l > 1) | (1 = l)))
+AST: and or = l i
+            > i l
+         or > l 1
+            = 1 l
+SIZE: 15
+TIME: 46s
+
+---------------------------------------
+HOLA/04.log
+Loop #1: == ((y > x) | (0 > x))
+AST: or > y x
+        > 0 x
+SIZE: 7
+TIME: 18s
+
+---------------------------------------
+HOLA/05.log
+Loop #1: == ((x = y) & ((j > i) | (i = j)))
+AST: and = x y
+         or > j i
+            = i j
+SIZE: 11
+TIME: 23s
+
+---------------------------------------
+HOLA/06.log
+Loop #1: == ((w = (z + 1)) & (x = y))
+AST: and = w
+           + z 1
+         = x y
+SIZE: 9
+Loop #2: == ((w = (z + 1)) & (x = y))
+AST: and = w
+           + z 1
+         = x y
+SIZE: 9
+TIME: 54s
+
+---------------------------------------
+HOLA/07.log
+Loop #1: == ((b = ((i * 3) - a)) & ((n > i) | (b = ((n * 3) - a))))
+AST: and = b
+           - * i 3
+             a
+         or > n i
+            = b
+              - * n 3
+                a
+SIZE: 19
+TIME: 116s
+
+---------------------------------------
+HOLA/08.log
+Loop #1: == ((y > x) | (x = y))
+AST: or > y x
+        = x y
+SIZE: 7
+TIME: 18s
+
+---------------------------------------
+HOLA/09.log
+Loop #1: == (0 = k)
+AST: = 0 k
+SIZE: 3
+Loop #2: == ((((k > 1) | (0 = k)) | (1 = k)) & (k = i))
+AST: and or or > k 1
+               = 0 k
+            = 1 k
+         = k i
+SIZE: 15
+Loop #3: == ((i = k) & (0 <= k))
+AST: and = i k
+         <= 0 k
+SIZE: 7
+Loop #4: == ((n = (j + k)) & ((((!(n > 1)) | (0 <= k)) & ((1 = j) | (0 <= k)))))
+AST: and = n
+           + j k
+         and or not > n 1
+                <= 0 k
+             or = 1 j
+                <= 0 k
+SIZE: 22
+TIME: 40s
+
+---------------------------------------
+HOLA/10.log
+Loop #1: == (((((((0 <= z) & (!(w = z))) & (z <= 1)) & (0 <= w)) & (w <= 1)) & (y = z)) & (x = y))
+AST: and and and and and and <= 0 z
+                             not = w z
+                         <= z 1
+                     <= 0 w
+                 <= w 1
+             = y z
+         = x y
+SIZE: 28
+TIME: 21s
+
+---------------------------------------
+HOLA/11.log
+Loop #1: == ((j = (i * 2)) & ((x > i) | (j = (x * 2))))
+AST: and = j
+           * i 2
+         or > x i
+            = j
+              * x 2
+SIZE: 15
+TIME: 22s
+
+---------------------------------------
+HOLA/12.log
+Loop #1: == ((b = a) & ((0 = flag) | (t = (s * 2))))
+AST: and = b a
+         or = 0 flag
+            = t
+              * s 2
+SIZE: 13
+Loop #2: == (((x = 2) | (x = 1)) & ((4 > y) | (y = 4)))
+AST: and or = x 2
+            = x 1
+         or > 4 y
+            = y 4
+SIZE: 15
+TIME: 45s
+
+---------------------------------------
+HOLA/13.log
+Loop #1: == (((((!(0 = flag)) | (!(0 = k))) | (2 = j)) & ((0 = flag) | (0 = k))) & ((k = 0) | (j = (2 * (k + 1)))))
+AST: and and or or not = 0 flag
+                   not = 0 k
+                = 2 j
+             or = 0 flag
+                = 0 k
+         or = k 0
+            = j
+              * 2
+                + k 1
+SIZE: 33
+TIME: 54s
+
+---------------------------------------
+HOLA/14.log
+Loop #1: == ((((((m > j) | (j = m)) | (j = (m + 1))) & (j > (0 - a))) & (j > a)) & ((m > 1) | (1 = m)))
+AST: and and and or or > m j
+                       = j m
+                    = j
+                      + m 1
+                 > j
+                   - 0 a
+             > j a
+         or > m 1
+            = 1 m
+SIZE: 31
+TIME: 22s
+
+---------------------------------------
+HOLA/15.log
+Loop #1: == ((j > (n - k)) & (((k > (1 + 1)) | (n <= (j + 1))) & (((k > 1) | (n = j)) & ((k > 1) | (1 = k)))))
+AST: and > j
+           - n k
+         and or > k
+                  + 1 1
+                <= n
+                   + j 1
+             and or > k 1
+                    = n j
+                 or > k 1
+                    = 1 k
+SIZE: 33
+TIME: 39s
+
+---------------------------------------
+HOLA/16.log
+Loop #1: == (((j > i) | (i > j)) | (x = y))
+AST: or or > j i
+           > i j
+        = x y
+SIZE: 11
+TIME: 22s
+
+---------------------------------------
+HOLA/17.log
+Loop #1: == ((k > 0) & (((n > i) | (k > n)) | (n = k)))
+AST: and > k 0
+         or or > n i
+               > k n
+            = n k
+SIZE: 15
+Loop #2: == ((k > j) & (k > 0))
+AST: and > k j
+         > k 0
+SIZE: 7
+TIME: 31s
+
+---------------------------------------
+HOLA/18.log
+Loop #1: == (((100 > j) | (j = 100)) & ((b = j) | (0 = flag)))
+AST: and or > 100 j
+            = j 100
+         or = b j
+            = 0 flag
+SIZE: 15
+TIME: 20s
+
+---------------------------------------
+HOLA/19.log
+Loop #1: == ((m <= y) & ((((x <= y) & (n > m)) & ((y = m) | (y = x))) & ((n > x) | (n = y))))
+AST: and <= m y
+         and and and <= x y
+                     > n m
+                 or = y m
+                    = y x
+             or > n x
+                = n y
+SIZE: 27
+TIME: 32s
+
+---------------------------------------
+HOLA/20.log
+Loop #1: == (((m = j) | (j > m)) & ((((m = 0) | (n > m)) & (((m = 0) | (m > 1)) | (1 = m))) & (x = (k - y))))
+AST: and or = m j
+            > j m
+         and and or = m 0
+                    > n m
+                 or or = m 0
+                       > m 1
+                    = 1 m
+             = x
+               - k y
+SIZE: 33
+TIME: 115s
+
+---------------------------------------
+HOLA/21.log
+Loop #1: == ((((c1 > 1) & (c2 > 1)) & (i <= k)) & ((n > i) | (k > n)))
+AST: and and and > c1 1
+                 > c2 1
+             <= i k
+         or > n i
+            > k n
+SIZE: 19
+TIME: 23s
+
+---------------------------------------
+HOLA/22.log
+Loop #1: == ((k = (3 * y)) & ((x = z) & (x = y)))
+AST: and = k
+           * 3 y
+         and = x z
+             = x y
+SIZE: 13
+TIME: 22s
+
+---------------------------------------
+HOLA/23.log
+Loop #1: == (((sum <= i) | (i > 1)) & (0 <= sum))
+AST: and or <= sum i
+            > i 1
+         <= 0 sum
+SIZE: 11
+TIME: 21s
+
+---------------------------------------
+HOLA/24.log
+Loop #1: == true
+AST: true
+SIZE: 1
+Loop #2: == (((j > i) | (i = j)))
+AST: or > j i
+        = i j
+SIZE: 7
+Loop #3: == (((k > j) | (j = k)) & (i <= j))
+AST: and or > k j
+            = j k
+         <= i j
+SIZE: 11
+TIME: 40s
+
+---------------------------------------
+HOLA/25.log
+Loop #1: == ((0 = j) & ((x = y) & (j <= i)))
+AST: and = 0 j
+         and = x y
+             <= j i
+SIZE: 11
+Loop #2: == (((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+AST: and and = 0 j
+             = x y
+         or or > i 1
+               = 1 i
+            = j i
+SIZE: 19
+TIME: 142s
+
+---------------------------------------
+HOLA/26.log
+Loop #1: == ((w = (z + 1)) & (x = y))
+AST: and = w
+           + z 1
+         = x y
+SIZE: 9
+Loop #2: == ((x = y) & (w = (z + 1)))
+AST: and = x y
+         = w
+           + z 1
+SIZE: 9
+Loop #3: == ((y = x) & (w = (z + 1)))
+AST: and = y x
+         = w
+           + z 1
+SIZE: 9
+TIME: 71s
+
+---------------------------------------
+HOLA/27.log
+Loop #1: == (((1 = k) | (k > 1)))
+AST: or = 1 k
+        > k 1
+SIZE: 7
+Loop #2: == (k > 0)
+AST: > k 0
+SIZE: 3
+Loop #3: == ((k > 1) | (1 = k))
+AST: or > k 1
+        = 1 k
+SIZE: 7
+TIME: 44s
+
+---------------------------------------
+HOLA/28.log
+Loop #1: == (x = y)
+AST: = x y
+SIZE: 3
+Loop #2: == (x = y)
+AST: = x y
+SIZE: 3
+TIME: 20s
+
+---------------------------------------
+HOLA/29.log
+Loop #1: == ((d = (a + 1)) & (c = (b + 1)))
+AST: and = d
+           + a 1
+         = c
+           + b 1
+SIZE: 11
+Loop #2: == ((d = (a + 1)) & (c = (b + 1)))
+AST: and = d
+           + a 1
+         = c
+           + b 1
+SIZE: 11
+TIME: 47s
+
+---------------------------------------
+HOLA/30.log
+Loop #1: == (((c <= i) | (i > 1)) & ((0 <= c) & ((i <= (c + 1)) & (((c > i) | (1000 > (i + 1))) & ((1000 > i) | (c > i))))))
+AST: and or <= c i
+            > i 1
+         and <= 0 c
+             and <= i
+                    + c 1
+                 and or > c i
+                        > 1000
+                          + i 1
+                     or > 1000 i
+                        > c i
+SIZE: 35
+TIME: 29s
+
+---------------------------------------
+HOLA/34.log
+Loop #1: == (((((2 * (y + 1)) > x) & (0 = (m % 2))) & (y <= (x - y))) & ((i = x) & (((n > m) | (m > x)) | (m = (y * 2)))))
+AST: and and and > * 2
+                     + y 1
+                   x
+                 = 0
+                   mod m 2
+             <= y
+                - x y
+         and = i x
+             or or > n m
+                   > m x
+                = m
+                  * y 2
+SIZE: 37
+TIME: 25s
+
+---------------------------------------
+HOLA/35.log
+Loop #1: == (((x = 0) | (x = n)) | (n > x))
+AST: or or = x 0
+           = x n
+        > n x
+SIZE: 11
+TIME: 18s
+
+---------------------------------------
+HOLA/36.log
+Loop #1: == ((0 = a) & ((z = w) & (b = a)))
+AST: and = 0 a
+         and = z w
+             = b a
+SIZE: 11
+Loop #2: == ((j = i) & (((b = k) & (k = a)) & (0 = k)))
+AST: and = j i
+         and and = b k
+                 = k a
+             = 0 k
+SIZE: 15
+Loop #3: == ((a = (x % 2)) & (((b = a) & (0 = b)) & (x = (z - y))))
+AST: and = a
+           mod x 2
+         and and = b a
+                 = 0 b
+             = x
+               - z y
+SIZE: 19
+Loop #4: == ((d = c) & ((z = w) & (b = a)))
+AST: and = d c
+         and = z w
+             = b a
+SIZE: 11
+TIME: 113s
+
+---------------------------------------
+HOLA/37.log
+Loop #1: == (((m = x) | (x > m)) & ((0 <= m) & ((m = 0) | (n > m))))
+AST: and or = m x
+            > x m
+         and <= 0 m
+             or = m 0
+                > n m
+SIZE: 19
+TIME: 22s
+
+---------------------------------------
+HOLA/38.log
+Loop #1: == (((x = ((y * 2) + 1)) | (x = (y * 2))) & ((i = x) & ((x = (y * 2)) | (1 = (x % 2)))))
+AST: and or = x
+              + * y 2
+                1
+            = x
+              * y 2
+         and = i x
+             or = x
+                  * y 2
+                = 1
+                  mod x 2
+SIZE: 29
+TIME: 36s
+
+---------------------------------------
+HOLA/39.log
+Loop #1: == (((0 <= glob3_dc) & ((MAXPATHLEN > glob3_dc) | (0 = flag))))
+AST: and <= 0 glob3_dc
+         or > MAXPATHLEN glob3_dc
+            = 0 flag
+SIZE: 11
+TIME: 20s
+
+---------------------------------------
+HOLA/40.log
+Loop #1: == (((1 = (j % 2)) | (0 = flag)) & ((0 = flag) | (j = (i + 1))))
+AST: and or = 1
+              mod j 2
+            = 0 flag
+         or = 0 flag
+            = j
+              + i 1
+SIZE: 19
+Loop #2: == (((0 = flag) | (j = (i + 1))) & ((b = a) | (0 = flag)))
+AST: and or = 0 flag
+            = j
+              + i 1
+         or = b a
+            = 0 flag
+SIZE: 17
+TIME: 40s
+
+---------------------------------------
+HOLA/41.log
+Loop #1: == ((0 <= i) & (((j > i) | (i = j)) & (0 <= k)))
+AST: and <= 0 i
+         and or > j i
+                = i j
+             <= 0 k
+SIZE: 15
+TIME: 27s
+
+---------------------------------------
+HOLA/42.log
+Loop #1: == (((((1 = y) | (!(!(0 = flag)))) & ((1 = x) | (!(0 = flag)))) & ((a = y) | (x = (a + 1)))) & (((!(0 = flag)) | (1 = (a % 2))) & ((0 = flag) | (!(1 = (a % 2))))))
+AST: and and and or = 1 y
+                    not not = 0 flag
+                 or = 1 x
+                    not = 0 flag
+             or = a y
+                = x
+                  + a 1
+         and or not = 0 flag
+                = 1
+                  mod a 2
+             or = 0 flag
+                not = 1
+                      mod a 2
+SIZE: 50
+TIME: 37s
+
+---------------------------------------
+HOLA/43.log
+Loop #1: == ((y > t) | (t = y))
+AST: or > y t
+        = t y
+SIZE: 7
+TIME: 19s
+
+---------------------------------------
+HOLA/44.log
+Loop #1: == ((((flag > 1) | (flag = n)) | (1 > flag)) & ((j = i) | (!(1 = flag))))
+AST: and or or > flag 1
+               = flag n
+            > 1 flag
+         or = j i
+            not = 1 flag
+SIZE: 20
+TIME: 26s
+
+---------------------------------------
+HOLA/45.log
+Loop #1: == ((x = y) & ((j > i) | (i = j)))
+AST: and = x y
+         or > j i
+            = i j
+SIZE: 11
+Loop #2: == ((w = (z + 1)) & (x = y))
+AST: and = w
+           + z 1
+         = x y
+SIZE: 9
+Loop #3: == ((w = (z + 1)) & (x = y))
+AST: and = w
+           + z 1
+         = x y
+SIZE: 9
+TIME: 64s
+
+---------------------------------------
+HOLA/46.log
+Loop #1: == ((w = (z + 1)) & ((((x = z) & (w > z)) & (w <= 2)) & (x <= 1)))
+AST: and = w
+           + z 1
+         and and and = x z
+                     > w z
+                 <= w 2
+             <= x 1
+SIZE: 21
+TIME: 24s
+
+---------------------------------------
+ICE_linear/afnp.log
+Loop #1: == ((0 <= y) & ((x > 0) & (y <= x)))
+AST: and <= 0 y
+         and > x 0
+             <= y x
+SIZE: 11
+TIME: 22s
+
+---------------------------------------
+ICE_linear/cegar1.log
+Loop #1: == ((0 <= y) & ((!(x = 4)) | (y > 1)))
+AST: and <= 0 y
+         or not = x 4
+            > y 1
+SIZE: 12
+TIME: 30s
+
+---------------------------------------
+ICE_linear/cegar2.log
+Loop #1: == (((m = x) | (x > m)) & ((0 <= m) & ((m = 0) | (N > m))))
+AST: and or = m x
+            > x m
+         and <= 0 m
+             or = m 0
+                > N m
+SIZE: 19
+TIME: 23s
+
+---------------------------------------
+ICE_linear/cggmp.log
+Loop #1: == ((!(j = ((6 + i) + 1))) & (((((((!(j = (2 * (i + 1)))) & ((6 > i) | (j <= i))) & (!(j = ((i * 2) + 1)))) & (!(j = ((i * 2) - 1)))) & (i > (j % 2))) & (6 > ((j % 6) + 1))) & (((((((((!(j = (i * 2))) & (!(j = (6 * i)))) & (i > 0)) & (!(j = (i + 1)))) & (6 > (j - 6))) & ((j > i) | (j <= (6 + 1)))) & (!(j = ((i + 1) + 1)))) & (1 = (i % 2))) & ((((!(j = (i - 1))) & (!(j = ((i - 1) - 1)))) & (i <= (((6 + 1) + 1) + 1))) & (6 <= j)))))
+AST: and not = j
+               + + 6 i
+                 1
+         and and and and and and not = j
+                                       * 2
+                                         + i 1
+                                 or > 6 i
+                                    <= j i
+                             not = j
+                                   + * i 2
+                                     1
+                         not = j
+                               - * i 2
+                                 1
+                     > i
+                       mod j 2
+                 > 6
+                   + mod j 6
+                     1
+             and and and and and and and and not = j
+                                                   * i 2
+                                             not = j
+                                                   * 6 i
+                                         > i 0
+                                     not = j
+                                           + i 1
+                                 > 6
+                                   - j 6
+                             or > j i
+                                <= j
+                                   + 6 1
+                         not = j
+                               + + i 1
+                                 1
+                     = 1
+                       mod i 2
+                 and and and not = j
+                                   - i 1
+                             not = j
+                                   - - i 1
+                                     1
+                         <= i
+                            + + + 6 1
+                                1
+                              1
+                     <= 6 j
+SIZE: 143
+TIME: 32s
+
+---------------------------------------
+ICE_linear/countud.log
+Loop #1: == ((y <= n) & (n = (y + x)))
+AST: and <= y n
+         = n
+           + y x
+SIZE: 9
+TIME: 17s
+
+---------------------------------------
+ICE_linear/dec.log
+Loop #1: == (0 <= x)
+AST: <= 0 x
+SIZE: 3
+TIME: 17s
+
+---------------------------------------
+ICE_linear/dillig01.log
+Loop #1: == ((y = x) & ((y > 1) | (1 = y)))
+AST: and = y x
+         or > y 1
+            = 1 y
+SIZE: 11
+TIME: 19s
+
+---------------------------------------
+ICE_linear/dillig03.log
+Loop #1: == (((w > 1) | (1 = w)) & ((k > 1) | (1 = k)))
+AST: and or > w 1
+            = 1 w
+         or > k 1
+            = 1 k
+SIZE: 15
+TIME: 29s
+
+---------------------------------------
+ICE_linear/dillig05.log
+Loop #1: == ((x = y) & ((j > i) | (i = j)))
+AST: and = x y
+         or > j i
+            = i j
+SIZE: 11
+TIME: 21s
+
+---------------------------------------
+ICE_linear/dillig07.log
+Loop #1: == ((j = i) & ((n > j) | (j = n)))
+AST: and = j i
+         or > n j
+            = j n
+SIZE: 11
+TIME: 21s
+
+---------------------------------------
+ICE_linear/dillig12.log
+Loop #1: == ((b = a) & ((0 = flag) | (t = (s * 2))))
+AST: and = b a
+         or = 0 flag
+            = t
+              * s 2
+SIZE: 13
+Loop #2: == (((x = 2) | (x = 1)) & (5 > y))
+AST: and or = x 2
+            = x 1
+         > 5 y
+SIZE: 11
+TIME: 44s
+
+---------------------------------------
+ICE_linear/dillig15.log
+Loop #1: == (((k > (n - j)) | (n = (k + j))) & (((k > (1 + 1)) | (n <= ((j + 1) + 1))) & ((((k > 1) | (n = (j + 1))) | (n = j)) & ((((k > 1) | (1 = k)) | (n = j)) & (k > -1)))))
+AST: and or > k
+              - n j
+            = n
+              + k j
+         and or > k
+                  + 1 1
+                <= n
+                   + + j 1
+                     1
+             and or or > k 1
+                       = n
+                         + j 1
+                    = n j
+                 and or or > k 1
+                           = 1 k
+                        = n j
+                     > k (- 1)
+SIZE: 55
+TIME: 42s
+
+---------------------------------------
+ICE_linear/dillig17.log
+Loop #1: == (((1 = k) | (k > 1)) & (((k > n) | (n > i)) | (n = k)))
+AST: and or = 1 k
+            > k 1
+         or or > k n
+               > n i
+            = n k
+SIZE: 19
+Loop #2: == ((k > j) & ((k > 1) | (1 = k)))
+AST: and > k j
+         or > k 1
+            = 1 k
+SIZE: 11
+TIME: 31s
+
+---------------------------------------
+ICE_linear/dillig19.log
+Loop #1: == (((x <= y) & (m <= y)) & (((y = m) | (y = x)) & (((n > y) | (y = x)) & ((n > y) | (y = n)))))
+AST: and and <= x y
+             <= m y
+         and or = y m
+                = y x
+             and or > n y
+                    = y x
+                 or > n y
+                    = y n
+SIZE: 31
+TIME: 32s
+
+---------------------------------------
+ICE_linear/dillig24.log
+Loop #1: == true
+AST: true
+SIZE: 1
+Loop #2: == ((i <= j))
+AST: <= i j
+SIZE: 3
+Loop #3: == (((k > i) | (j = k)) & (i <= j))
+AST: and or > k i
+            = j k
+         <= i j
+SIZE: 11
+TIME: 40s
+
+---------------------------------------
+ICE_linear/dillig25.log
+Loop #1: == ((0 = j) & ((x = y) & (j <= i)))
+AST: and = 0 j
+         and = x y
+             <= j i
+SIZE: 11
+Loop #2: == (((0 = j) & (x = y)) & (((i > 1) | (1 = i)) | (j = i)))
+AST: and and = 0 j
+             = x y
+         or or > i 1
+               = 1 i
+            = j i
+SIZE: 19
+TIME: 74s
+
+---------------------------------------
+ICE_linear/dillig28.log
+Loop #1: == (x = y)
+AST: = x y
+SIZE: 3
+Loop #2: == (x = y)
+AST: = x y
+SIZE: 3
+TIME: 19s
+
+---------------------------------------
+ICE_linear/dtuc.log
+Loop #1: == (i = k)
+AST: = i k
+SIZE: 3
+Loop #2: == ((j <= k))
+AST: <= j k
+SIZE: 3
+TIME: 22s
+
+---------------------------------------
+ICE_linear/fig1.log
+Loop #1: == ((y > x) | (0 > x))
+AST: or > y x
+        > 0 x
+SIZE: 7
+TIME: 17s
+
+---------------------------------------
+ICE_linear/fig3.log
+Loop #1: == ((y > x) | (1 = lock))
+AST: or > y x
+        = 1 lock
+SIZE: 7
+TIME: 17s
+
+---------------------------------------
+ICE_linear/fig9.log
+Loop #1: == ((y = x) & (0 = y))
+AST: and = y x
+         = 0 y
+SIZE: 7
+TIME: 19s
+
+---------------------------------------
+ICE_linear/formula22.log
+Loop #1: == ((((0 <= x2) | (!(0 = input))) | (x3 > x2)) & (x1 <= x2))
+AST: and or or <= 0 x2
+               not = 0 input
+            > x3 x2
+         <= x1 x2
+SIZE: 16
+TIME: 25s
+
+---------------------------------------
+ICE_linear/formula25.log
+Loop #1: == ((((x2 = x3) & (x3 > x4)) & (1 > x1)) & (x1 > x4))
+AST: and and and = x2 x3
+                 > x3 x4
+             > 1 x1
+         > x1 x4
+SIZE: 15
+TIME: 21s
+
+---------------------------------------
+ICE_linear/formula27.log
+Loop #1: == (((((x3 = x5) & (x2 = x5)) & (x5 = x4)) & (x1 = x5)) & (x5 = 0))
+AST: and and and and = x3 x5
+                     = x2 x5
+                 = x5 x4
+             = x1 x5
+         = x5 0
+SIZE: 19
+TIME: 25s
+
+---------------------------------------
+ICE_linear/inc.log
+Loop #1: == ((100 > x) | (x = 100))
+AST: or > 100 x
+        = x 100
+SIZE: 7
+TIME: 18s
+
+---------------------------------------
+ICE_linear/inc2.log
+Loop #1: == ((N > x) | (x = N))
+AST: or > N x
+        = x N
+SIZE: 7
+TIME: 17s
+
+---------------------------------------
+ICE_linear/loops.log
+Loop #1: == ((s <= x) & (0 <= x))
+AST: and <= s x
+         <= 0 x
+SIZE: 7
+Loop #2: == ((x = s) & (y <= x))
+AST: and = x s
+         <= y x
+SIZE: 7
+TIME: 28s
+
+---------------------------------------
+ICE_linear/sum1.log
+Loop #1: == ((i = (sn + 1)) & ((((0 = sn) | (n = sn)) | (n > i)) | (i = n)))
+AST: and = i
+           + sn 1
+         or or or = 0 sn
+                  = n sn
+               > n i
+            = i n
+SIZE: 21
+TIME: 22s
+
+---------------------------------------
+ICE_linear/sum3.log
+Loop #1: == ((x = sn))
+AST: = x sn
+SIZE: 3
+TIME: 20s
+
+---------------------------------------
+ICE_linear/sum4.log
+Loop #1: == ((sn <= 8) & (i = (sn + 1)))
+AST: and <= sn 8
+         = i
+           + sn 1
+SIZE: 9
+TIME: 17s
+
+---------------------------------------
+ICE_linear/sum4c.log
+Loop #1: == ((i = (sn + 1)) & ((((0 <= sn) & (i > sn)) & (((SIZE > i) | (i = SIZE)) | (SIZE <= sn))) & (((!(SIZE <= sn)) | (i = 1)) | (sn = SIZE))))
+AST: and = i
+           + sn 1
+         and and and <= 0 sn
+                     > i sn
+                 or or > SIZE i
+                       = i SIZE
+                    <= SIZE sn
+             or or not <= SIZE sn
+                   = i 1
+                = sn SIZE
+SIZE: 38
+TIME: 32s
+
+---------------------------------------
+ICE_linear/tacas6.log
+Loop #1: == (((j > i) | (i > j)) | (x = y))
+AST: or or > j i
+           > i j
+        = x y
+SIZE: 11
+TIME: 22s
+
+---------------------------------------
+ICE_linear/trex1.log
+Loop #1: == ((k > 1) | (1 = z))
+AST: or > k 1
+        = 1 z
+SIZE: 7
+Loop #2: == true
+AST: true
+SIZE: 1
+TIME: 19s
+
+---------------------------------------
+ICE_linear/trex3.log
+Loop #1: == ((d1 = 1) & (0 <= x1))
+AST: and = d1 1
+         <= 0 x1
+SIZE: 7
+TIME: 23s
+
+---------------------------------------
+ICE_linear/w1.log
+Loop #1: == ((n > x) | (x = n))
+AST: or > n x
+        = x n
+SIZE: 7
+TIME: 17s
+
+---------------------------------------
+ICE_non-linear/multiply.log
+Loop #1: == ((s = (j * y)) & ((x > j) | (s = (y * x))))
+AST: and = s
+           * j y
+         or > x j
+            = s
+              * y x
+SIZE: 15
+TIME: 41s
+
+---------------------------------------
+ICE_non-linear/square.log
+Loop #1: == (x = (n * n))
+AST: = x
+       * n n
+SIZE: 5
+TIME: 24s
+
+---------------------------------------
+Strings/cav2014a.log
+Loop #1: == (((((((((#has(r, "(a)") | #has("(a)", #sub(r, 1, i))) & ((!#has(#cat("(a)", "(a)"), r)) | #has("(a)", #sub(r, 1, i)))) & (#has(r, #cat("(a)", #get("(a)", i))) | (!(i = (((#len(r) - 1) - 1) - 1))))) & #has("(a)", #get(r, (#len(r) - 1)))) & (#has("(a)", #get(r, 1)) | #has("(a)", #sub(r, 1, i)))) & (#has("(a)", r) | (!(1 = i)))) & ((i = 0) | #has("(a)", #get(r, (i - 1))))) & ((!(2 = i)) | (i = (((#len(r) - 1) - 1) - 1)))) & (1 = (#len(r) % 2)))
+AST: and and and and and and and and or Contains r "(a)"
+                                        Contains "(a)"
+                                                 Substring r 1 i
+                                     or not Contains Concat "(a)" "(a)"
+                                                     r
+                                        Contains "(a)"
+                                                 Substring r 1 i
+                                 or Contains r
+                                             Concat "(a)"
+                                                    CharAt "(a)" i
+                                    not = i
+                                          - - - Length r
+                                                1
+                                              1
+                                            1
+                             Contains "(a)"
+                                      CharAt r
+                                             - Length r
+                                               1
+                         or Contains "(a)"
+                                     CharAt r 1
+                            Contains "(a)"
+                                     Substring r 1 i
+                     or Contains "(a)" r
+                        not = 1 i
+                 or = i 0
+                    Contains "(a)"
+                             CharAt r
+                                    - i 1
+             or not = 2 i
+                = i
+                  - - - Length r
+                        1
+                      1
+                    1
+         = 1
+           mod Length r
+               2
+SIZE: 110
+TIME: 45s
+
+---------------------------------------
+Strings/cav2014b.log
+Loop #1: == (i = #len(r))
+AST: = i
+       Length r
+SIZE: 4
+TIME: 10s
+
+---------------------------------------
+Strings/cav2014c.log
+Loop #1: == (#has(r, "a") & (#len(r) > i))
+AST: and Contains r "a"
+         > Length r
+           i
+SIZE: 8
+TIME: 11s
+
+---------------------------------------
+Strings/cav2014d.log
+Loop #1: == ((1 = i) & #has("a", #get(r, 0)))
+AST: and = 1 i
+         Contains "a"
+                  CharAt r 0
+SIZE: 9
+TIME: 11s
+
+---------------------------------------
