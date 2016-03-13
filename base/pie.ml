@@ -641,7 +641,6 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
   List.map (fun post ->
     (* remove all tests which throw IgnoreTest *)
     let tests = (List.fold_left (fun p t -> try (fst post) t (BatResult.catch f t) ; (t::p) with IgnoreTest -> p) [] tests) in (
-      prerr_string ("\r    [%] " ^ (snd post) ^ " -> Escher: "); flush_all();
       let res = pacLearnSpecIncrK ~k:k f tests
                                   (if fst trans = [] then features
                                    else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps

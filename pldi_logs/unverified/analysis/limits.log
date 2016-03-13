@@ -1,0 +1,98 @@
+Checking K = 1:
+. [1] 250 [499]
+. [250] 375 [499]
+. [375] 437 [499]
+. [437] 468 [499]
+. [468] 484 [499]
+. [484] 492 [499]
+. [492] 496 [499]
+. [496] 498 [499]
+. [498] 499 [499]
+PIE_Limit(1) = 499
+
+
+Checking K = 2:
+. [1] 250 [499]
+. [250] 375 [499]
+. [375] 437 [499]
+. [437] 468 [499]
+. [468] 484 [499]
+. [484] 492 [499]
+. [492] 496 [499]
+. [496] 498 [499]
+. [498] 499 [499]
+PIE_Limit(2) = 499
+
+
+Checking K = 3:
+. [1] 250 [499]
+. [250] 375 [499]
+bash: line 1:  5945 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '3' '375' &> /dev/null
+. [250] 313 [375]
+bash: line 1:  6345 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '3' '313' &> /dev/null
+. [250] 282 [313]
+bash: line 1:  6819 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '3' '282' &> /dev/null
+. [250] 266 [282]
+. [266] 274 [282]
+bash: line 1:  8430 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '3' '274' &> /dev/null
+. [266] 270 [274]
+bash: line 1:  9056 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '3' '270' &> /dev/null
+. [266] 268 [270]
+. [268] 269 [270]
+bash: line 1: 10572 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '3' '269' &> /dev/null
+PIE_Limit(3) = 268
+
+
+Checking K = 4:
+. [1] 250 [499]
+bash: line 1: 11230 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '4' '250' &> /dev/null
+. [1] 126 [250]
+bash: line 1: 11500 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '4' '126' &> /dev/null
+. [1] 64 [126]
+. [64] 95 [126]
+bash: line 1: 12330 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '4' '95' &> /dev/null
+. [64] 80 [95]
+bash: line 1: 12745 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '4' '80' &> /dev/null
+. [64] 72 [80]
+. [72] 76 [80]
+. [76] 78 [80]
+. [78] 79 [80]
+bash: line 1: 16408 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '4' '79' &> /dev/null
+PIE_Limit(4) = 78
+
+
+Checking K = 5:
+. [1] 250 [499]
+bash: line 1: 17342 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '5' '250' &> /dev/null
+. [1] 126 [250]
+bash: line 1: 17640 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '5' '126' &> /dev/null
+. [1] 64 [126]
+. [1] 33 [64]
+. [33] 49 [64]
+bash: line 1: 18397 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '5' '49' &> /dev/null
+. [33] 41 [49]
+bash: line 1: 18815 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '5' '41' &> /dev/null
+. [33] 37 [41]
+. [37] 39 [41]
+. [39] 40 [41]
+. [40] 41 [41]
+bash: line 1: 22970 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '5' '41' &> /dev/null
+PIE_Limit(5) = 40
+
+
+Checking K = 6:
+. [1] 250 [499]
+bash: line 1: 23812 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '6' '250' &> /dev/null
+. [1] 126 [250]
+bash: line 1: 24127 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '6' '126' &> /dev/null
+. [1] 64 [126]
+. [1] 33 [64]
+bash: line 1: 24726 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '6' '33' &> /dev/null
+. [1] 17 [33]
+. [17] 25 [33]
+. [25] 29 [33]
+bash: line 1: 25688 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '6' '29' &> /dev/null
+. [25] 27 [29]
+. [27] 28 [29]
+bash: line 1: 27222 Killed                  cgexec -g memory,cpu:limit_8gb ./PIE_limits.e '6' '28' &> /dev/null
+PIE_Limit(6) = 27

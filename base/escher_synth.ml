@@ -274,30 +274,3 @@ let solve_impl ?ast:(ast=false) task consts =
       raise Not_found
         in
     solve task []; ()
-
-  let target =
-    ("-target", Arg.String synthesize, " Synthesize a target program")
-
-  let expand_method =
-    ("-expand", Arg.Set_string expand_, " Set expand method")
-
-  let noisy_arg =
-    ("-noisy", Arg.Set noisy, " Print additional information")
-
-  let quiet_arg =
-    ("-quiet", Arg.Set quiet, " Print less information")
-
-  let no_goal_graph_arg =
-    ("-no-goal-graph", Arg.Clear goal_graph, " Disable goal graph")
-
-  let spec_list =
-    [ target;
-    expand_method;
-    no_goal_graph_arg;
-    noisy_arg;
-    quiet_arg;
-    ]
-  let usage_msg = "todo"
-  let anon_fun s = raise (Arg.Bad (s ^ " is not recognized"))
-
-  let _ = Arg.parse (Arg.align spec_list) anon_fun usage_msg
