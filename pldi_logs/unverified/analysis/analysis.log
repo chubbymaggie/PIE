@@ -1,0 +1,204 @@
+$ grep ASTs *.clean | sort -nk 3 -nk 7
+
+batavltree_6400_16.clean:189:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:202:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:245:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:273:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:286:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:32:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:45:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:4:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:73:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:86:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:120:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:148:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:176:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:189:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:202:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:230:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:243:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:286:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:299:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:312:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:325:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:4:[E] Explored 0 ASTs till size 0
+list_6400_16.clean:92:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:105:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:208:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:221:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:234:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:382:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:470:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:498:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:4:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:526:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:554:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:582:[E] Explored 0 ASTs till size 0
+string_6400_16.clean:62:[E] Explored 0 ASTs till size 0
+batavltree_6400_16.clean:114:[E] Explored 13 ASTs till size 2
+batavltree_6400_16.clean:144:[E] Explored 13 ASTs till size 2
+batavltree_6400_16.clean:174:[E] Explored 13 ASTs till size 2
+batavltree_6400_16.clean:215:[E] Explored 13 ASTs till size 2
+batavltree_6400_16.clean:230:[E] Explored 13 ASTs till size 2
+batavltree_6400_16.clean:99:[E] Explored 13 ASTs till size 2
+batavltree_6400_16.clean:258:[E] Explored 15 ASTs till size 2
+list_6400_16.clean:105:[E] Explored 15 ASTs till size 2
+list_6400_16.clean:17:[E] Explored 15 ASTs till size 2
+list_6400_16.clean:32:[E] Explored 15 ASTs till size 2
+list_6400_16.clean:47:[E] Explored 15 ASTs till size 2
+list_6400_16.clean:271:[E] Explored 17 ASTs till size 2
+batavltree_6400_16.clean:17:[E] Explored 24 ASTs till size 3
+batavltree_6400_16.clean:129:[E] Explored 31 ASTs till size 3
+batavltree_6400_16.clean:159:[E] Explored 31 ASTs till size 3
+string_6400_16.clean:595:[E] Explored 33 ASTs till size 3
+string_6400_16.clean:75:[E] Explored 35 ASTs till size 3
+string_6400_16.clean:90:[E] Explored 39 ASTs till size 3
+list_6400_16.clean:62:[E] Explored 43 ASTs till size 3
+list_6400_16.clean:133:[E] Explored 53 ASTs till size 3
+list_6400_16.clean:161:[E] Explored 53 ASTs till size 3
+string_6400_16.clean:118:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:17:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:247:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:483:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:511:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:539:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:567:[E] Explored 55 ASTs till size 4
+string_6400_16.clean:148:[E] Explored 57 ASTs till size 3
+string_6400_16.clean:395:[E] Explored 58 ASTs till size 4
+string_6400_16.clean:262:[E] Explored 60 ASTs till size 4
+string_6400_16.clean:292:[E] Explored 60 ASTs till size 4
+string_6400_16.clean:193:[E] Explored 82 ASTs till size 3
+string_6400_16.clean:440:[E] Explored 108 ASTs till size 4
+string_6400_16.clean:277:[E] Explored 121 ASTs till size 5
+list_6400_16.clean:215:[E] Explored 143 ASTs till size 4
+string_6400_16.clean:178:[E] Explored 152 ASTs till size 4
+string_6400_16.clean:337:[E] Explored 226 ASTs till size 5
+string_6400_16.clean:367:[E] Explored 233 ASTs till size 5
+list_6400_16.clean:256:[E] Explored 1467 ASTs till size 6
+string_6400_16.clean:163:[E] Explored 1842 ASTs till size 7
+string_6400_16.clean:47:[E] Explored 2060 ASTs till size 8
+string_6400_16.clean:32:[E] Explored 2101 ASTs till size 8
+string_6400_16.clean:307:[E] Explored 2109 ASTs till size 9
+string_6400_16.clean:410:[E] Explored 2114 ASTs till size 8
+string_6400_16.clean:455:[E] Explored 2418 ASTs till size 8
+string_6400_16.clean:352:[E] Explored 2603 ASTs till size 8
+list_6400_16.clean:77:[E] Explored 5568 ASTs till size 8
+batavltree_6400_16.clean:58:[E] Explored 12099 ASTs till size 13
+string_6400_16.clean:133:[E] Explored 12494 ASTs till size 9
+string_6400_16.clean:322:[E] Explored 16691 ASTs till size 10
+string_6400_16.clean:425:[E] Explored 18051 ASTs till size 10
+
+
+$ grep ASTs *.clean | sort -nk 3 -nk 7 | wc -l
+
+87
+
+
+$ set -l col 3 ; grep ASTs *.clean | datamash -W min $col q1 $col median $col mean $col q3 $col max $col sstdev $col | tr \t \n
+
+0
+0
+15
+963.37931034483
+59
+18051
+3222.64353512
+
+
+$ set -l col 7 ; grep ASTs *.clean | datamash -W min $col q1 $col median $col mean $col q3 $col max $col sstdev $col | tr \t \n
+
+0
+0
+2
+2.7126436781609
+4
+13
+3.0304963365721
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+
+$ grep ASTs *.clean | grep -v 'size 0' | sort -nk 3 -nk 7
+
+11:batavltree_6400_16.clean:144:[E] Explored 13 ASTs till size 2
+13:batavltree_6400_16.clean:174:[E] Explored 13 ASTs till size 2
+16:batavltree_6400_16.clean:215:[E] Explored 13 ASTs till size 2
+17:batavltree_6400_16.clean:230:[E] Explored 13 ASTs till size 2
+8:batavltree_6400_16.clean:99:[E] Explored 13 ASTs till size 2
+9:batavltree_6400_16.clean:114:[E] Explored 13 ASTs till size 2
+19:batavltree_6400_16.clean:258:[E] Explored 15 ASTs till size 2
+23:list_6400_16.clean:17:[E] Explored 15 ASTs till size 2
+24:list_6400_16.clean:32:[E] Explored 15 ASTs till size 2
+25:list_6400_16.clean:47:[E] Explored 15 ASTs till size 2
+29:list_6400_16.clean:105:[E] Explored 15 ASTs till size 2
+41:list_6400_16.clean:271:[E] Explored 17 ASTs till size 2
+2:batavltree_6400_16.clean:17:[E] Explored 24 ASTs till size 3
+10:batavltree_6400_16.clean:129:[E] Explored 31 ASTs till size 3
+12:batavltree_6400_16.clean:159:[E] Explored 31 ASTs till size 3
+87:string_6400_16.clean:595:[E] Explored 33 ASTs till size 3
+51:string_6400_16.clean:75:[E] Explored 35 ASTs till size 3
+52:string_6400_16.clean:90:[E] Explored 39 ASTs till size 3
+26:list_6400_16.clean:62:[E] Explored 43 ASTs till size 3
+31:list_6400_16.clean:133:[E] Explored 53 ASTs till size 3
+33:list_6400_16.clean:161:[E] Explored 53 ASTs till size 3
+47:string_6400_16.clean:17:[E] Explored 55 ASTs till size 4
+54:string_6400_16.clean:118:[E] Explored 55 ASTs till size 4
+63:string_6400_16.clean:247:[E] Explored 55 ASTs till size 4
+79:string_6400_16.clean:483:[E] Explored 55 ASTs till size 4
+81:string_6400_16.clean:511:[E] Explored 55 ASTs till size 4
+83:string_6400_16.clean:539:[E] Explored 55 ASTs till size 4
+85:string_6400_16.clean:567:[E] Explored 55 ASTs till size 4
+56:string_6400_16.clean:148:[E] Explored 57 ASTs till size 3
+73:string_6400_16.clean:395:[E] Explored 58 ASTs till size 4
+64:string_6400_16.clean:262:[E] Explored 60 ASTs till size 4
+66:string_6400_16.clean:292:[E] Explored 60 ASTs till size 4
+59:string_6400_16.clean:193:[E] Explored 82 ASTs till size 3
+76:string_6400_16.clean:440:[E] Explored 108 ASTs till size 4
+65:string_6400_16.clean:277:[E] Explored 121 ASTs till size 5
+37:list_6400_16.clean:215:[E] Explored 143 ASTs till size 4
+58:string_6400_16.clean:178:[E] Explored 152 ASTs till size 4
+69:string_6400_16.clean:337:[E] Explored 226 ASTs till size 5
+71:string_6400_16.clean:367:[E] Explored 233 ASTs till size 5
+40:list_6400_16.clean:256:[E] Explored 1467 ASTs till size 6
+57:string_6400_16.clean:163:[E] Explored 1842 ASTs till size 7
+49:string_6400_16.clean:47:[E] Explored 2060 ASTs till size 8
+48:string_6400_16.clean:32:[E] Explored 2101 ASTs till size 8
+67:string_6400_16.clean:307:[E] Explored 2109 ASTs till size 9
+74:string_6400_16.clean:410:[E] Explored 2114 ASTs till size 8
+77:string_6400_16.clean:455:[E] Explored 2418 ASTs till size 8
+70:string_6400_16.clean:352:[E] Explored 2603 ASTs till size 8
+27:list_6400_16.clean:77:[E] Explored 5568 ASTs till size 8
+5:batavltree_6400_16.clean:58:[E] Explored 12099 ASTs till size 13
+55:string_6400_16.clean:133:[E] Explored 12494 ASTs till size 9
+68:string_6400_16.clean:322:[E] Explored 16691 ASTs till size 10
+75:string_6400_16.clean:425:[E] Explored 18051 ASTs till size 10
+
+
+$ grep ASTs *.clean | grep -v 'size 0' | sort -nk 3 -nk 7 | wc -l
+
+52
+
+
+$ set -l col 3 ; grep ASTs *.clean | grep -v 'size 0' | datamash -W min $col q1 $col median $col mean $col q3 $col max $col sstdev $col | tr \t \n
+
+13
+29.25
+55
+1611.8076923077
+541.5
+18051
+4055.496681646
+
+
+$ set -l col 7 ; grep ASTs *.clean | grep -v 'size 0' | datamash -W min $col q1 $col median $col mean $col q3 $col max $col sstdev $col | tr \t \n
+
+2
+3
+4
+4.5384615384615
+5.25
+13
+2.6528677672754

@@ -506,6 +506,7 @@ let synthFeatures ?(fname="") ?(consts=[]) ?(comps=[]) ?(arg_names=[]) (f : 'a -
                 components = default_int @ default_string @ default_bool @ comps
             } in
             let solutions = solve xtask consts in
+              prerr_string ("(" ^ (string_of_int (!synth_candidates)) ^ " explored)\n"); flush_all();
               (if fname = "" then () else
                 let conflict_log = open_out_gen [Open_append] 0 (fname ^ "." ^ (string_of_int !conflict_counter) ^ ".con") in
                   conflict_counter := !conflict_counter + 1;

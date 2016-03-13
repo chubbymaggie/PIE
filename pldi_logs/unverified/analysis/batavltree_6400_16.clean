@@ -1,0 +1,296 @@
+
+=== (0) BatAvlTree.is_empty(t) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m5.540s
+user	0m5.172s
+sys	0m0.356s
+
+[M]ax Memory Usage = 9
+
+=== (0) BatAvlTree.is_empty(t) ===
+
+[E] Explored 24 ASTs till size 3
+
+[S]ynthesized features = 1
+
+precondition: (! empty(t))
+postcondition: (res = false)
+
+real	0m5.651s
+user	0m5.280s
+sys	0m0.348s
+
+[M]ax Memory Usage = 9
+
+=== (1) BatAvlTree.make_tree(l, v, r) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m10.873s
+user	0m10.140s
+sys	0m0.720s
+
+[M]ax Memory Usage = 12
+
+=== (1) BatAvlTree.make_tree(l, v, r) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: empty(res)
+
+real	0m10.816s
+user	0m10.084s
+sys	0m0.724s
+
+[M]ax Memory Usage = 14
+
+=== (2) BatAvlTree.create(l, v, r) ===
+
+[E] Explored 12099 ASTs till size 13
+
+[S]ynthesized features = 3
+
+precondition: ((height(r) > (height(l) + 1)) || (height(l) > (height(r) + 1)))
+postcondition: exception thrown
+
+real	0m16.569s
+user	0m15.828s
+sys	0m0.716s
+
+[M]ax Memory Usage = 42
+
+=== (2) BatAvlTree.create(l, v, r) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: empty(res)
+
+real	0m10.889s
+user	0m10.108s
+sys	0m0.772s
+
+[M]ax Memory Usage = 12
+
+=== (3) BatAvlTree.height(t) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m5.490s
+user	0m5.116s
+sys	0m0.368s
+
+[M]ax Memory Usage = 8
+
+=== (3) BatAvlTree.height(t) ===
+
+[E] Explored 13 ASTs till size 2
+
+[S]ynthesized features = 1
+
+precondition: empty(t)
+postcondition: (res = 0)
+
+real	0m5.755s
+user	0m5.360s
+sys	0m0.368s
+
+[M]ax Memory Usage = 9
+
+=== (4) BatAvlTree.left_branch(t) ===
+
+[E] Explored 13 ASTs till size 2
+
+[S]ynthesized features = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m5.600s
+user	0m5.164s
+sys	0m0.408s
+
+[M]ax Memory Usage = 10
+
+=== (4) BatAvlTree.left_branch(t) ===
+
+[E] Explored 31 ASTs till size 3
+
+[S]ynthesized features = 1
+
+precondition: empty(left(t))
+postcondition: empty(res)
+
+real	0m5.547s
+user	0m5.120s
+sys	0m0.396s
+
+[M]ax Memory Usage = 9
+
+=== (5) BatAvlTree.right_branch(t) ===
+
+[E] Explored 13 ASTs till size 2
+
+[S]ynthesized features = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m5.569s
+user	0m5.272s
+sys	0m0.272s
+
+[M]ax Memory Usage = 9
+
+=== (5) BatAvlTree.right_branch(t) ===
+
+[E] Explored 31 ASTs till size 3
+
+[S]ynthesized features = 1
+
+precondition: empty(right(t))
+postcondition: empty(res)
+
+real	0m5.578s
+user	0m5.188s
+sys	0m0.352s
+
+[M]ax Memory Usage = 9
+
+=== (6) BatAvlTree.root(t) ===
+
+[E] Explored 13 ASTs till size 2
+
+[S]ynthesized features = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m5.502s
+user	0m5.080s
+sys	0m0.416s
+
+[M]ax Memory Usage = 10
+
+=== (7) BatAvlTree.singleton_tree(v) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.121s
+user	0m0.120s
+sys	0m0.000s
+
+[M]ax Memory Usage = 6
+
+=== (7) BatAvlTree.singleton_tree(v) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: empty(res)
+
+real	0m0.122s
+user	0m0.120s
+sys	0m0.000s
+
+[M]ax Memory Usage = 6
+
+=== (8) BatAvlTree.split_leftmost(t) ===
+
+[E] Explored 13 ASTs till size 2
+
+[S]ynthesized features = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m5.571s
+user	0m5.168s
+sys	0m0.376s
+
+[M]ax Memory Usage = 11
+
+=== (9) BatAvlTree.split_rightmost(t) ===
+
+[E] Explored 13 ASTs till size 2
+
+[S]ynthesized features = 1
+
+precondition: empty(t)
+postcondition: exception thrown
+
+real	0m5.637s
+user	0m5.288s
+sys	0m0.316s
+
+[M]ax Memory Usage = 11
+
+=== (10) BatAvlTree.concat(t0, t1) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m10.905s
+user	0m10.260s
+sys	0m0.640s
+
+[M]ax Memory Usage = 15
+
+=== (10) BatAvlTree.concat(t0, t1) ===
+
+[E] Explored 15 ASTs till size 2
+
+[S]ynthesized features = 2
+
+precondition: empty(r) && empty(l)
+postcondition: empty(res)
+
+real	0m11.166s
+user	0m10.488s
+sys	0m0.668s
+
+[M]ax Memory Usage = 17
+
+=== (11) BatAvlTree.check(t) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m5.499s
+user	0m5.132s
+sys	0m0.364s
+
+[M]ax Memory Usage = 9
+
+=== (11) BatAvlTree.check(t) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: (res = false)
+
+real	0m5.705s
+user	0m5.308s
+sys	0m0.368s
+
+[M]ax Memory Usage = 9
+

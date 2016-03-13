@@ -9,9 +9,11 @@ SZ_CONFLICT_SET="$5"
 TOOL="pie"
 TIMEOUT="60m"
 
-if [[ ! `command -v timeo 2>&1 >/dev/null` ]]; then
-    TMOUTDEF="function timeout() { perl -e 'alarm shift; exec @ARGV' \"$@\"; }"
-    function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
+if hash timeout 2> /dev/null; then
+  TMOUTDEF=''
+else
+  TMOUTDEF="function timeout() { perl -e 'alarm shift; exec @ARGV' \"$@\"; }"
+  function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
 fi
 
 if [[ "$CGROUP" == "" ]]; then

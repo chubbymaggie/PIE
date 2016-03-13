@@ -1,0 +1,607 @@
+
+=== (0) String.length(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.325s
+user	0m0.308s
+sys	0m0.016s
+
+[M]ax Memory Usage = 4
+
+=== (0) String.length(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (res = 0)
+
+real	0m0.403s
+user	0m0.364s
+sys	0m0.024s
+
+[M]ax Memory Usage = 6
+
+=== (1) String.get(s, i) ===
+
+[E] Explored 2101 ASTs till size 8
+
+[S]ynthesized features = 1
+
+precondition: ((0 > i) | ((#len(s)) <= i))
+postcondition: exception thrown
+
+real	0m0.524s
+user	0m0.492s
+sys	0m0.012s
+
+[M]ax Memory Usage = 11
+
+=== (2) String.set(s, i, c) ===
+
+[E] Explored 2060 ASTs till size 8
+
+[S]ynthesized features = 3
+
+precondition: (((#len(s)) <= i) || (0 > i))
+postcondition: exception thrown
+
+real	0m0.697s
+user	0m0.688s
+sys	0m0.004s
+
+[M]ax Memory Usage = 11
+
+=== (2) String.set(s, i, c) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: (#eql(res, ""))
+
+real	0m0.252s
+user	0m0.232s
+sys	0m0.016s
+
+[M]ax Memory Usage = 4
+
+=== (3) String.create(i) ===
+
+[E] Explored 35 ASTs till size 3
+
+[S]ynthesized features = 1
+
+precondition: (i = 0)
+postcondition: (#eql(res, ""))
+
+real	0m0.086s
+user	0m0.056s
+sys	0m0.004s
+
+[M]ax Memory Usage = 4
+
+=== (4) String.make(i,c) ===
+
+[E] Explored 39 ASTs till size 3
+
+[S]ynthesized features = 1
+
+precondition: (i = 0)
+postcondition: (#eql(res, ""))
+
+real	0m0.103s
+user	0m0.072s
+sys	0m0.000s
+
+[M]ax Memory Usage = 5
+
+=== (5) String.copy(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.339s
+user	0m0.336s
+sys	0m0.000s
+
+[M]ax Memory Usage = 5
+
+=== (5) String.copy(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.390s
+user	0m0.360s
+sys	0m0.028s
+
+[M]ax Memory Usage = 6
+
+=== (6) String.sub(s,i1,i2) ===
+
+[E] Explored 12494 ASTs till size 9
+
+[S]ynthesized features = 4
+
+precondition: ((0 > i1) || (i1 > ((#len(s)) - i2)) || (0 > i2))
+postcondition: exception thrown
+
+real	0m1.626s
+user	0m1.576s
+sys	0m0.016s
+
+[M]ax Memory Usage = 39
+
+=== (6) String.sub(s,i1,i2) ===
+
+[E] Explored 57 ASTs till size 3
+
+[S]ynthesized features = 1
+
+precondition: (i2 = 0)
+postcondition: (#eql(res, ""))
+
+real	0m0.244s
+user	0m0.212s
+sys	0m0.012s
+
+[M]ax Memory Usage = 4
+
+=== (7) String.fill(s, i0, i1, c) ===
+
+[E] Explored 1842 ASTs till size 7
+
+[S]ynthesized features = 5
+
+precondition: ((0 > i1) || (0 > i0) || (i1 > ((#len(s)) - i0)))
+postcondition: exception thrown
+
+real	0m0.951s
+user	0m0.932s
+sys	0m0.012s
+
+[M]ax Memory Usage = 10
+
+=== (7) String.fill(s, i0, i1, c) ===
+
+[E] Explored 152 ASTs till size 4
+
+[S]ynthesized features = 2
+
+precondition: (i0 = (#len(s))) && (i0 = i1)
+postcondition: (#eql(res, ""))
+
+real	0m0.267s
+user	0m0.220s
+sys	0m0.016s
+
+[M]ax Memory Usage = 5
+
+=== (8) String.blit(s0, i0, s1, i1, il) ===
+
+[E] Explored 82 ASTs till size 3
+
+[S]ynthesized features = 2
+
+precondition: (#has(s1, s0)) && (il = i0)
+postcondition: (#eql(res, ""))
+
+real	0m0.447s
+user	0m0.408s
+sys	0m0.020s
+
+[M]ax Memory Usage = 5
+
+=== (9) String.concat(s, sl) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.845s
+user	0m0.808s
+sys	0m0.032s
+
+[M]ax Memory Usage = 7
+
+=== (10) String.trim(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.328s
+user	0m0.316s
+sys	0m0.008s
+
+[M]ax Memory Usage = 5
+
+=== (11) String.escaped(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.334s
+user	0m0.324s
+sys	0m0.008s
+
+[M]ax Memory Usage = 4
+
+=== (11) String.escaped(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.426s
+user	0m0.404s
+sys	0m0.016s
+
+[M]ax Memory Usage = 6
+
+=== (12) String.index(s, c) ===
+
+[E] Explored 60 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (! (has(s, c)))
+postcondition: exception thrown
+
+real	0m0.395s
+user	0m0.384s
+sys	0m0.008s
+
+[M]ax Memory Usage = 7
+
+=== (12) String.index(s, c) ===
+
+[E] Explored 121 ASTs till size 5
+
+[S]ynthesized features = 1
+
+precondition: (has((#get(s, 0)), c))
+postcondition: (res = 0)
+
+real	0m0.386s
+user	0m0.204s
+sys	0m0.012s
+
+[M]ax Memory Usage = 4
+
+=== (13) String.rindex(s, c) ===
+
+[E] Explored 60 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (! (has(s, c)))
+postcondition: exception thrown
+
+real	0m0.563s
+user	0m0.376s
+sys	0m0.020s
+
+[M]ax Memory Usage = 7
+
+=== (13) String.rindex(s, c) ===
+
+[E] Explored 2109 ASTs till size 9
+
+[S]ynthesized features = 2
+
+precondition: (! (has((#sub(s, 1, ((#len(s)) - 1))), c)))
+postcondition: (res = 0)
+
+real	0m0.320s
+user	0m0.288s
+sys	0m0.012s
+
+[M]ax Memory Usage = 9
+
+=== (14) String.index_from(s, i, c) ===
+
+[E] Explored 16691 ASTs till size 10
+
+[S]ynthesized features = 4
+
+precondition: (((0 > i) | (! (has(s, c)))) || (i > (#len(s))) || (! (has((#sub(s, i, ((#len(s)) - i))), c))))
+postcondition: exception thrown
+
+real	0m1.592s
+user	0m1.552s
+sys	0m0.020s
+
+[M]ax Memory Usage = 38
+
+=== (14) String.index_from(s, i, c) ===
+
+[E] Explored 226 ASTs till size 5
+
+[S]ynthesized features = 2
+
+precondition: (has((#get(s, 0)), c)) && (i = 0)
+postcondition: (res = 0)
+
+real	0m0.237s
+user	0m0.216s
+sys	0m0.004s
+
+[M]ax Memory Usage = 5
+
+=== (15) String.rindex_from(s, i, c) ===
+
+[E] Explored 2603 ASTs till size 8
+
+[S]ynthesized features = 3
+
+precondition: (((0 > i) | (! (has(s, c)))) || (! (has((#sub(s, 0, (i + 1))), c))) || ((#len(s)) <= i))
+postcondition: exception thrown
+
+real	0m0.913s
+user	0m0.876s
+sys	0m0.008s
+
+[M]ax Memory Usage = 12
+
+=== (15) String.rindex_from(s, i, c) ===
+
+[E] Explored 233 ASTs till size 5
+
+[S]ynthesized features = 1
+
+precondition: (has((#get(s, 0)), c))
+postcondition: (res = 0)
+
+real	0m0.255s
+user	0m0.196s
+sys	0m0.020s
+
+[M]ax Memory Usage = 5
+
+=== (16) String.contains(s, c) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.329s
+user	0m0.316s
+sys	0m0.012s
+
+[M]ax Memory Usage = 5
+
+=== (16) String.contains(s, c) ===
+
+[E] Explored 58 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (! (has(s, c)))
+postcondition: (res = false)
+
+real	0m0.429s
+user	0m0.392s
+sys	0m0.032s
+
+[M]ax Memory Usage = 7
+
+=== (17) String.contains_from(s, i, c) ===
+
+[E] Explored 2114 ASTs till size 8
+
+[S]ynthesized features = 1
+
+precondition: ((0 > i) | (i > (#len(s))))
+postcondition: exception thrown
+
+real	0m0.497s
+user	0m0.484s
+sys	0m0.008s
+
+[M]ax Memory Usage = 11
+
+=== (17) String.contains_from(s, i, c) ===
+
+[E] Explored 18051 ASTs till size 10
+
+[S]ynthesized features = 1
+
+precondition: (! (has((#sub(s, i, ((#len(s)) - i))), c)))
+postcondition: (res = false)
+
+real	0m1.376s
+user	0m1.308s
+sys	0m0.044s
+
+[M]ax Memory Usage = 60
+
+=== (18) String.rcontains_from(s, i, c) ===
+
+[E] Explored 108 ASTs till size 4
+
+[S]ynthesized features = 2
+
+precondition: ((0 > i) || ((#len(s)) <= i))
+postcondition: exception thrown
+
+real	0m0.549s
+user	0m0.496s
+sys	0m0.024s
+
+[M]ax Memory Usage = 7
+
+=== (18) String.rcontains_from(s, i, c) ===
+
+[E] Explored 2418 ASTs till size 8
+
+[S]ynthesized features = 2
+
+precondition: (! (has((#sub(s, 0, (i + 1))), c)))
+postcondition: (res = false)
+
+real	0m0.518s
+user	0m0.492s
+sys	0m0.016s
+
+[M]ax Memory Usage = 12
+
+=== (19) String.uppercase(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.326s
+user	0m0.304s
+sys	0m0.020s
+
+[M]ax Memory Usage = 5
+
+=== (19) String.uppercase(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.398s
+user	0m0.380s
+sys	0m0.016s
+
+[M]ax Memory Usage = 6
+
+=== (20) String.lowercase(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.329s
+user	0m0.304s
+sys	0m0.024s
+
+[M]ax Memory Usage = 5
+
+=== (20) String.lowercase(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.388s
+user	0m0.376s
+sys	0m0.008s
+
+[M]ax Memory Usage = 6
+
+=== (21) String.capitalize(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.326s
+user	0m0.312s
+sys	0m0.012s
+
+[M]ax Memory Usage = 5
+
+=== (21) String.capitalize(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.396s
+user	0m0.372s
+sys	0m0.016s
+
+[M]ax Memory Usage = 6
+
+=== (22) String.uncapitalize(s) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.330s
+user	0m0.312s
+sys	0m0.016s
+
+[M]ax Memory Usage = 5
+
+=== (22) String.uncapitalize(s) ===
+
+[E] Explored 55 ASTs till size 4
+
+[S]ynthesized features = 1
+
+precondition: (0 = (#len(s)))
+postcondition: (#eql(res, ""))
+
+real	0m0.388s
+user	0m0.380s
+sys	0m0.004s
+
+[M]ax Memory Usage = 6
+
+=== (23) String.compare(s0, s1) ===
+
+[E] Explored 0 ASTs till size 0
+
+precondition: false
+postcondition: exception thrown
+
+real	0m0.533s
+user	0m0.492s
+sys	0m0.036s
+
+[M]ax Memory Usage = 5
+
+=== (23) String.compare(s0, s1) ===
+
+[E] Explored 33 ASTs till size 3
+
+[S]ynthesized features = 2
+
+precondition: (#has(s1, s0)) && (#has(s0, s1))
+postcondition: (res = 0)
+
+real	0m0.766s
+user	0m0.644s
+sys	0m0.020s
+
+[M]ax Memory Usage = 7
+

@@ -42,6 +42,7 @@ let noisy = ref false
 let quiet = ref true
 
 let all_solutions = ref []
+let synth_candidates = ref 0
 
 let rec is_boring = function
   | (Leaf "0") | (Leaf "[]") -> true
@@ -85,7 +86,6 @@ let rec print_goal indent goal =
   else print_endline (indent ^ "goal: " ^ (varray_string goal.varray))
 
 let solve_impl ?ast:(ast=false) task consts =
-  let seen = ref VSet.empty in
   let vector_size = Array.length (snd (List.hd task.inputs)) in
   let components = task.components in
 
@@ -119,6 +119,7 @@ let solve_impl ?ast:(ast=false) task consts =
          print_endline "--- new vector --------------------------------------";
          print_endline ((string_of_int (hvalue v)) ^ ": " ^ (Vector.string v));
        end else ();
+       synth_candidates := 1 + (!synth_candidates);
        List.iter (close_goal v) v_closes; true
   in
 
@@ -219,7 +220,7 @@ let solve_impl ?ast:(ast=false) task consts =
   done
 
   let solve ?ast:(ast=false) task consts =
-    all_solutions := [] ;
+    all_solutions := [] ; synth_candidates := 0;
   (try solve_impl ~ast:ast task consts with Success -> ());
   if not (!quiet) then (print_endline "Synthesis Result: "; List.iter (fun v -> print_endline (Vector.string v)) all_solutions.contents) ;
   List.rev_map (fun (((x,y),_),_) -> (x, (fun trans data -> y (trans data)))) all_solutions.contents
