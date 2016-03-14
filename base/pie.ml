@@ -266,9 +266,9 @@ let cnfVarsToConjunctVars k n : (int * (int list)) list =
     (* we use bit-packing to represent a clause (a set of ints) as a single int.
        our current encoding uses 10 bits per int and so requires:
         - 64-bit architecture
-        - k <= 6
-        - n*2 < 2^10 *)
-  if Sys.word_size != 64 || k > 6 || n > 500 then raise ClauseEncodingError else
+        - k <= 3
+        - n*2 < 2^20 *)
+  if Sys.word_size != 64 || k > 3 || n > 524288 then raise ClauseEncodingError else
 
   let newVars = allKTuples k n in
   
@@ -276,7 +276,7 @@ let cnfVarsToConjunctVars k n : (int * (int list)) list =
   BatList.map
     (fun t ->
        let (enc, _) = 
-	 BatList.fold_left (fun (enc,b) x -> (enc lor (x lsl b), b+10)) (0,0) t in
+	 BatList.fold_left (fun (enc,b) x -> (enc lor (x lsl b), b+20)) (0,0) t in
 	 (enc, t))
     newVars
   
@@ -331,9 +331,9 @@ let pacLearnKCNF ?(k=3) (strengthen : bool) (n : int) (costs : (int, float) BatH
   (* translate the result back to the old variables *)
   let decodeClause i =
     let rec aux n =
-      match (i lsr n) land 0x3ff with
+      match (i lsr n) land 0x7ff with
 	  0 -> []
-	| lit -> lit :: (aux (n+10))
+	| lit -> lit :: (aux (n+20))
     in aux 0
   in
   let learnedkCNF = BatList.map decodeClause learnedConjunct in

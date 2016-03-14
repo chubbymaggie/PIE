@@ -7,7 +7,7 @@ TIMEOUT="$3"
 printf "Checking K = $K:\n"
 
 MIN=1
-MAX=499
+MAX=524288
 OLDF=0
 while true; do
   echo 0 > /sys/fs/cgroup/memory/$CGROUP/memory.failcnt
