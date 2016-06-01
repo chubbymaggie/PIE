@@ -8,8 +8,21 @@ from time import sleep
 from Queue import Empty
 
 from mcf2smtlib import vars_from_smtlib, smtlib2_string_from_file, substitute_model, \
-                       run_CVC4_internal, run_Z3Str2_internal, z3str_to_cvc4, \
+                       run_CVC4_internal, run_Z3_internal, run_Z3Str2_internal, z3str_to_cvc4, \
                        epsilon, timeout, devnull, increment_record
+
+def runZ3(sema, smtdata, queue):
+    with sema:
+        res = run_Z3_internal(smtdata)
+        if res == 'ERROR':
+            sleep(timeout)
+        elif res[:3]== 'SAT':
+            vsmtdata = substitute_model(smtdata, res)
+            vres = run_Z3_internal(vsmtdata, False)
+            res = 'ERROR' if vres != 'SAT' else res
+
+        queue.put(['z3', res])
+        sleep(epsilon)
 
 def runZ3Str2(sema, smtdata, queue):
     with sema:
@@ -38,7 +51,7 @@ def runCVC4(sema, smtdata, queue):
         sleep(epsilon)
 
 def unknownAction(smtdata):
-    sys.stderr.write('''[!] None of the verifiers could verify the following SMTLib2 query:
+    sys.stderr.write('''[!] None of the solvers could verify the following SMTLib2 query:
 ----------------------------------------------------------------------------------------------------
 %s
 ----------------------------------------------------------------------------------------------------
@@ -70,8 +83,9 @@ if __name__ == '__main__':
     smtdata = (smtlib2_string_from_file('define-fun goal () Bool', sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "1")
                + '\n(assert (not goal))')
 
-    sema = mp.BoundedSemaphore(2)
+    sema = mp.BoundedSemaphore(3)
     jobs = [('str', mp.Process(target=runZ3Str2, args=(sema, smtdata, q))),
+            ('z3', mp.Process(target=runZ3, args=(sema, smtdata, q))),
             ('cvc4', mp.Process(target=runCVC4, args=(sema, z3str_to_cvc4(smtdata), q)))]
     [j.start() for (p, j) in jobs]
     sleep(epsilon)
