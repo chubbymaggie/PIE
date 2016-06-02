@@ -68,16 +68,6 @@ string unknown_s2(unsigned max_len = RAND_STR_LEN_MAX) {
 }
 
 
-
-void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
-void assert(bool condition) {
-  if(!condition) {
-    fprintf(stderr, "[ ASSERTION FAILED! ]\n");
-    exit(EXIT_FAILURE);
-  }
-}
-
-
 bool eql(string str1, string str2) {
   return str1 == str2;
 }
@@ -116,7 +106,17 @@ string sub(string src, int start, int len) {
 }
 
 
-#define OUTPUT_STREAM stdout
+#define OUTPUT_STREAM stderr
+
+void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
+void assert(bool condition) {
+  if(!condition) {
+    fprintf(OUTPUT_STREAM, "[ ASSERTION FAILED! ]\n");
+    exit(EXIT_FAILURE);
+  }
+}
+void PRINT_BAR(int loopId) { fprintf(OUTPUT_STREAM, "---%d---\n", loopId); }
+
 
 // In-string substring replacement (http://stackoverflow.com/a/15372760/554436)
 void replaceAll( string &s, const string &search, const string &replace ) {

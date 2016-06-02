@@ -358,7 +358,7 @@ let print_spec chan (cnfopt, post) =
         output_string chan ("postcondition: " ^ post ^ "\n")
 
 let print_specs chan specs =
-  BatList.iter (fun s -> (print_spec chan s); output_string chan "\n") specs
+  BatList.iter (fun s -> (output_string chan "\n"); (print_spec chan s); output_string chan "\n") specs
 
 let print_cnf chan cnfopt = match cnfopt with
     None -> output_string chan "false"
@@ -646,7 +646,7 @@ let resolveAndPacLearnSpec ?(k=1) ?(dump=("", (fun a -> ""))) ?(record="") ?(con
                                    else convergePCondFeatures ~fname:(fst dump) ~consts:consts ~comps:comps
                                                               ~arg_names:arg_names f tests features post trans)
                                   post in
-        (output_string stderr "\n" ; print_spec stderr res ; res)
+        ((* output_string stderr "\n" ; print_spec stderr res ; *) res)
     )) posts
 
 

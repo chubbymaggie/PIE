@@ -201,6 +201,9 @@ def run_Z3Str2_internal(smtdata, needModel = True):
         return 'ERROR'
 
 def run_Z3_internal(smtdata, needModel = True):
+    if "String" in smtdata:
+        return 'ERROR'
+
     try:
         solver = z3.Solver()
         solver.add(z3.parse_smt2_string(smtdata))
@@ -209,6 +212,8 @@ def run_Z3_internal(smtdata, needModel = True):
         else:
             return string_from_z3_model(solver.model()) if needModel else 'SAT'
     except:
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
         return 'ERROR'
 
 def run_CVC4_internal(smtdata, needModel = True):
