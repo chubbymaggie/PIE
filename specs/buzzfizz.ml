@@ -27,6 +27,12 @@ let my_postconditions = [
                        | Ok z -> z = "buzz"),
    "is buzz") ;
   ((fun _ r -> match r with Bad _ -> raise IgnoreTest
+                       | Ok z -> z = "fizz"),
+   "is fizz") ;
+  ((fun _ r -> match r with Bad _ -> raise IgnoreTest
+                       | Ok z -> z = "buzzfizz"),
+   "is buzzfizz") ;     
+  ((fun _ r -> match r with Bad _ -> raise IgnoreTest
                        | Ok z -> try (BatString.find z "fizz"); true with _ -> false),
    "has fizz")
 ] in
