@@ -49,11 +49,16 @@ int unknownu() { return uni_rand_interval(0, RAND_HIGH); }
 // A boolean unknown function
 int unknown4() { return uni_rand_interval(0, 1); }
 
-void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
-void assert(bool condition) { if(!condition) exit(EXIT_FAILURE); }
-void PRINT_BAR(int loopId) { fprintf(stdout, "---%d---\n", loopId); }
+#define OUTPUT_STREAM stderr
 
-#define OUTPUT_STREAM stdout
+void assume(bool condition) { if(!condition) exit(EXIT_FAILURE); }
+void assert(bool condition) {
+  if(!condition) {
+    fprintf(OUTPUT_STREAM, "[ ASSERTION FAILED! ]\n");
+    exit(EXIT_FAILURE);
+  }
+}
+void PRINT_BAR(int loopId) { fprintf(OUTPUT_STREAM, "---%d---\n", loopId); }
 
 #define _FE_12(TASK, arg0, args...) TASK(arg0) _FE_11(TASK, args)
 #define _FE_11(TASK, arg0, args...) TASK(arg0) _FE_10(TASK, args)

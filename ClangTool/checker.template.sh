@@ -61,7 +61,7 @@ for i in `seq 1 $MAX_RUNS`; do
   echo -ne "\r(*) Collecting test data ... $i / $MAX_RUNS"
   TESTS=`false`
   while [ $? -ne 0 ]; do
-    TESTS=`timeout ${TIMEOUT_EACH_RUN}s ./$FILE.x || (( $? > 100 ))`
+    TESTS=`timeout ${TIMEOUT_EACH_RUN}s ./$FILE.x 2>&1 >/dev/null || (( $? > 100 ))`
   done
   echo "$TESTS" >> tests
   ./separate_tests tests
@@ -88,7 +88,7 @@ aterrcho -ne "\n(*) Checking loop invariant:\n"
 
 EXEC_CMD="time bin/pinvgen -wpath $WORKING_PATH -abducer $ABDUCER_PATH/abduce.sh    \
                            -tool=$USE_TOOL -csize $CONFLICT_SIZE --extra-arg=--std=c++11 $SOURCE_FILE --"
-echo "$EXEC_CMD" > checker_exec.sh
+echo "MALLOC_CHECK_=2 $EXEC_CMD" > checker_exec.sh
 
 OOM_Monitor_PID=""
 if [[ "$CGROUP" != "" ]]; then

@@ -119,10 +119,13 @@ void checkValidity(CFG *cfg,
     }
 
     errs() << " is not valid!\n";
-    errs() << "\n----------------------------------< RESTART >-----------------------------------\n";  
+    if(guesses.size())
+      errs() << "\n----------------------------------< RESTART >-----------------------------------\n";
+    else break;
   }
 
-  errs() << "\n\n[###] Final invariants: [###]\n";
+  if(guesses.size())
+    errs() << "\n\n[###] Final invariants: [###]\n";
   for (const auto & guess : guesses) {
     errs() << "Loop #" << guess.getKey() << ": " << PredicateNode2MCF(guess.getValue()) << '\n';
   }

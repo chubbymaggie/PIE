@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import sys
+import z3
 
 uvars = {'true', 'false'}
 bounds = set()
@@ -197,6 +198,22 @@ def run_Z3Str2_internal(smtdata, needModel = True):
 
         return (string_from_z3str_model(z3str_out) if needModel else 'SAT') if z3str_res == 'sat' else ('UNSAT' if z3str_res == 'unsat' else 'ERROR')
     except:
+        return 'ERROR'
+
+def run_Z3_internal(smtdata, needModel = True):
+    if "String" in smtdata:
+        return 'ERROR'
+
+    try:
+        solver = z3.Solver()
+        solver.add(z3.parse_smt2_string(smtdata))
+        if solver.check() == z3.unsat:
+            return 'UNSAT'
+        else:
+            return string_from_z3_model(solver.model()) if needModel else 'SAT'
+    except:
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
         return 'ERROR'
 
 def run_CVC4_internal(smtdata, needModel = True):

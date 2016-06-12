@@ -158,6 +158,16 @@ let modulo = {
     dump = (fun l -> "(" ^ (List.hd l) ^ " % " ^ List.(hd (tl l)) ^ ")")
 }
 
+let unsafe_modulo = {
+    domain = [TInt;TInt];
+    codomain = TInt;
+    apply = (function
+             | [VInt x;VInt y] -> if y < 2 then VError else VInt (((x mod y) + y) mod y)
+             | _ -> VError);
+    name = "unsafe_mod";
+    dump = (fun l -> "(" ^ (List.hd l) ^ " % " ^ List.(hd (tl l)) ^ ")")
+}
+
 
 (* Default BOOL components *)
 let notc = {

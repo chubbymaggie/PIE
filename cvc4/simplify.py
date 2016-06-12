@@ -67,6 +67,7 @@ if __name__ == '__main__':
     print(mcf)
     sys.exit(0)
 
+    # ---------------------------------------------------------------
     # FIXME: No simplification for now. Weird __ufSS output from CVC4
     # FIXME: Replace CVC string functions with the new MCF format
 
